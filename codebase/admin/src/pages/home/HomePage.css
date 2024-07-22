@@ -1,0 +1,106 @@
+.ant-layout-sider.xm-sider{
+    overflow: auto;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+}
+
+.home-user{
+    padding: 15px 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center
+}
+
+.home-title{
+    font-size:20px;
+    margin-left: 10px;
+}
+
+.collapsed-btn{
+    font-size: 16px;
+    width: 64px;
+    height: 48px;
+}
+
+.xm-container{
+    margin: 10px;
+    padding: 10px;
+    min-height: 280px,
+}
+
+.xm-footer{
+    text-align: center;
+    display: flex; 
+    align-items: center;
+    justify-content: center;
+    padding: 5px 10px 5px 10px;
+}
+
+.xm-top{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.xm-tab .ant-tabs-content-holder{display:none;}
+.xm-tab .ant-tabs-top .ant-tabs-nav{margin-bottom:0px;}
+
+.xm-header-wrap{
+    display:flex;
+    flex-direction: column;
+}
+
+.collapsed-menu .ant-menu-item .ant-menu-title-content{
+    visibility: hidden;
+}
+
+.home-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0px 15px;
+}
+
+.home-header-right{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.color-block-wrap{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width:18px;
+    height:18px;
+    overflow: hidden;
+}
+
+.color-block{
+    display: inline-block;
+    width: 16px; 
+    height: 16px;
+    cursor: pointer;
+    border-radius: 18px;
+}
+
+.color-block:hover{
+    width: 18px; 
+    height: 18px;
+}
+
+.wallpaper-tab-dropdown{
+    z-index: 9999 !important;
+}
+
+.xm-wrapper-listitem{
+    overflow: hidden;
+}
+
+.xm-wrapper-img:hover{
+    transform: scale(1.1);
+    cursor: pointer;
+}

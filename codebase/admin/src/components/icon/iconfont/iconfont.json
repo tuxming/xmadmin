@@ -1,0 +1,114 @@
+{
+  "id": "4606368",
+  "name": "admin",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "4765881",
+      "name": "dashboard",
+      "font_class": "dashboard",
+      "unicode": "e78b",
+      "unicode_decimal": 59275
+    },
+    {
+      "icon_id": "12625084",
+      "name": "at",
+      "font_class": "at",
+      "unicode": "e81e",
+      "unicode_decimal": 59422
+    },
+    {
+      "icon_id": "1008561",
+      "name": "文件",
+      "font_class": "wenjian",
+      "unicode": "e68f",
+      "unicode_decimal": 59023
+    },
+    {
+      "icon_id": "2523702",
+      "name": "符号-国际化",
+      "font_class": "guojihua",
+      "unicode": "e6e4",
+      "unicode_decimal": 59108
+    },
+    {
+      "icon_id": "2546498",
+      "name": "日志",
+      "font_class": "rizhi",
+      "unicode": "e69d",
+      "unicode_decimal": 59037
+    },
+    {
+      "icon_id": "5214565",
+      "name": "地址",
+      "font_class": "dizhi",
+      "unicode": "e62a",
+      "unicode_decimal": 58922
+    },
+    {
+      "icon_id": "6265238",
+      "name": "菜单-实色",
+      "font_class": "menu-s",
+      "unicode": "e653",
+      "unicode_decimal": 58963
+    },
+    {
+      "icon_id": "7683853",
+      "name": "user",
+      "font_class": "user",
+      "unicode": "e626",
+      "unicode_decimal": 58918
+    },
+    {
+      "icon_id": "8802668",
+      "name": "权限",
+      "font_class": "quanxian",
+      "unicode": "e656",
+      "unicode_decimal": 58966
+    },
+    {
+      "icon_id": "10262050",
+      "name": "设 置",
+      "font_class": "shezhi",
+      "unicode": "e611",
+      "unicode_decimal": 58897
+    },
+    {
+      "icon_id": "11121435",
+      "name": "编号",
+      "font_class": "bianhao",
+      "unicode": "e635",
+      "unicode_decimal": 58933
+    },
+    {
+      "icon_id": "12594595",
+      "name": "角色管理",
+      "font_class": "jiaoseguanli",
+      "unicode": "e72c",
+      "unicode_decimal": 59180
+    },
+    {
+      "icon_id": "11686866",
+      "name": "system",
+      "font_class": "system",
+      "unicode": "e684",
+      "unicode_decimal": 59012
+    },
+    {
+      "icon_id": "4084620",
+      "name": "验证码",
+      "font_class": "yanzhengma",
+      "unicode": "e63d",
+      "unicode_decimal": 58941
+    },
+    {
+      "icon_id": "35350609",
+      "name": "手机号码",
+      "font_class": "shoujihaoma",
+      "unicode": "e615",
+      "unicode_decimal": 58901
+    }
+  ]
+}

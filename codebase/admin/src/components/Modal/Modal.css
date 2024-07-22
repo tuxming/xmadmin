@@ -1,0 +1,177 @@
+
+.x-modal-overlay{
+    box-sizing: content-box;
+    position: fixed;
+    top: 0;
+    left:0;
+}
+
+.x-modal-mask{
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.4);
+}
+
+.x-modal-content{
+    position:absolute;
+    background: white;
+    border-radius: 7px;
+    box-shadow:
+        0px 1.5px 2.7px rgba(0, 0, 0, 0.047),
+        0px 3.8px 6.9px rgba(0, 0, 0, 0.067),
+        0px 7.8px 14.2px rgba(0, 0, 0, 0.083),
+        0px 16.1px 29.2px rgba(0, 0, 0, 0.103),
+        0px 44px 80px rgba(0, 0, 0, 0.15)
+    ;
+    box-sizing: content-box;
+}
+.x-modal-inner-content{
+    padding: 8px;
+    box-sizing: content-box;
+}
+
+
+.dark .x-modal-content{
+    background-color: rgba(0, 0, 0, 0.9);
+    box-shadow:
+        0px 1.5px 2.7px rgba(225, 225, 225, 0.047),
+        0px 3.8px 6.9px rgba(225, 225, 225, 0.067),
+        0px 7.8px 14.2px rgba(225, 225, 225, 0.083),
+        0px 16.1px 29.2px rgba(225, 225, 225, 0.103),
+        0px 44px 80px rgba(225, 225, 225, 0.15)
+    ;
+}
+
+.x-modal-ctrl{
+    position: absolute;
+    top: 6px; 
+    right: 6px;
+    display:flex;
+}
+
+.x-modal-ctrl-btn svg{
+    position:relative;
+    top: -3px;
+    fill: white;
+}   
+
+.x-modal-min-btn svg{
+    top: -1px;
+}   
+
+.x-modal-ctrl-btn{
+    position:relative;
+    border-radius: 30px;
+    padding: 0px 6.5px;
+    cursor: pointer;
+    margin-left: 3px;
+    margin-right: 3px;
+}
+
+.x-modal-min-btn span{
+    position:relative;
+    top: -4px;
+    background-color: white;
+    display:inline-block;
+    width: 7px; 
+    height: 3px;
+}   
+.x-modal-min-btn:hover span{
+    background-color: rgba(80,80,80);;
+}
+
+.x-modal-max-btn, .x-modal-min-btn{
+    background-color: rgba(225,225,225);
+}
+
+.x-modal-max-btn:hover, .x-modal-min-btn:hover{
+    background-color: rgba(170,170,170);
+}
+
+.x-modal-max-btn:hover path{
+    fill: rgba(80,80,80);
+}
+
+.x-modal-close-btn{
+    background-color: #e81123;
+}
+
+.x-modal-close-btn:hover{
+    background-color: #f3404f;
+}
+
+.x-modal-move-btn{
+    display:none;
+    padding: 0px;
+    background: none;
+    top: 3px;
+}
+.x-modal-move-btn path{
+    fill: var(--var-btn-color);
+}
+.x-modal-move-btn:hover path{
+    fill: var(--var-btn-hover-color);
+}
+.x-modal-title{
+    color: #333;
+    font-size: 14px;
+    position:relative;
+    top: -1px;
+    padding-right: 6px;
+    word-break: keep-all;
+    overflow:hidden;
+}
+
+.dark .x-modal-min-btn, .dark .x-modal-max-btn{
+    background-color: transparent;
+    border: 1px solid #aaa;
+}
+
+.dark .x-modal-min-btn span, .dark .x-modal-max-btn path{
+    background-color: #aaa;
+    fill: #aaa;
+}
+
+
+.dark .x-modal-min-btn:hover, .dark .x-modal-max-btn:hover{
+    border: 1px solid #fff;
+}
+
+.dark .x-modal-min-btn:hover span, .dark .x-modal-max-btn:hover path{
+    background-color: #fff;
+    fill: #fff;
+}
+
+
+.dark .x-modal-close-btn{
+    padding: 1px 8px;
+}
+
+.dark .x-modal-close-btn svg{
+    top: -3px;
+    left: 0.5px;
+}
+
+.dark .x-modal-move-btn{
+    top: 5px;
+}
+
+.x-modal-content:hover .x-modal-resize-btn, .x-modal-content:hover .x-modal-move-btn{
+    display: block; 
+}
+
+.x-modal-resize-btn{
+    display:none;
+}
+
+.x-modal-resize-btn svg{
+    position: absolute;
+    right: -10px; 
+    bottom:-10px;
+    cursor: nw-resize;
+    fill: var(--var-btn-color)
+}
+
+.x-modal-resize-btn:hover svg{
+    fill: var(--var-btn-hover-color)
+}

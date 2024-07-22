@@ -1,0 +1,17 @@
+
+.forget-step.ant-steps.ant-steps-vertical >.ant-steps-item>.ant-steps-item-container>.ant-steps-item-content>.ant-steps-item-title::after {
+    position: absolute;
+    top: 16px;
+    /* inset-inline-start: 75%; */
+    display: block;
+    width: 9999px;
+    height: 1px;
+    background: rgba(5, 5, 5, 0.06);
+    content: "";
+    left: 0px;
+}
+/* .forget-step.ant-steps.ant-steps-vertical .ant-steps-item:last-child >.ant-steps-item-container>.ant-steps-item-tail,  */
+.forget-step.ant-steps .ant-steps-item:last-child >.ant-steps-item-container>.ant-steps-item-content>.ant-steps-item-title::after {
+    display: none;
+}
+

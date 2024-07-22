@@ -1,0 +1,83 @@
+
+.login-bg-img{
+    /* background: url('../../assets/bg.jpg') no-repeat center center / cover; */
+    width: 100vw;
+    height:100vh;
+}
+
+.login-bg-color{
+    background: rgba(150,150,150,0.1);
+    width:100%;
+    height:100%; 
+    backdrop-filter: blur(5px);
+    display:flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-head{
+    display:flex;
+    align-items: center;
+    margin-bottom:20px;
+    justify-content: center;
+}
+
+.login-logo{
+    width:80px;
+}
+
+.login-logo-path{
+    fill: rgba(255,255,255,0.75);
+}
+
+.login-title{
+    margin-left: 15px;
+    font-size:30px; 
+    color: rgba(255,255,255,0.75);
+}
+
+.login-container{
+    background: rgba(255,255,255, 0.3);
+    width:400px;
+    padding-bottom:10px;
+    box-shadow:
+        0px 0px 3.6px rgba(0, 0, 0, 0.028),
+        0px 0px 10px rgba(0, 0, 0, 0.04),
+        0px 0px 24.1px rgba(0, 0, 0, 0.052),
+        0px 0px 80px rgba(0, 0, 0, 0.08)
+        ;
+    border-radius: 4px;
+}
+
+.login-part-title{
+    font-size:28px;
+    padding: 20px 0px;
+    color:#6b5353;
+    text-align:center;
+}
+
+.login-hr{
+    width:100%;
+    border-top:1px solid white;
+    height:10px;
+    padding-bottom:10px;
+}
+
+.other-login{
+    text-align:center;
+    padding-bottom:10px;
+}
+
+.login-radio-group{
+    text-align:center;
+    padding-bottom:30px;
+    width:100%;
+}
+
+@media screen and (max-width: 575px) {
+    .login-container{
+        box-sizing: border-box;
+        padding-left:20px;
+        padding-right:20px;
+    }    
+}
