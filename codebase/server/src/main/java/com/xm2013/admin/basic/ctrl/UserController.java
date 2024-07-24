@@ -14,7 +14,6 @@ import com.xm2013.admin.common.JsonKit;
 import com.xm2013.admin.domain.dto.JsonResult;
 import com.xm2013.admin.domain.dto.PageInfo;
 import com.xm2013.admin.domain.dto.user.UserListQuery;
-import com.xm2013.admin.domain.model.Role;
 import com.xm2013.admin.domain.model.User;
 import com.xm2013.admin.exception.BusinessErr;
 import com.xm2013.admin.exception.BusinessException;

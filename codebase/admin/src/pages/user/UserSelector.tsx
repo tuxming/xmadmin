@@ -3,7 +3,7 @@ import { api } from '../../common/api';
 import { DebounceSelector, RemoteAutoComplete } from '../../components';
 
 /**
- * 角色选择下拉框
+ * 用户搜索选择下拉框
  * @param props onChange(value), mode= multiple | single
  * @returns 
  */

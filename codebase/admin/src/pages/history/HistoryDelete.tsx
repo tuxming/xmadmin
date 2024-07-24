@@ -1,8 +1,9 @@
 
 
-import { Confirm, useRequest } from "../../components";
+import { Confirm, useRequest, useTranslation } from "../../components";
 import { api } from "../../common/api";
 import { App } from 'antd'
+import { AdminHistory, DefaultNS } from "../../common/I18NNamespace";
 
 export type HistoryDeleteType = {
     histories: any[],
@@ -17,10 +18,11 @@ export const HistoryDelete : React.FC<HistoryDeleteType> = ({
     if(!histories || histories.length == 0)
     return <></>
 
+    const {t} = useTranslation(AdminHistory);
     const { message } = App.useApp();
     const requet = useRequest();
 
-    const msg = "确定要删除以下日志记录：" 
+    const msg = t("确定要删除以下日志记录：") 
                 + histories.map(item => item.id+"").join(", ") 
             ; 
 
@@ -28,11 +30,11 @@ export const HistoryDelete : React.FC<HistoryDeleteType> = ({
         const doDelete = async () => {
             let result = await requet.get(api.history.deletes+"?ids="+histories.map(hist => hist.id+"").join(","));
             if(result.status){
-                message.success("删除成功");
+                message.success(t("删除成功", DefaultNS));
                 successCall();
                 close();
             }else{
-                message.error("删除失败");
+                message.error(t("删除失败", DefaultNS));
             }
         }
         doDelete();

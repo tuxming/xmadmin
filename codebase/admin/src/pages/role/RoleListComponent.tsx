@@ -1,13 +1,13 @@
 
-import { TableComponent, TableColumnType, useTranslation, ModalContext } from '../../components';
+import { TableComponent, TableColumnType, ModalContext } from '../../components';
 import { api } from '../../common/api';
-import { AdminHistory } from '../../common/I18NNamespace';
+import { RoleTypeTag } from './RoleType';
 import { useContext, useEffect, useState } from 'react';
 import { computePx } from '../../common/kit';
 
-export type HistoryListComponentType = {
+export type RoleListComponentType = {
     query: any,
-    onSelect: (rows: any[]) => void, 
+    onSelect: (rows: any[]) => void,
     refresh?: {
         /**
          * 是否刷新到第一页，false: 刷新当前页, true: 刷新至第一页，默认false
@@ -20,59 +20,58 @@ export type HistoryListComponentType = {
     }
 }
 
-export const HistoryListComponent : React.FC<HistoryListComponentType> = ({
+/**
+ * 角色列表组件
+ * @returns 
+ */
+export const RoleListComponent : React.FC<RoleListComponentType> = ({
     query,
     onSelect,
     refresh
 }) => {
-    const {t} = useTranslation(AdminHistory);
     const columns : TableColumnType[]= [
         {
-            title: t("ID"),
+            title: 'ID',
             key: 'id',
             sort: true,
             ellipsis: true,
-            width: 80,
-            fixed: 'left'
+            width: 100
         },
         {
-            title: t("操作人"),
-            key: 'username',
+            title: '角色名',
+            key: 'roleName',
             sort: true,
             filter: true,
             ellipsis: true,
             width: 150
         },
         {
-            title: t("IP地址"),
-            key: 'ipAddr',
+            title: '角色代码',
+            key: 'code',
             sort: true,
             filter: true,
             ellipsis: true,
-            width: 150
+            width: 200
         },
         {
-            title: t('操作类型'),
+            title: '角色类型',
             key: 'type',
             sort: true,
             filter: true,
-            width: 150
+            ellipsis: true,
+            width: 150,
+            render(text, record, index) {
+                return <RoleTypeTag>{text}</RoleTypeTag>
+            },
         },
         {
-            title: t('操作时间'),
-            key: 'created',
+            title: '创建人',
+            key: 'createrName',
             sort: true,
             filter: true,
             ellipsis: true,
-            width: 200
-        },
-        {
-            title: t("请求参数"),
-            key: 'remark',
-            ellipsis: true,
-            align: 'left',
-            width: 200
-        },
+            width: 150
+        }
     ];
     
     //当组件使用窗口话的时候，获取窗口的位置信息，设置到表格
@@ -94,9 +93,10 @@ export const HistoryListComponent : React.FC<HistoryListComponentType> = ({
 
     }, [modalPos]);
 
-    return <TableComponent pageSize={20} query={query} apiUrl={api.history.list} refresh={refresh}
+    return <TableComponent pageSize={20} query={query} apiUrl={api.role.list} 
         width={pos?.width} height={pos?.height}
         onSelect={onSelect}
         columns={columns}
+        refresh={refresh}
     />
 }

@@ -1,7 +1,8 @@
 
 import { ReactNode, useState } from 'react';
 import {Modal, ModalType} from './index'
-import { Button, Divider } from 'antd';
+import { Button, Divider, Typography } from 'antd';
+import { useSelector } from '../../redux/hooks';
 
 export type ConfirmType = {
     text: ReactNode
@@ -21,6 +22,7 @@ export const Confirm : React.FC<ConfirmType> = ({
 })=>{
     
     const [open, setOpen] = useState(true);
+    const theme = useSelector(state => state.themeConfig.theme);
     
     const onClickCancel = () => {
         setOpen(false);
@@ -36,7 +38,7 @@ export const Confirm : React.FC<ConfirmType> = ({
     }
 
     return open ? (
-        <Modal open={open} onClose={()=>setOpen(false)}
+        <Modal open={open} onClose={()=>setOpen(false)} theme={theme}
             type='modal' showMove={false} showResize={false} 
         >
             <>
@@ -46,7 +48,9 @@ export const Confirm : React.FC<ConfirmType> = ({
                 textAlign: "center"
             }}>
                 <div>
+                <Typography.Text>
                 {text}
+                </Typography.Text>
                 </div>
                 <Divider />
                 <div style={{

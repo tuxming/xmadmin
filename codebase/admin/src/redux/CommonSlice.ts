@@ -60,6 +60,29 @@ export const TabItemsSlice = createSlice({
         },
         addItem: (state, action) => { //item
             state.items.push(action.payload);
+        },
+        removeItem: (state, action) => {
+            state.items = state.items.filter(item => item.key != action.payload.key);
+        }
+    }
+});
+
+type openItemType = {
+    value: any
+}
+
+const defaultOpenItem = {
+    value: {}
+}
+/**
+ * 要窗口化的tab
+ */
+export const openItemSlice = createSlice({
+    name: "openItem",
+    initialState: defaultOpenItem,
+    reducers: {
+        open: (state, action) => {
+            state.value = action.payload;
         }
     }
 });

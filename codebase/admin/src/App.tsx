@@ -42,6 +42,8 @@ function App() {
 
     // 当组件挂载完成后，添加resize事件监听器
     useEffect(() => {
+        document.body.classList.add(themeType);
+
         const handleResize = () => {
             dispatch(globalVarSlice.actions.changeSize({width: document.body.clientWidth, height: document.body.clientHeight}));
         };

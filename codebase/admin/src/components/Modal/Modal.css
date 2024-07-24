@@ -12,34 +12,46 @@
     background: rgba(0,0,0,0.4);
 }
 
-.x-modal-content{
-    position:absolute;
-    background: white;
-    border-radius: 7px;
-    box-shadow:
-        0px 1.5px 2.7px rgba(0, 0, 0, 0.047),
-        0px 3.8px 6.9px rgba(0, 0, 0, 0.067),
-        0px 7.8px 14.2px rgba(0, 0, 0, 0.083),
-        0px 16.1px 29.2px rgba(0, 0, 0, 0.103),
-        0px 44px 80px rgba(0, 0, 0, 0.15)
-    ;
-    box-sizing: content-box;
-}
-.x-modal-inner-content{
-    padding: 8px;
-    box-sizing: content-box;
+@keyframes zoomIn
+{
+    from {opacity: 0; transform: scale(0.2);}
+    to {opacity: 1; transform: scale(1);}
 }
 
+@keyframes zoomOut
+{
+    from {opacity: 1; transform: scale(1);}
+    to {opacity: 0; transform: scale(0.2);}
+}
+
+.x-modal-content{
+    position:absolute;
+    box-sizing: content-box;
+    animation-name: zoomIn;
+    animation-duration: 0.3s; /* 动画持续时间 */
+    animation-iteration-count: 1; /* 循环播放 */
+    animation-timing-function: ease-in-out; /* 缓动效果 */
+    border-radius: 7px;
+    background: white;
+    box-shadow:
+        0px 0px 5.3px rgba(0, 0, 0, 0.085),
+        0px 0px 17.9px rgba(0, 0, 0, 0.125),
+        0px 0px 80px rgba(0, 0, 0, 0.21)
+    ;
+}
 
 .dark .x-modal-content{
     background-color: rgba(0, 0, 0, 0.9);
     box-shadow:
-        0px 1.5px 2.7px rgba(225, 225, 225, 0.047),
-        0px 3.8px 6.9px rgba(225, 225, 225, 0.067),
-        0px 7.8px 14.2px rgba(225, 225, 225, 0.083),
-        0px 16.1px 29.2px rgba(225, 225, 225, 0.103),
-        0px 44px 80px rgba(225, 225, 225, 0.15)
+        0px 0px 5.3px rgba(255, 255, 255, 0.085),
+        0px 0px 17.9px rgba(255, 255, 255, 0.125),
+        0px 0px 80px rgba(255, 255, 255, 0.21)
     ;
+}
+
+.x-modal-inner-content{
+    padding: 8px;
+    box-sizing: content-box;
 }
 
 .x-modal-ctrl{
@@ -106,12 +118,7 @@
     background: none;
     top: 3px;
 }
-.x-modal-move-btn path{
-    fill: var(--var-btn-color);
-}
-.x-modal-move-btn:hover path{
-    fill: var(--var-btn-hover-color);
-}
+
 .x-modal-title{
     color: #333;
     font-size: 14px;
@@ -120,6 +127,7 @@
     padding-right: 6px;
     word-break: keep-all;
     overflow:hidden;
+    white-space: nowrap;
 }
 
 .dark .x-modal-min-btn, .dark .x-modal-max-btn{
@@ -162,16 +170,8 @@
 
 .x-modal-resize-btn{
     display:none;
-}
-
-.x-modal-resize-btn svg{
     position: absolute;
     right: -10px; 
     bottom:-10px;
     cursor: nw-resize;
-    fill: var(--var-btn-color)
-}
-
-.x-modal-resize-btn:hover svg{
-    fill: var(--var-btn-hover-color)
 }

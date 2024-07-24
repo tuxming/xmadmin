@@ -3,8 +3,9 @@
 import { useEffect, useState } from 'react';
 import { Descriptions, DescriptionsProps, Skeleton, theme as antdTheme, App  } from 'antd';
 import { useSelector } from '../../redux/hooks';
-import { Modal, useRequest } from '../../components';
+import { Modal, useRequest, useTranslation } from '../../components';
 import { api } from '../../common/api';
+import { AdminHistory, DefaultNS } from '../../common/I18NNamespace';
 
 export type HistoryDetailType = {
     historyId: string,
@@ -30,6 +31,7 @@ export const HistoryDetail : React.FC<HistoryDetailType> = ({
     const size = useSelector(state => state.themeConfig.componentSize);
     const request = useRequest();
     const {token} = antdTheme.useToken();
+    const {t} = useTranslation(AdminHistory);
 
     useEffect(()=>{
         if(!historyId) return;
@@ -42,36 +44,36 @@ export const HistoryDetail : React.FC<HistoryDetailType> = ({
             let hist = result.data;
             setItems([
                 {
-                    label: "操作人",
+                    label: t("操作人"),
                     children: hist.username
                 },
                 {
-                    label: "IP地址",
+                    label: t("IP地址"),
                     children: hist.ipAddr
                 },
                 {
-                    label: "操作类型",
+                    label: t("操作类型"),
                     children: hist.type
                 },
                 {
-                    label: "操作时间",
+                    label: t("操作时间"),
                     children: hist.created
                 },
                 {
-                    label: "请求参数",
+                    label: t("请求参数"),
                     children: hist.remark,
                     span: { xs: 2, sm: 2, md: 2, lg: 2, xl: 2, xxl: 2 },
                 }
             ]);
             setLoading(false);
-            message.success(result.msg);
+            message.success(t(result.msg, DefaultNS));
         }else{
-            message.error(result.msg);
+            message.error(t(result.msg, DefaultNS));
         }
     }
 
     return <>
-        <Modal title="详情" 
+        <Modal title={t("日志详情" )}
             open={open} showMask={false}
             onClose={close}
             width={"500"}

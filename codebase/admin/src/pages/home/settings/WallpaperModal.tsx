@@ -4,6 +4,7 @@ import { Modal, Tabs } from 'antd';
 import { api } from "../../../common/api";
 import { useSelector } from "../../../redux/hooks";
 import { WallpaperList } from "./WallpaperList";
+import "./WallpaperModal.css"
 
 type WallpaperModalType = {
     open: boolean,
@@ -15,6 +16,7 @@ export const WallpaperModal : React.FC<WallpaperModalType> = ({open, close}) => 
     const request = useRequest();
     
     const width = useSelector(state => state.globalVar.width);
+    const theme = useSelector(state => state.themeConfig.theme);
 
     // const [categories, setCategories] = useState<any>([]);
     const [tabItems, setTabItems] = useState([]);
@@ -54,7 +56,7 @@ export const WallpaperModal : React.FC<WallpaperModalType> = ({open, close}) => 
         >
             <div>
                 <Tabs items={tabItems} activeKey={activeKey} onChange={onTabChange}
-                    popupClassName="wallpaper-tab-dropdown"
+                    popupClassName={`${theme}-wallpaper-tab-dropdown`}
                 />
             </div>
         </Modal>

@@ -1,12 +1,16 @@
 package com.xm2013.admin.basic.ctrl;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.jfinal.aop.Inject;
 import com.xm2013.admin.annotation.RequirePermission;
 import com.xm2013.admin.basic.service.HistoryService;
 import com.xm2013.admin.common.JsonKit;
-import com.xm2013.admin.domain.dto.HistoryQuery;
 import com.xm2013.admin.domain.dto.JsonResult;
 import com.xm2013.admin.domain.dto.PageInfo;
+import com.xm2013.admin.domain.dto.basic.HistoryQuery;
 import com.xm2013.admin.domain.model.History;
 import com.xm2013.admin.exception.BusinessErr;
 import com.xm2013.admin.exception.BusinessException;
@@ -47,6 +51,16 @@ public class HistoryController extends BaseController{
 		String ids = getPara("ids");
 		if(ids == null || !ids.matches("[\\d,]+")) {
 			throw new BusinessException(BusinessErr.NULL_PARAM);
+		}
+		
+		List<Integer> idsList = Arrays.asList(ids.split(","))
+				.stream().map(id -> Integer.parseInt(id))
+				.collect(Collectors.toList());
+		
+		for (Integer id : idsList) {
+			if(id<=4) {
+				throw new BusinessException(BusinessErr.ERROR, Msg.ROLE_NOT_DELETE_SYS_ROLE);
+			}
 		}
 		
 		historyService.deletes(ids);

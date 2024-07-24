@@ -1,6 +1,8 @@
-package com.xm2013.admin.domain.dto;
+package com.xm2013.admin.domain.dto.basic;
 
 import java.util.List;
+
+import com.xm2013.admin.domain.dto.Query;
 
 public class HistoryQuery extends Query{
 	public String ipAddr;

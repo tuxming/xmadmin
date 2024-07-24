@@ -5,8 +5,8 @@ import java.util.List;
 import com.jfinal.plugin.activerecord.Db;
 import com.xm2013.admin.common.Kit;
 import com.xm2013.admin.common.SqlKit;
-import com.xm2013.admin.domain.dto.HistoryQuery;
 import com.xm2013.admin.domain.dto.PageInfo;
+import com.xm2013.admin.domain.dto.basic.HistoryQuery;
 import com.xm2013.admin.domain.model.History;
 import com.xm2013.admin.shiro.dto.ShiroUser;
 

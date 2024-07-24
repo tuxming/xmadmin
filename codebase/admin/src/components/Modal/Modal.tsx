@@ -1,7 +1,10 @@
 
 import {createPortal} from 'react-dom'
-import React, { useState, useEffect, useRef } from 'react';
-import './Modal.css'
+import React, { useState, useEffect, useRef, ReactNode } from 'react';
+import './Modal.css';
+import {ModalContext} from './ModalContext';
+import {computePx} from '../../common/kit'
+
 /**
  * 包装过的ant modal主要是能够自适应，窗体的变化，在不同尺寸的窗体下，显示大小
  */
@@ -38,7 +41,7 @@ export type ModalType = {
     /**
      * 在min模式下才显示
      */
-    title?: string, 
+    title?: string | ReactNode, 
     /**
      * 主题,dark , light 默认light
      */
@@ -68,39 +71,9 @@ export type ModalType = {
 }
 
 /**
- * 
- * @param size 尺寸： 100vw, 100wh, 70%, 30px
- * @param isHeight 是否计算的高度，针对百分比的尺寸
- * @returns 
- */
-const computePx = (size, isHeight = false) => {
-    if( typeof size == 'number' ){
-        return size as number;
-    }else if(typeof size == 'string'){
-        let widthStr = size as string;
-        if(widthStr.endsWith("%")){
-            let total = isHeight?document.body.clientWidth:document.body.clientHeight;
-            return total * parseInt(widthStr.replace("%", ""))/100;
-        }else if(widthStr.endsWith("vw")){
-            return document.body.clientWidth * parseInt(widthStr.replace("vm", ""))/100;
-        }else if(widthStr.endsWith("vh")){
-            return document.body.clientHeight * parseInt(widthStr.replace("vh", ""))/100;
-        }else if(widthStr.endsWith("px")){
-            return parseInt(widthStr.replace("px", ""));
-        }else {
-            let num = (widthStr as any) * 1;
-            if(num.toString() == 'NaN'){
-                return 0
-            }else{
-                return num;
-            }
-        }
-    }
-    return 0;
-}
-
-/**
  * 自定义modal，支持拖拽，最大化，最小化，窗口化， 窗口尺寸变化
+ * .x-modal-conten设置 窗体大小 位置 背景，阴影，显示隐藏动画信息的地方
+ * .x-modal-inner-content设置padding, border-width， margin的地方， 因为这些信息很会导致窗体的实际大小和获取到的宽高，所以给放到下级
  * @param prpos ModalType
  * @returns 
  */
@@ -122,25 +95,32 @@ export const Modal : React.FC<ModalType> = ({
     showMove = true,
     type= "window"
 }) => {
-    if (!open) return <></>;
+
+    if(!open) return <></>
 
     const modalRef = useRef(null);
     const [modalState, setModalState] = useState(state);
     const [topLevel, setTopLevel] = useState(false);
 
     let wheight = computePx(height, true);
+
+    //窗口模式下的弹窗位置大小信息
     const [winPos, setWinPos] = useState<any>({
         width: computePx(width),
         height: wheight || 'auto',
         top: (window.innerHeight - wheight) /5,
         left: (window.innerWidth - computePx(width)) /2
     })
+
+    //全屏模式下的弹窗位置大小信息
     const [fullPos, setFullPos] = useState<any>({
         width: "100vw",
         height: "100vh",
         top: "0px",
         left: "0px"
     })
+
+    //最小化模式下的弹窗位置大小信息
     const [minPos, setMinPos] = useState<any>({
         maxWidth: "300px",
         // maxHeight: "20px",
@@ -148,17 +128,20 @@ export const Modal : React.FC<ModalType> = ({
         left: window.innerWidth - 315
     })
 
+    //当前正在应用的弹窗位置的大小信息
     const [currPos, setCurrPos] = useState<any>(
         state == 'win'? winPos : state == 'full'? fullPos:minPos
     );
+    
+    //窗口在切换模式以后，保存的前一个模式，主要用于当窗体最小化以后，应该恢复成什么样子
     const [prevState, setPrevState] = useState<any>();
-   
 
     const [isDragging, setIsDragging] = useState(false);
     const [position, setPosition] = useState({ x: 0, y: 0 });
 
     const [isDraggingSize, setIsDraggingSize] = useState(false);
     
+    //根据当前模式设置窗体信息
     const completePos = () => {
         if(modalState == "win"){
             setCurrPos(winPos);
@@ -206,7 +189,8 @@ export const Modal : React.FC<ModalType> = ({
                 modalRef.current.style.height = `${newHeight}px`;
             }
         };
-    
+        
+        //在拖拽鼠标放开以后，固定当前窗体信息到state中
         const handleMouseUp = () => {
             if(isDragging){
                 if(modalState == 'win'){
@@ -240,22 +224,15 @@ export const Modal : React.FC<ModalType> = ({
         let moveBtn = modalRef.current.querySelector(".x-modal-move-btn");
         let resizeBtn = modalRef.current.querySelector(".x-modal-resize-btn");
         
-        if(showMove){
-            moveBtn.addEventListener('mousedown', handleMoveMouseDown);
-        }
-        if(showResize){
-            resizeBtn.addEventListener('mousedown', handleResizeMouseDown);
-        }
+        moveBtn.addEventListener('mousedown', handleMoveMouseDown);
+        resizeBtn.addEventListener('mousedown', handleResizeMouseDown);
 
         document.addEventListener('mousemove', handleMouseMove);
         document.addEventListener('mouseup', handleMouseUp);
     
         return () => {
-            if(showMove){
-                moveBtn.removeEventListener('mousedown', handleMoveMouseDown);
-            }
-            if(showResize)
-                resizeBtn.removeEventListener('mousedown', handleResizeMouseDown);
+            moveBtn.removeEventListener('mousedown', handleMoveMouseDown);
+            resizeBtn.removeEventListener('mousedown', handleResizeMouseDown);
             document.removeEventListener('mousemove', handleMouseMove);
             document.removeEventListener('mouseup', handleMouseUp);
         };
@@ -331,7 +308,7 @@ export const Modal : React.FC<ModalType> = ({
                 top: newTop,
                 left: newLeft
             };
-            console.log(offsetHeight, offsetWidth, top, left, winWidth, winHeight);
+            // console.log(offsetHeight, offsetWidth, top, left, winWidth, winHeight);
             console.log(pos);
             setCurrPos(pos);
 
@@ -340,22 +317,6 @@ export const Modal : React.FC<ModalType> = ({
         };
 
         if(modalRef ){
-            // if(height == 'auto'){
-            //     setTimeout(() => {
-            //         let height = modalRef.current.offsetHeight;
-            //         console.log(height, modalRef.current.clientHeight); 
-            //         let wpos = {
-            //             ...winPos,
-            //             height: height,
-            //             top: (window.innerHeight - height) / 3
-            //         };
-            //         setWinPos(wpos);
-            //         if(modalState == 'win'){
-            //             setCurrPos(wpos);
-            //         }
-            //     }, 60);
-            // }  
-
             modalRef.current.addEventListener('focus', focusHandler);
             modalRef.current.addEventListener('blur', blurHandler);
             window.addEventListener('resize', handleResize);
@@ -372,17 +333,31 @@ export const Modal : React.FC<ModalType> = ({
 
     }, [modalRef]);
 
+    //关闭窗体，执行关闭过度动画，在执行关闭操作
+    const closeModal = () => {
+        let css = modalRef.current.style;
+        css.animationName ="zoomOut";
+
+        setTimeout(() => {
+            css.opacity ="0";
+            onClose();
+        }, 300);
+    }
+
+    //点击遮罩关闭弹窗
     const onClickMaskHandler = () => {
         if(closeMask){
-            onClose()
+            closeModal();
         }
     }
 
+    //点击最小化，保存当前状态
     const onClickMinHandler = () => {
         setPrevState(modalState);
         setModalState("min");
     }
 
+    //点击最大化
     const onClickMaxHandler = () => {
 
         if(modalState == 'min' && prevState){
@@ -397,15 +372,29 @@ export const Modal : React.FC<ModalType> = ({
             }
         }
     }
-
+    
+    //设置一些css信息
     const overlayStye = {
         zIndex: topLevel?999999: zIndex,
-        "--var-btn-color": btnColor,
-        "--var-btn-hover-color": btnHoverColor
     }
 
     return createPortal(
         <div className={theme + " x-modal-overlay "} onClick={onClickMaskHandler}  style={overlayStye}>
+            <style dangerouslySetInnerHTML={{
+                __html: `
+.x-modal-resize-btn svg{
+    fill: ${btnColor};
+}
+.x-modal-resize-btn:hover svg{
+    fill: ${btnHoverColor}
+}
+.x-modal-move-btn path{
+    fill: ${btnColor};
+}
+.x-modal-move-btn:hover path{
+    fill: ${btnHoverColor};
+}`
+            }} />
             <div className="x-modal-mask" style={{display: showMask?"block":"none"}}></div>
             <div 
                 tabIndex={11}
@@ -413,7 +402,7 @@ export const Modal : React.FC<ModalType> = ({
                 style={currPos}
                 className="x-modal-content"
                 onClick={(e) => e.stopPropagation()}
-            >   
+            >
                 <div className="x-modal-inner-content">
                     <div className="x-modal-ctrl" style={{
                             right: modalState == 'full'?20:6, maxWidth: modalState=='min'? currPos.width:"auto",
@@ -422,19 +411,16 @@ export const Modal : React.FC<ModalType> = ({
                             paddingLeft: '15px',
                         }}>
                         <span className='x-modal-title' style={{display: modalState=="min"?'block':"none" }}>{title}</span>
-                        {modalState != 'full' && showMove ? ( 
-                            <span className="x-modal-ctrl-btn x-modal-move-btn" >
-                                <svg width="15" height="15" viewBox="0 0 64 64">
-                                    <path d="M36.6,14.5H32h14.9L31.9,0L17.2,14.5h10.3v13.5H13.6v9h13.8v13.6h9.1V37h13.7v-9H36.6V14.5z M31.9,64l13.8-13.4H18.3L31.9,64L31.9,64z M0,32.5L13.6,46v-27L0,32.5L0,32.5z M50.3,19.1v27L64,32.5L50.3,19.1L50.3,19.1z">
-                                    </path>
-                                </svg>
-                            </span> 
-                        ): (<></>)}
-                        {modalState != 'min'?(
-                            <span className="x-modal-ctrl-btn x-modal-min-btn" onClick={onClickMinHandler}>
-                                <span></span>
-                            </span>
-                        ):(<></>)}
+
+                        <span className="x-modal-ctrl-btn x-modal-move-btn" >
+                            <svg width="15" height="15" viewBox="0 0 64 64" style={{display: modalState != 'full' && showMove ? "inline-block": 'none'}}>
+                                <path d="M36.6,14.5H32h14.9L31.9,0L17.2,14.5h10.3v13.5H13.6v9h13.8v13.6h9.1V37h13.7v-9H36.6V14.5z M31.9,64l13.8-13.4H18.3L31.9,64L31.9,64z M0,32.5L13.6,46v-27L0,32.5L0,32.5z M50.3,19.1v27L64,32.5L50.3,19.1L50.3,19.1z">
+                                </path>
+                            </svg>
+                        </span> 
+                        <span style={{display: modalState != 'min'?'inline-block':"none"}} className="x-modal-ctrl-btn x-modal-min-btn" onClick={onClickMinHandler}>
+                            <span></span>
+                        </span>
                         <span className="x-modal-ctrl-btn x-modal-max-btn" onClick={onClickMaxHandler}>
                             <svg width="7" height="7" viewBox="0 0 11 11">
                                 <path id="modal-max-path" 
@@ -442,24 +428,25 @@ export const Modal : React.FC<ModalType> = ({
                                 </path>
                             </svg>
                         </span>
-                        <span className="x-modal-ctrl-btn x-modal-close-btn" onClick={onClose}>
+                        <span className="x-modal-ctrl-btn x-modal-close-btn" onClick={closeModal}>
                             <svg width="7" height="7" viewBox="0 0 11 11">
                                 <path id="modal-close-path" d="M8.55 10.58L5.5 7.53L2.45 10.58C1.89 11.14 0.98 11.14 0.42 10.58C-0.14 10.02 -0.14 9.11 0.42 8.55L3.47 5.5L0.42 2.45C-0.14 1.89 -0.14 0.98 0.42 0.42C0.98 -0.14 1.89 -0.14 2.45 0.42L5.5 3.47L8.55 0.42C9.11 -0.14 10.02 -0.14 10.58 0.42C11.14 0.98 11.14 1.89 10.58 2.45L7.53 5.5L10.58 8.55C11.14 9.11 11.14 10.02 10.58 10.58C10.02 11.14 9.11 11.14 8.55 10.58Z"></path>
                             </svg>
                         </span>
                     </div>
                     <div className="x-modal-body" style={{display: modalState == 'min'?'none': 'block'}}>
-                        {children}
+                        <ModalContext.Provider value={currPos}>
+                            {children}
+                        </ModalContext.Provider>
                     </div>
-                    {modalState == 'win' && showResize ? (
-                        <span className="x-modal-resize-btn" >
-                            <svg width="24" height="24" viewBox="0 0 64 64">
-                                <path d="M28.2,32.1l3.8-3.8l-6.1-6.1l4.1-4.1H18v12.1l4.2-4.2L28.2,32.1z M14,2L9.8,6.2L3.7,0.1L0,3.9L6.1,10l-4,3.9H14V2z">
-                                </path>
-                            </svg>
-                        </span> 
-                    ) : (<></>)}
+                    <span className="x-modal-resize-btn" >
+                        <svg width="24" height="24" viewBox="0 0 64 64" style={{display: modalState == 'win' && showResize? "inline":"none"}} >
+                            <path d="M28.2,32.1l3.8-3.8l-6.1-6.1l4.1-4.1H18v12.1l4.2-4.2L28.2,32.1z M14,2L9.8,6.2L3.7,0.1L0,3.9L6.1,10l-4,3.9H14V2z">
+                            </path>
+                        </svg>
+                    </span> 
                 </div>
+            
                 
             </div>
         </div>,

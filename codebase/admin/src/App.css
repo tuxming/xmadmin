@@ -1,8 +1,16 @@
 .App {
-  text-align: center;
+    text-align: center;
 }
 
 .cegz-scrollbar .cegz-scrollbar-view-wrap{
-  overflow:hidden !important;
+    overflow:hidden !important;
 }
 
+.light .ant-table-filter-dropdown, .light .ant-tabs-dropdown-menu{
+    background-color: white;
+}
+
+.dark .ant-table-filter-dropdown, .dark .ant-tabs-dropdown-menu{
+    background-color: #1f1f1f;
+    box-shadow: 0 6px 16px 0 rgba(255, 255, 255, 0.08), 0 3px 6px -4px rgba(255, 255, 255, 0.12), 0 9px 28px 8px rgba(255, 255, 255, 0.05);
+}

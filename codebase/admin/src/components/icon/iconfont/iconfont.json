@@ -6,6 +6,13 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "18126053",
+      "name": "Maximize 2",
+      "font_class": "maximize",
+      "unicode": "e892",
+      "unicode_decimal": 59538
+    },
+    {
       "icon_id": "4765881",
       "name": "dashboard",
       "font_class": "dashboard",

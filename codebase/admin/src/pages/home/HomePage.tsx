@@ -1,15 +1,14 @@
 
 import React, { useEffect, useState, useMemo } from 'react';
-import { Layout,  theme, } from 'antd';
+import { Layout,  Typography,  theme, } from 'antd';
 import KeepAlive from 'keepalive-for-react';
 import { useOutlet,useLocation, useNavigate } from "react-router-dom";
 import { Footer } from 'antd/es/layout/layout';
-import { Logo, useTranslation } from '../../components';
+import { Logo, Modal, useTranslation } from '../../components';
 import "./HomePage.css";
 import { SideMenuComponent, HomeHeader } from "./index";
-import { basePath, api } from "../../common/api";
 import { useDispatch, useSelector } from "../../redux/hooks";
-import { ActiveTabSlice, themeConfigSlice } from "../../redux/slice";
+import { TabItemsSlice, openItemSlice, themeConfigSlice } from "../../redux/slice";
 import { AdminHome } from "../../common/I18NNamespace";
 
 const { Header, Sider, Content } = Layout;
@@ -24,7 +23,11 @@ export const HomePage : React.FC = () => {
     const sideTheme = useSelector(state => state.themeConfig.sideTheme);
     const wallpaperUrl = useSelector(state => state.themeConfig.wallpaperUrl);
     const bgBlur = useSelector(state => state.themeConfig.bgBlur);
-    const activeKey = useSelector(sate => sate.activeTabKey.value);
+    const activeKey = useSelector(state => state.activeTabKey.value);
+    //带打开的弹窗
+    const openItem = useSelector(state => state.openItem.value);
+    
+    const [pageModals, setPageModals] = useState<any>([]);
 
     const navigate = useNavigate();
     const location = useLocation();
@@ -33,17 +36,30 @@ export const HomePage : React.FC = () => {
         return location.pathname + location.search;
     }, [location]);
 
-    useEffect(()=> {
-        console.log("location change", location);
-    }, [location]);
-    
-    // console.log("defaultActiveKey", activeKey);
-    // console.log(location.pathname)
+
+    useEffect(() => {
+        // console.log(openItem);
+        //添加打开modal
+        let item = openItem as any;
+        if(item && item.key === activeKey){
+            setPageModals([...pageModals, {...item, outlet: outlet}]);
+            //清除掉item
+            // dispatch(openItemSlice.actions.open(null)); 
+            //移除掉tab
+            setTimeout(() => {
+                dispatch(TabItemsSlice.actions.removeItem(item))
+            }, 300);
+
+
+        }
+
+    }, [openItem]);
+
     useEffect(()=>{
+        // console.log(activeKey);
         if(!activeKey){
             return;
         }
-        // console.log("activeKey", activeKey);
 
         if(activeKey == location.pathname)
             return;
@@ -55,6 +71,12 @@ export const HomePage : React.FC = () => {
 
     const changeCollapsed = (collapsed: boolean) => {
         dispatch(themeConfigSlice.actions.changeSidemenuCollapsed(collapsed));
+    }
+
+    const onPageModelClose = (item) => {
+        const pms = pageModals.filter(m => m.key != item.key);
+        // console.log(pms);
+        setPageModals(pms);
     }
 
     useEffect(()=>{
@@ -128,6 +150,16 @@ export const HomePage : React.FC = () => {
                     </Footer>
                 </Layout>
             </Layout>
+            {pageModals.map(item => {
+                return <Modal showMask={false} open key={item.key} 
+                    onClose={()=>onPageModelClose(item)} height={500}
+                    title={<Typography.Text>{item.label}</Typography.Text>}
+                >
+                        <div style={{margin: "32px 20px 0px 20px"}}>
+                            {item.outlet}
+                        </div>
+                </Modal>
+            })}
         </div>
     );
 }

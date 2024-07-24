@@ -21,6 +21,7 @@ import {
     TabItemsSlice, 
     themeConfigSlice,
     globalVarSlice,
+    openItemSlice
 } from './slice'
 
 import {
@@ -50,6 +51,7 @@ const rootReducer = combineReducers({
     jwtToken: jwtTokenSlice.reducer,
     themeConfig: themeConfigSlice.reducer,
     globalVar: globalVarSlice.reducer,
+    openItem: openItemSlice.reducer
 })
 
 

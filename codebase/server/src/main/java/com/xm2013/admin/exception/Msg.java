@@ -27,10 +27,17 @@ public class Msg {
 	public static final String AUTH_SEND_PHONE_CODE_OK = "手机验证码发送成功";
 	public static final String AUTH_SEND_EMAIL_CODE_OK = "邮箱验证码发送成功";
 	public static final String AUTH_SEND_CODE_ERR = "发送失败";
+	
 	public static final String OK_UPDATE = "更新成功";
 	public static final String ERR_UPDATE = "更新失败";
 	public static final String OK_CREATED = "创建成功";
 	public static final String OK_DELETE = "删除成功";
 	
+	public static final String ROLE_NOT_CREATE_SYS_ROLE = "禁止创建系统级别的管理员";
+	public static final String ROLE_NOT_CREATE_SUPER_ROLE = "超级管理员只能是系统级管理员或者同为超级管理员的角色创建";
+	public static final String ROLE_NOT_CREATE_ADMIN_ROLE = "管理员只能是管理员或者更高级的管理员创建";
+	
+	public static final String ROLE_NOT_EDIT_SYS_ROLE = "禁止修改系统级别的角色";
+	public static final String ROLE_NOT_DELETE_SYS_ROLE = "禁止删除系统级别的角色";
 	
 }

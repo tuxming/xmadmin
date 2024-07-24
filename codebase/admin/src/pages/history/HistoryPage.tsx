@@ -4,9 +4,12 @@ import { Divider, Space, Tooltip, Button, App  } from "antd";
 import { DeleteIcon, ViewIcon } from "../../components/icon/svg/Icons";
 import { HistoryQueryComponent, HistoryListComponent, HistoryDetail } from "./index";
 import { HistoryDelete } from "./HistoryDelete";
+import { useTranslation } from "../../components";
+import { AdminHistory } from "../../common/I18NNamespace";
 
 export const HistoryPage : React.FC = () => {
 
+    const {t} = useTranslation(AdminHistory);
     const onlyIcon = useSelector(state => state.themeConfig.onlyIcon);
     const [query, setQuery] = useState({});
     const size = useSelector(state => state.themeConfig.componentSize);
@@ -40,7 +43,7 @@ export const HistoryPage : React.FC = () => {
      */
     const onViewDetail = () => {
         if(!histories || histories.length==0){
-            message.error("请选择要查看的日志");
+            message.error(t("请选择要查看的日志"));
             return;
         }
         setViews([...histories]);
@@ -59,7 +62,7 @@ export const HistoryPage : React.FC = () => {
      */
     const onDelete = () => {
         if(!histories || histories.length==0){
-            message.error("请选择要删除的日志");
+            message.error(t("请选择要删除的日志"));
             return;
         }
         setDeletes([]);
@@ -81,11 +84,11 @@ export const HistoryPage : React.FC = () => {
         <Divider />
 
         <Space wrap>
-            <Tooltip title="查看日志">
-                <Button type='primary' size={size} onClick={onViewDetail} icon={<ViewIcon type='primary'/>}>{!onlyIcon && '查看'}</Button>
+            <Tooltip title={t("查看日志")}>
+                <Button type='primary' size={size} onClick={onViewDetail} icon={<ViewIcon type='primary'/>}>{!onlyIcon && t('查看')}</Button>
             </Tooltip>
-            <Tooltip title="删除日志">
-                <Button type='primary' size={size} onClick={onDelete} icon={<DeleteIcon type='ghostPrimary' danger/>} ghost danger>{!onlyIcon && '删除'}</Button>
+            <Tooltip title={t("删除日志")}>
+                <Button type='primary' size={size} onClick={onDelete} icon={<DeleteIcon type='ghostPrimary' danger/>} ghost danger>{!onlyIcon && t('删除')}</Button>
             </Tooltip>
         </Space>
 

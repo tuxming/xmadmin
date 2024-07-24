@@ -1,34 +1,65 @@
 
 import './iconfont/iconfont.css';
 import { createStyles } from 'antd-style';
+import React from 'react';
 
-interface IconType{
+type IconType = {
     fontClass?: string;
     unicode? : string; 
     size?: string;
     color?: string;
     hoverColor?: string;
-}
+} & React.HTMLAttributes<HTMLDivElement>
 
-export const IconFont: React.FC<IconType> = (prop) => {
-
+export const IconFont = React.forwardRef<HTMLDivElement, IconType>(({
+    color, hoverColor, size, fontClass, unicode,
+    className,
+    ...props
+}, ref) => {
+  
     const useStyles = createStyles(({token, css}) => ({
         xmIcon: css`
-            ${prop.color? 'color:'+prop.color+';': ''}
-            ${prop.hoverColor? 'cursor: pointer;': ''}
-            font-size: ${prop.size || '16'}px;
-            ${prop.hoverColor? '&:hover{color: '+prop.hoverColor+';}': ''}
+            ${color? 'color:'+color+';': ''}
+            ${hoverColor? 'cursor: pointer;': ''}
+            font-size: ${size || '16'}px;
+            ${hoverColor? '&:hover{color: '+hoverColor+';}': ''}
         `
     }));
     
     const { styles, cx, theme } = useStyles();
 
-    if(prop.fontClass){
-        return <i className={`iconfont ${prop.fontClass} ${cx('xmIcon', styles.xmIcon)}`}></i>
-    }else if(prop.unicode){
-        return <i className={`iconfont ${cx('xmIcon', styles.xmIcon)}`}>{prop.unicode}</i>
+    if(fontClass){
+        return <i ref={ref} className={`iconfont ${fontClass} ${cx('xmIcon', styles.xmIcon)} ${className || ''}`} {...props}></i>
+    }else if(unicode){
+        return <i ref={ref} className={`iconfont ${cx('xmIcon', styles.xmIcon)} `} {...props}>{unicode}</i>
     }else{
         return <></>
     }
+});
 
-};
+// export const IconFont: React.FC<IconType> = ({
+//     color, hoverColor, size, fontClass, unicode,
+//     className,
+//     ...props
+// }) => {
+
+//     const useStyles = createStyles(({token, css}) => ({
+//         xmIcon: css`
+//             ${color? 'color:'+color+';': ''}
+//             ${hoverColor? 'cursor: pointer;': ''}
+//             font-size: ${size || '16'}px;
+//             ${hoverColor? '&:hover{color: '+hoverColor+';}': ''}
+//         `
+//     }));
+    
+//     const { styles, cx, theme } = useStyles();
+
+//     if(fontClass){
+//         return <i className={`iconfont ${fontClass} ${cx('xmIcon', styles.xmIcon)} ${className || ''}`} {...props}></i>
+//     }else if(unicode){
+//         return <i className={`iconfont ${cx('xmIcon', styles.xmIcon)} `} {...props}>{unicode}</i>
+//     }else{
+//         return <></>
+//     }
+
+// };

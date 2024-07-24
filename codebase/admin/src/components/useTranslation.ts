@@ -13,7 +13,10 @@ export const useTranslation = (namespace: string = 'translation') =>{
      * @returns 
      */
     const ti = (key: string, ns?: string) => {
-        return t(key, ns);
+        if(ns){
+            return t(key, {ns: ns})
+        }
+        return t(key);
     }
 
     /**
@@ -28,7 +31,7 @@ export const useTranslation = (namespace: string = 'translation') =>{
      * @returns 
      */
     const f = (key: string, values: any[], ns?: string) => {
-        let msg = t(key, ns);
+        let msg = ns?t(key, {ns: ns}) : t(key);
         if(values && values.length>0) {
             for(let i = 0; i<values.length; i++){
                 msg = msg.replace("%s", values[i]);

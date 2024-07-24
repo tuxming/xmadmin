@@ -25,7 +25,10 @@ export const ThemeSettingComponent : React.FC = () => {
     const componentSize = useSelector(state => state.themeConfig.componentSize);
 
     const onChangeTheme = (checked: boolean, event) => {
-        dispatch(themeConfigSlice.actions.changeTheme(checked?'light':'dark'))
+        document.body.classList.remove(themeType);
+        let newType = checked?'light':'dark';
+        dispatch(themeConfigSlice.actions.changeTheme(newType));
+        document.body.classList.add(newType);
     }
 
     const changePrimaryColor = (color) => {

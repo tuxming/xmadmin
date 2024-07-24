@@ -47,11 +47,11 @@ export const AdminRouter : React.FC = () => {
             <Route path="/" Component={() => <h1>主页</h1>}></Route>
             <Route path="/login" Component={LoginPage}></Route>
             <Route path={basePath} Component={HomePage}>
-                <Route path="overview" index Component={OverviewPage}></Route>
-                <Route path="user" Component={UserPage}></Route>
-                <Route path="menu" Component={MenuPage}></Route>
-                <Route path="role" Component={RolePage}></Route>
-                <Route path="history" Component={HistoryPage}></Route>
+                <Route path="overview" key="overview" index Component={OverviewPage}></Route>
+                <Route path="user" key="user" Component={UserPage}></Route>
+                <Route path="menu" key="menu" Component={MenuPage}></Route>
+                <Route path="role" key="role" Component={RolePage}></Route>
+                <Route path="history"  key="history" Component={HistoryPage}></Route>
                 <Route path="*" element={<>404</>}></Route>
             </Route>
         </Routes>

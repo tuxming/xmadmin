@@ -1,7 +1,7 @@
 
 
 import { Tabs, TabsProps, GetProp  } from 'antd';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import type { DragEndEvent } from '@dnd-kit/core';
 import { DndContext, PointerSensor, useSensor } from '@dnd-kit/core';
@@ -14,8 +14,9 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { useSelector, useDispatch } from '../../redux/hooks';
-import { TabItemsSlice, ActiveTabSlice } from "../../redux/slice";
+import { TabItemsSlice, ActiveTabSlice, openItemSlice } from "../../redux/slice";
 import { IconFont } from '../../components';
+import { TabIcon } from './TabIcon';
 
 
 type TargetKey = React.MouseEvent | React.KeyboardEvent | string;
@@ -26,34 +27,36 @@ interface DraggableTabPaneProps extends React.HTMLAttributes<HTMLDivElement> {
 export type TabItemType = GetProp<TabsProps,  'items'>[number];
 export type TabKeyType = GetProp<TabItemType,  'key'>;
 
-
 /**
  * 主页菜单顶部tab
- * @param param0 
  * @returns 
  */
 export const HeadTabComponent : React.FC = () => {
     const dispatch = useDispatch();
-    const activeKey = useSelector(sate => sate.activeTabKey.value);
+    const currActiveKey = useSelector(sate => sate.activeTabKey.value);
   
     const items = useSelector(state => state.tabItems.items)
     const [tabItems, setTabItems] = useState<TabItemType[]>([]);
 
-    const menus = useSelector(state => state.myMenus.menus);
+    // const menus = useSelector(state => state.myMenus.menus);
     // const [menus, setMenus] = useState([]);
 
+    //items变化，更新tab显示
     useEffect(()=>{
         // console.log("items change", items);
-        let newTabItems = [...tabItems];
-        items.forEach(item => {
-            if(newTabItems.findIndex(i => i.key == item.key) == -1){
+        let newTabItems = [];  //
+        items.forEach((item, index) => {
+            let existTab = tabItems.find(i => i.key == item.key);
+            if(existTab){
+                newTabItems.push(existTab);
+            }else{
                 newTabItems.push({
                     key: item.key,
-                    icon: <IconFont fontClass={item.icon} />,
+                    icon: <TabIcon tabKey={item.key} icon={item.icon}></TabIcon>,
                     label: item.label
                 });
             }
-        })
+        });
         setTabItems(newTabItems);
     }, [items])
 
@@ -73,7 +76,20 @@ export const HeadTabComponent : React.FC = () => {
         if(action === 'add') return;
         if(items.length == 1) return;
 
-        let index = tabItems.findIndex(item => item.key == targetKey);
+        let item = items.find(i => i.key == targetKey);
+        removeTabItem(item);
+    }
+
+    //删除tab
+    const removeTabItem = (item) => {
+        
+        if(!item) return;
+
+        let index = items.indexOf(item);
+
+        // console.log(items, tabItems); 
+
+        // let index = tabItems.findIndex(item => item.key == targetKey);
         if(index == -1) return;
 
         let newIndex = index;
@@ -81,25 +97,35 @@ export const HeadTabComponent : React.FC = () => {
             newIndex = index - 1;
         }
 
-        let item = tabItems[index];
+        // console.log(index, newIndex, item); 
+ 
+        // let item = tabItems[index];
         let newTabItems = tabItems.filter(s => s.key !== item.key);
         setTabItems(newTabItems);
 
         let newItems = items.filter(s => s.key !== item.key);
 
+        console.log(newTabItems, newItems, item);
+
         // setItems(newItems);
-        dispatch(TabItemsSlice.actions.setItems(newItems))
-        dispatch(ActiveTabSlice.actions.activeKey(items[newIndex].path))
+        dispatch(TabItemsSlice.actions.setItems(newItems));
+        dispatch(ActiveTabSlice.actions.activeKey(items[newIndex].path));
     }
 
-    //tab激活改变
-    const onTabChange = (activeKey: string) => {
-        // console.log("on tab change", activeKey);
-        let menu = menus.find(s => s.path === activeKey )
-        if(!menu) return;
-        dispatch(ActiveTabSlice.actions.activeKey(menu.path))
 
-        // navigate(menu.path);
+    //tab激活改变
+    const onTabClick = (activeKey: string, event) => {
+
+        let item = items.find(s => s.key == activeKey);
+        if(!item) return ;
+
+       
+        if(activeKey == currActiveKey &&  event.target.closest(".tab-icon")){
+            dispatch(openItemSlice.actions.open(item)); 
+        }else{
+            dispatch(ActiveTabSlice.actions.activeKey(activeKey))
+        }
+       
     }
 
     //启用tab拖拽
@@ -125,12 +151,12 @@ export const HeadTabComponent : React.FC = () => {
     const sensor = useSensor(PointerSensor, { activationConstraint: { distance: 10 } });
 
     return  <Tabs type="editable-card" hideAdd
-            defaultActiveKey={activeKey} activeKey={activeKey} 
+            defaultActiveKey={currActiveKey} activeKey={currActiveKey} 
             items={tabItems} 
-            onChange={onTabChange} 
+            onTabClick={onTabClick} 
             onEdit={onTabEdit}
             renderTabBar={(tabBarProps, DefaultTabBar) => (
-                <DndContext sensors={[sensor]} onDragEnd={onDragEnd}>
+                <DndContext sensors={[sensor]} onDragEnd={onDragEnd} >
                     <SortableContext items={tabItems.map((i) => i.key)} strategy={horizontalListSortingStrategy}>
                         <DefaultTabBar {...tabBarProps}>
                         {(node) => (

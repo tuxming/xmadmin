@@ -30,7 +30,11 @@ export const api = {
         search: server + "/am/user/search"
     },
     role: {
-        search: server + "/am/role/search"
+        search: server + "/am/role/search",
+        list: server + "/am/role/list",
+        create: server + "/am/role/create",
+        update: server + "/am/role/update",
+        deletes: server + "/am/role/deletes",
     },
     history: {
         get: server + "/am/history/get",
