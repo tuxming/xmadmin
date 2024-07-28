@@ -8,6 +8,8 @@ import {
     MenuPage,
     RolePage,
     HistoryPage,
+    PermissionPage,
+    DocumentPage
 } from "./pages";
 import { basePath, api } from "./common/api";
 import { useEffect } from "react";
@@ -51,7 +53,9 @@ export const AdminRouter : React.FC = () => {
                 <Route path="user" key="user" Component={UserPage}></Route>
                 <Route path="menu" key="menu" Component={MenuPage}></Route>
                 <Route path="role" key="role" Component={RolePage}></Route>
+                <Route path="permission" key="permission" Component={PermissionPage}></Route>
                 <Route path="history"  key="history" Component={HistoryPage}></Route>
+                <Route path="document"  key="document" Component={DocumentPage}></Route>
                 <Route path="*" element={<>404</>}></Route>
             </Route>
         </Routes>

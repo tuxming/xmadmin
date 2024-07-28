@@ -1,5 +1,7 @@
 import React, {useRef} from "react";
 import { Select, SelectProps, Tag, TagProps } from 'antd';
+import { useTranslation } from "../../components";
+import { AdminRole } from "../../common/I18NNamespace";
 
 const _RoleTypes = [
     {
@@ -45,13 +47,15 @@ export const RoleTypeSelector: React.FC<SelectProps> = (props) => {
  */
 export const RoleTypeTag = React.forwardRef<HTMLSpanElement, TagProps>(({ children, ...props }, ref) => {
     
+    const {t} = useTranslation(AdminRole);
+
     let text : any = children;
     let childrenType = typeof text;
     let color = "success";
     if(childrenType  == 'string' || childrenType == 'number'){
         let type = _RoleTypes.find(rt => (rt.value) == children);
         if(type){
-            text = type.label;
+            text = t(type.label);
             color = type.color;
         }
     }

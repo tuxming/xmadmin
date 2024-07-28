@@ -8,7 +8,7 @@ import com.jfinal.aop.Inject;
 import com.xm2013.admin.annotation.Op;
 import com.xm2013.admin.annotation.RequirePermission;
 import com.xm2013.admin.basic.service.RoleService;
-import com.xm2013.admin.common.JsonKit;
+import com.xm2013.admin.common.kits.JsonKit;
 import com.xm2013.admin.domain.dto.JsonResult;
 import com.xm2013.admin.domain.dto.PageInfo;
 import com.xm2013.admin.domain.dto.basic.RoleListQuery;
@@ -44,7 +44,7 @@ public class RoleController extends BaseController{
 		renderJson(JsonResult.ok(Msg.OK_GET, options));
 	}
 	
-	@RequirePermission(val="role:list", name="角色列表")
+	@RequirePermission(val="sys:role:list", name="角色列表", group="system")
 	@Op("角色列表")
 	public void list() {
 		RoleListQuery query = JsonKit.getObject(getRawData(), RoleListQuery.class);
@@ -53,7 +53,7 @@ public class RoleController extends BaseController{
 		renderJson(JsonResult.ok(Msg.OK_GET, users));
 	}
 	
-	@RequirePermission(val="role:create", name="添加角色")
+	@RequirePermission(val="sys:role:create", name="添加角色", group="system")
 	@Op("添加角色")
 	public void create() {
 		Role role = JsonKit.getObject(getRawData(), Role.class);
@@ -71,7 +71,7 @@ public class RoleController extends BaseController{
 		renderJson(JsonResult.ok(Msg.OK_CREATED));
 	}
 	
-	@RequirePermission(val="role:edit", name="编辑角色")
+	@RequirePermission(val="sys:role:edit", name="编辑角色", group="system")
 	@Op("编辑角色")
 	public void update() {
 		Role role = JsonKit.getObject(getRawData(), Role.class);
@@ -89,7 +89,7 @@ public class RoleController extends BaseController{
 		renderJson(JsonResult.ok(Msg.OK_UPDATE));
 	}
 	
-	@RequirePermission(val="role:edit", name="删除角色")
+	@RequirePermission(val="sys:role:delete", name="删除角色", group="system")
 	@Op("删除角色")
 	public void deletes() {
 		String ids = getPara("ids");

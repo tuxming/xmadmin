@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Objects;
 
 import com.jfinal.kit.JsonKit;
+import com.jfinal.plugin.activerecord.Db;
+import com.xm2013.admin.common.Kit;
 import com.xm2013.admin.domain.model.Role;
 
 public class ShiroUser implements java.io.Serializable{
@@ -56,6 +58,54 @@ public class ShiroUser implements java.io.Serializable{
 			}
 		}
 		return false;
+	}
+	
+	public boolean isOwnerData(String deptpath) {
+		if(Kit.isNull(deptpath)) {
+			return false;
+		}
+		
+		if(dataPath == null || dataPath.size() ==0 ) {
+			return deptpath.startsWith(dept.getPath());
+		}else {
+			for (String dp : dataPath) {	
+				if(deptpath.startsWith(dp)) return true;
+			}
+			return false;
+		}
+	}
+	
+	public boolean isOwnerData(Integer userId) {
+		
+		if(userId == null || userId == 0) return false;
+		
+		if(users==null) {
+			if(dataPath == null || dataPath.size() ==0 ) {
+				String path = Db.queryStr("select dept_path from sys_user where user_id=?", userId);
+				if(path == null) return false;
+				
+				return path.startsWith(dept.getPath());
+			}else {
+				String path = Db.queryStr("select dept_path from sys_user where user_id=?", userId);
+				if(path == null) return false;
+				
+				for (String dp : dataPath) {	
+					if(path.startsWith(dp)) return true;
+				}
+				return false;
+			}
+		}else {
+			if(users.contains(","+userId+",")) {
+				return true;
+			}else if(users.startsWith(userId+",")) {
+				return true;
+			}else if(users.endsWith(","+userId)) {
+				return true;
+			}else {
+				return false;
+			}
+		}
+		
 	}
 	
 	public Integer getId() {

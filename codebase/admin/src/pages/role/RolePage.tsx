@@ -1,14 +1,19 @@
 import React, {useState} from 'react';
-import { Button, Tooltip, Space, Divider, App } from "antd"
+import {Tooltip, Space, Divider, App } from "antd"
 import { useSelector } from "../../redux/hooks"
 import { UserAddIcon, DeleteIcon, EditIcon, } from '../../components/icon/svg/Icons';
-import { RoleQueryComponent, RoleListComponent, RoleEdit } from './index'
-import { RoleDelete } from './RoleDelete';
+import { RoleQueryComponent, RoleListComponent, RoleEdit, RoleDelete } from './index'
+import { useTranslation } from '../../components';
+import { AdminRole } from '../../common/I18NNamespace';
+import { AuthButton } from '../../components/wrap/AuthButton';
+import { permission } from '../../common/permission';
 
 /**
  * 角色管理页面
  */
 export const RolePage : React.FC = () => {
+
+    const {t} = useTranslation(AdminRole);
     const onlyIcon = useSelector(state => state.themeConfig.onlyIcon);
     const size = useSelector(state => state.themeConfig.componentSize);
     const {message} = App.useApp();
@@ -35,7 +40,7 @@ export const RolePage : React.FC = () => {
 
     const onEdit = () => {
         if(!selectedRows || selectedRows.length == 0){
-            message.error("请选择要编辑的角色");
+            message.error(t("请选择要编辑的角色"));
             return;
         }
 
@@ -67,7 +72,7 @@ export const RolePage : React.FC = () => {
      */
      const onDelete = () => {
         if(!selectedRows || selectedRows.length==0){
-            message.error("请选择要删除的角色");
+            message.error(t("请选择要删除的角色"));
             return;
         }
         setDeletes([]);
@@ -80,14 +85,32 @@ export const RolePage : React.FC = () => {
         <RoleQueryComponent onQuery={onQuery}/>
         <Divider />
         <Space wrap>
-            <Tooltip title="新增角色">
-                <Button type='primary' size={size} icon={<UserAddIcon type='primary'/>} onClick={onCreate}>{!onlyIcon && '新增'}</Button>
+            <Tooltip title={t("新增角色")}>
+                <AuthButton type='primary' size={size} 
+                    icon={<UserAddIcon type='primary'/>} 
+                    onClick={onCreate}
+                    requiredPermissions={permission.role.create.expression}
+                >
+                    {!onlyIcon && t('新增')}
+                </AuthButton>
             </Tooltip>
-            <Tooltip title="编辑角色">
-                <Button type='primary' size={size} icon={<EditIcon type='primary'/>} onClick={onEdit}>{!onlyIcon && '编辑'}</Button>
+            <Tooltip title={t("编辑角色")}>
+                <AuthButton type='primary' size={size} 
+                    icon={<EditIcon type='primary'/>} 
+                    onClick={onEdit}
+                    requiredPermissions={permission.role.update.expression}
+                >
+                    {!onlyIcon && t('编辑')}
+                </AuthButton>
             </Tooltip>
-            <Tooltip title="删除角色">
-                <Button type='primary' size={size} icon={<DeleteIcon type='ghostPrimary' danger/>} onClick={onDelete} ghost danger>{!onlyIcon && '删除'}</Button>
+            <Tooltip title={t("删除角色")}>
+                <AuthButton type='primary' size={size} danger  ghost
+                    icon={<DeleteIcon type='ghostPrimary' />} 
+                    onClick={onDelete}
+                    requiredPermissions={permission.role.delete.expression}
+                >
+                    {!onlyIcon && t('删除')}
+                </AuthButton>
             </Tooltip>
         </Space>
         <Divider />

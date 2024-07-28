@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { DebounceSelector,RemoteAutoComplete } from '../../components';
+import { DebounceSelector,RemoteAutoComplete, useTranslation } from '../../components';
 import { api } from '../../common/api';
 
 /**
@@ -18,6 +18,7 @@ export const RoleSelector : React.FC<any> = ({
     //innValue是文本框显示的值
 
     // const [value, setValue] = useState<any>();
+    const {t} = useTranslation();
 
     const [innValue, setInnValue] = useState<any>();
 
@@ -46,7 +47,7 @@ export const RoleSelector : React.FC<any> = ({
 
     let isSingle = mode  == "single"
     if(isSingle){
-        return <RemoteAutoComplete placeholder="输入关键字" 
+        return <RemoteAutoComplete placeholder={t("输入关键字" )}
             remoteUrl={api.role.search}
             value={innValue}
             onSelect={onSelect}
@@ -58,7 +59,7 @@ export const RoleSelector : React.FC<any> = ({
         return <DebounceSelector
             mode="multiple"
             value={innValue}
-            placeholder="输入关键字"
+            placeholder={t("输入关键字")}
             remoteUrl={api.role.search}
             // fetchOptions={fetchUserList}
             onChange={onValueChange}

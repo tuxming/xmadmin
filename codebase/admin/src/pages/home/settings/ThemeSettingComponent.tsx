@@ -1,12 +1,13 @@
 
 
 
-import {Typography, Switch, Space, theme, ColorPicker, Slider, Row, Col, Radio} from "antd"
+import {Typography, Switch, Space, theme, ColorPicker, Slider, Row, Col, Radio, Button} from "antd"
 import { 
     SunOutlined,
     MoonOutlined,
     CloseOutlined,
-    CheckOutlined
+    CheckOutlined,
+    ReloadOutlined
 } from '@ant-design/icons';
 import { useDispatch, useSelector } from '../../../redux/hooks';
 import { themeConfigSlice } from '../../../redux/CommonSlice';
@@ -67,6 +68,9 @@ export const ThemeSettingComponent : React.FC = () => {
 
     const imgData = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQEBAQIBAQECAgICAgQDAgICAgUEBAMEBgUGBgYFBgYGBwkIBgcJBwYGCAsICQoKCgoKBggLDAsKDAkKCgr/2wBDAQICAgICAgUDAwUKBwYHCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgr/wgARCAAoACgDAREAAhEBAxEB/8QAGwAAAgIDAQAAAAAAAAAAAAAABwgFCQECAwb/xAAbAQEAAgMBAQAAAAAAAAAAAAAHBQgEBgkCA//aAAwDAQACEAMQAAAAtDxz5W1UCFyvPjBIQ3DFlnlQSIjmYjFNq9UXBpsZ4z082a8AvOs5DAi8eCll17Fx33nreeBxljInF9fGdVbdb7EI+oXh8+aZq4cPoRWE8NMu9OXutT//xAAwEAABBAECAwcDAwUAAAAAAAABAgMEBREABgghMQcJEhMUIkFRYXEVUpGBweHx8v/aAAgBAQABPwDi84td0jcs3su7MbdyDGgrLNnZxTh514ZCm0K6oCTyKhhWQeYHXcz1hcFyZZz3n3lc1uyHCtRJ+SVEnW80+QF5T01a7ptdvThYUlrJiSWiFIfivKbWkjoQpJBB/rruzO9I30e0ur4cuIfdD1xXXb6Ye3r+evxSoks8m2HnOrqHFe0KVlYWtIJKelk7ItZ0iwmKK3ZDynHVk5JUo5Jz9zqTEICs9NdrjIq2HHDyH/P51vLc7YecAc6f4+2ou/JtBfRb+rlKalQJbchhxCiClxCgtJB+CCAdekJGPDr9Jcd9qU9dcbZ3PtXbEM0tJ6lEnzPUP+oSnyMKRj2nJVnOOXTVuL6Y+pctzw5+PCP7aVVKJytXPT9S9DluwpDZDjLim3AfhQOCP5GpTkasYL7vXXEbYK3Mw608vI/b/H4+mtx0CGH3EeXg/wCvvqt2jMv7uJQ1jBclTZTceM2gElTi1BKQAOpJI1xJcOF7HvJnaBsGqXLYlrLs2DHGXG3DzUtKRzWFHmQMkE631NnQluRJsV5hYOFIdQUKBGOoIBGu0F31SVk6vNq2txY+hpayRMfWQlLEZhS1qJwAAACSc/TXdi915v17tHq+IniE2u9UVlM+mXQUM5GJEuSnm286jq0hB9wSrCipKSQEjn//xAAlEQABBAEEAgIDAQAAAAAAAAABAAIDBAUGBxESITETIwhBUWH/2gAIAQIBAT8Ar365sDgrB3YpAAFh3d3BVqTLMBa4cgrcbbalWoOymNZ1LfLmj0R/QP0sdqf7eSVpLVcTpACVo2w27wQqzPiYrELbEJZKOQVDmbUb+wKx2tb9KXsF+Ou7ta+ZIckehbx1/wBUOrqU7eY/IQzrHD2pq89eUsKq13Sv44W30AxkgkHsrTeobIiHY+FWzj+PJW4W21uW669jm8tPsfxUMZLV+t7eCtPM+PhYS49o4Cfk52w9fRX/xAAkEQABBAICAgIDAQAAAAAAAAABAAIDBAURBiESMQcTCBRBUf/aAAgBAwEBPwDleVsgGCt6V1skFol6xXnN2sRDJIRpY+rZdB2Fk+OufETpcl4w9kRc0drBNlEv1riHGZrDA/SxXGCYfSODilGiFc4JXug9Li/42NyeVNqOTQHetLEfHEWFg+jw9JuHhg6a1Voopm7Co48OcuIV46ThsK9joJmecY7Ku1YqbC6Q6C4ZyyrHE2ncd469H+LENhmYJGHYKwsbmHtfuVqtIvlOgPZK+YflrFWaEmKxD/NzunPHoD/Af7tf/9k=';
 
+    const reset = () => {
+        dispatch(themeConfigSlice.actions.resetTheme(null));
+    }
 
     return <>
         <Typography.Title level={5}>{t('主题')}</Typography.Title>
@@ -127,5 +131,9 @@ export const ThemeSettingComponent : React.FC = () => {
             <Radio value={'large'}>大</Radio>
         </Radio.Group>
         </Space>
+
+        <div style={{margin: "25px 0px", textAlign: "center"}}>
+            <Button onClick={reset} block type="primary" icon={<ReloadOutlined />}>{t("重置")}</Button>
+        </div>
     </>
 }

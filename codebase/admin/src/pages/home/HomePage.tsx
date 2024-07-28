@@ -8,7 +8,7 @@ import { Logo, Modal, useTranslation } from '../../components';
 import "./HomePage.css";
 import { SideMenuComponent, HomeHeader } from "./index";
 import { useDispatch, useSelector } from "../../redux/hooks";
-import { TabItemsSlice, openItemSlice, themeConfigSlice } from "../../redux/slice";
+import { ActiveTabSlice, TabItemsSlice, openItemSlice, themeConfigSlice } from "../../redux/slice";
 import { AdminHome } from "../../common/I18NNamespace";
 
 const { Header, Sider, Content } = Layout;
@@ -19,13 +19,15 @@ export const HomePage : React.FC = () => {
     const collapsed = useSelector(state => state.themeConfig.sidemenuCollapsed);
     const dispatch = useDispatch();
     const { token } = theme.useToken();
-    const [sideWidth, setSideWidth] = useState<number>(250);
+    const configedSideWidth = useSelector(state => state.themeConfig.sideWidth); 
+    const [sideWidth, setSideWidth] = useState<number>(configedSideWidth);
     const sideTheme = useSelector(state => state.themeConfig.sideTheme);
     const wallpaperUrl = useSelector(state => state.themeConfig.wallpaperUrl);
     const bgBlur = useSelector(state => state.themeConfig.bgBlur);
     const activeKey = useSelector(state => state.activeTabKey.value);
     //带打开的弹窗
     const openItem = useSelector(state => state.openItem.value);
+    const items = useSelector(state => state.tabItems.items);
     
     const [pageModals, setPageModals] = useState<any>([]);
 
@@ -44,17 +46,24 @@ export const HomePage : React.FC = () => {
         if(item && item.key === activeKey){
             setPageModals([...pageModals, {...item, outlet: outlet}]);
             //清除掉item
-            // dispatch(openItemSlice.actions.open(null)); 
             //移除掉tab
             setTimeout(() => {
-                dispatch(TabItemsSlice.actions.removeItem(item))
+                let index = items.findIndex(i => i.key == activeKey); 
+                let newItems = items.filter((s, idx) => idx != index);
+                dispatch(TabItemsSlice.actions.setItems(newItems));
+
+                let newIndex = index;
+                if(newIndex == items.length - 1){
+                    newIndex = index - 1;
+                }
+                dispatch(ActiveTabSlice.actions.activeKey(newItems[newIndex].path));
             }, 300);
-
-
         }
 
     }, [openItem]);
 
+
+    //监听activeKey变化，跳转到指定页面
     useEffect(()=>{
         // console.log(activeKey);
         if(!activeKey){
@@ -80,8 +89,14 @@ export const HomePage : React.FC = () => {
     }
 
     useEffect(()=>{
-        setSideWidth(collapsed?50:250);
-    }, [collapsed])
+        setSideWidth(collapsed?50:configedSideWidth);
+    }, [collapsed]);
+
+    useEffect(() => {
+        if(!collapsed){
+            setSideWidth(configedSideWidth);
+        }
+    }, [configedSideWidth]);
 
     return (
         <div style={{
@@ -152,10 +167,11 @@ export const HomePage : React.FC = () => {
             </Layout>
             {pageModals.map(item => {
                 return <Modal showMask={false} open key={item.key} 
-                    onClose={()=>onPageModelClose(item)} height={500}
+                    onClose={()=>onPageModelClose(item)} height={600}  width={800}
                     title={<Typography.Text>{item.label}</Typography.Text>}
                 >
-                        <div style={{margin: "32px 20px 0px 20px"}}>
+                        <div style={{margin: "0px 20px 0px 20px"}}>
+                            <Typography.Title level={5} style={{marginTop: 10}}>{item.label}</Typography.Title>
                             {item.outlet}
                         </div>
                 </Modal>

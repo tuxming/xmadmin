@@ -4,4 +4,6 @@ export * from './login';
 export * from './user';
 export * from './menu';
 export * from './role';
+export * from './permission'
 export * from './history'
+export * from './document'

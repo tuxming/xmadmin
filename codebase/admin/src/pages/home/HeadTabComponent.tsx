@@ -76,44 +76,23 @@ export const HeadTabComponent : React.FC = () => {
         if(action === 'add') return;
         if(items.length == 1) return;
 
-        let item = items.find(i => i.key == targetKey);
-        removeTabItem(item);
-    }
-
-    //删除tab
-    const removeTabItem = (item) => {
-        
-        if(!item) return;
-
-        let index = items.indexOf(item);
-
-        // console.log(items, tabItems); 
-
-        // let index = tabItems.findIndex(item => item.key == targetKey);
-        if(index == -1) return;
-
-        let newIndex = index;
-        if(newIndex == tabItems.length - 1){
-            newIndex = index - 1;
-        }
-
-        // console.log(index, newIndex, item); 
- 
-        // let item = tabItems[index];
-        let newTabItems = tabItems.filter(s => s.key !== item.key);
-        setTabItems(newTabItems);
-
-        let newItems = items.filter(s => s.key !== item.key);
-
-        console.log(newTabItems, newItems, item);
-
-        // setItems(newItems);
+        //待删除的index
+        let index = items.findIndex(i => i.key == targetKey); 
+        let newItems = items.filter((s, idx) => idx != index);
         dispatch(TabItemsSlice.actions.setItems(newItems));
-        dispatch(ActiveTabSlice.actions.activeKey(items[newIndex].path));
+
+        //如果待删除的key==activeKey就需要重新指定一个activeKey
+        if(currActiveKey === targetKey){
+            let newIndex = index;
+            if(newIndex == items.length - 1){
+                newIndex = index - 1;
+            }
+            dispatch(ActiveTabSlice.actions.activeKey(newItems[newIndex].path));
+        }
     }
+    
 
-
-    //tab激活改变
+    //监听点击icon
     const onTabClick = (activeKey: string, event) => {
 
         let item = items.find(s => s.key == activeKey);
@@ -122,10 +101,18 @@ export const HeadTabComponent : React.FC = () => {
        
         if(activeKey == currActiveKey &&  event.target.closest(".tab-icon")){
             dispatch(openItemSlice.actions.open(item)); 
-        }else{
-            dispatch(ActiveTabSlice.actions.activeKey(activeKey))
         }
+        // else{
+        //     dispatch(ActiveTabSlice.actions.activeKey(activeKey))
+        // }
        
+    }
+
+
+    //tab切换事件
+    const onTabChange = (activeKey: string) => {
+        console.log("change "+activeKey);
+        dispatch(ActiveTabSlice.actions.activeKey(activeKey))
     }
 
     //启用tab拖拽
@@ -155,6 +142,7 @@ export const HeadTabComponent : React.FC = () => {
             items={tabItems} 
             onTabClick={onTabClick} 
             onEdit={onTabEdit}
+            onChange={onTabChange}
             renderTabBar={(tabBarProps, DefaultTabBar) => (
                 <DndContext sensors={[sensor]} onDragEnd={onDragEnd} >
                     <SortableContext items={tabItems.map((i) => i.key)} strategy={horizontalListSortingStrategy}>

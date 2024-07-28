@@ -1,4 +1,4 @@
-package com.xm2013.admin.common;
+package com.xm2013.admin.common.kits;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.jfinal.json.Jackson;
 import com.jfinal.kit.FileKit;
+import com.xm2013.admin.common.Kit;
 
 public class JsonKit {
 	private static Logger log = Logger.getLogger(JsonKit.class);

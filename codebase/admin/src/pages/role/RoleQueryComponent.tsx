@@ -1,7 +1,8 @@
-import { QueryComponent } from '../../components';
-import { Input, DatePicker } from "antd"
+import { QueryComponent, useTranslation } from '../../components';
+import { Input } from "antd"
 import { useSelector } from '../../redux/hooks';
 import { UserSelector } from '../user/index';
+import { AdminRole } from '../../common/I18NNamespace';
 
 
 export type RoleQueryComponentType = {
@@ -15,27 +16,28 @@ export type RoleQueryComponentType = {
 export const RoleQueryComponent: React.FC<RoleQueryComponentType> = ({onQuery}) => {
 
     const size = useSelector(state => state.themeConfig.componentSize);
+    const {t} = useTranslation(AdminRole);
 
     const queryItems = [
         {
-            label: "角色名",
+            label: t("角色名"),
             name: "userId",
-            inputElement: <UserSelector name="userId" mode='single' size={size}/>
+            inputElement: <UserSelector name="userId" mode='single' size={size} allowClear/>
         },
         {
-            label: "角色代码",
+            label: t("角色代码"),
             name: "code",
-            inputElement: <Input name="fullname" size={size}/>
+            inputElement: <Input name="code" size={size} allowClear/>
         },
         {
-            label: "角色类型",
+            label: t("角色类型"),
             name: "types",
-            inputElement: <Input name="email" size={size}/>
+            inputElement: <Input name="types" size={size} allowClear/>
         },
         {
-            label: "创建人",
+            label: t("创建人"),
             name: "creaters",
-            inputElement: <UserSelector name="creaters" mode='multiple' size={size}/>
+            inputElement: <UserSelector name="creaters" mode='multiple' size={size} allowClear/>
         }
     ]
 

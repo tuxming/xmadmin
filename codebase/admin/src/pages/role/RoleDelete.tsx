@@ -3,7 +3,7 @@
 import { Confirm, useRequest, useTranslation } from "../../components";
 import { api } from "../../common/api";
 import { App } from 'antd'
-import { AdminHistory, AdminRole, DefaultNS } from "../../common/I18NNamespace";
+import { AdminRole, DefaultNS } from "../../common/I18NNamespace";
 
 export type RoleDeleteType = {
     roles: any[],
@@ -21,7 +21,7 @@ export const RoleDelete : React.FC<RoleDeleteType> = ({
     
     const {t} = useTranslation(AdminRole);
     const { message } = App.useApp();
-    const requet = useRequest();
+    const request = useRequest();
 
     const msg = t("确定要删除以下角色：") 
                 + roles.map(item => item.roleName+"").join(", ") 
@@ -29,13 +29,13 @@ export const RoleDelete : React.FC<RoleDeleteType> = ({
 
     const onOk = (close) => {
         const doDelete = async () => {
-            let result = await requet.get(api.role.deletes+"?ids="+roles.map(hist => hist.id+"").join(","));
+            let result = await request.get(api.role.deletes+"?ids="+roles.map(hist => hist.id+"").join(","));
             if(result.status){
                 message.success(t("删除成功", DefaultNS));
                 successCall();
                 close();
             }else{
-                message.error(t("删除失败"));
+                message.error(t("删除失败", DefaultNS));
             }
         }
         doDelete();

@@ -16,6 +16,7 @@ import com.jfinal.kit.Base64Kit;
  */
 public class Kit {
 	
+//	private static Logger log = Logger.getLogger(Kit.class);
 	public static String DATE_TIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
 	public static String DATE_PATTERN = "yyyy-MM-dd";
 	
@@ -190,5 +191,4 @@ public class Kit {
 		String encrypt = MD5(text);
 		return MD5(encrypt+SALT);
 	}
-	
 }

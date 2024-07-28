@@ -101,6 +101,7 @@ export type ThemeConfigType = {
     onlyIcon: boolean,                   //是否只显示图标，一般针对按钮
     sidemenuCollapsed:  boolean,        //侧边菜单是否展开
     sideTheme:  'light' | 'dark',       //侧边菜单主题色调
+    sideWidth: number,                  //侧边菜单的宽度
     sideItemOpacity: number,            //侧边菜单项的透明都
     sideItemSelectOpacity: number,       //侧边菜单项选中的透明度
     componentSize: 'small' | 'large' | 'middle',
@@ -118,6 +119,7 @@ const defaultThemeConfig : ThemeConfigType= {
     containerOpacity: 1,           //容器的透明度
     sideItemOpacity:0.1,            //侧边菜单项的透明都
     sideItemSelectOpacity: 0.75,    //侧边菜单项选中的透明度
+    sideWidth: 250,                 //侧边菜单的宽度
     bgBlur: 0,                      //背景模糊度
     onlyIcon: false,                  //是否只显示图标，一般针对按钮
     componentSize: 'middle'            //设置按钮尺寸
@@ -175,13 +177,38 @@ export const themeConfigSlice = createSlice({
         changeComponentSize: (state, action) => {  //componentSize 是设置按钮尺寸
             state.componentSize = action.payload;
         },
+        changeSideWidth: (state, action) => { //设置侧边菜单的宽度
+            state.sideWidth = action.payload;
+        },
+        /**
+         * 重置主题设置
+         * @param state 
+         * @param action 
+         */
+        resetTheme: (state, action) => {
+            state.theme = 'light',
+            state.colorPrimary = "#00b96b";
+            state.borderRadius = 4;
+            state.onlyIcon = false;
+            state.componentSize = 'middle';
+        },
+        /**
+         * 重置侧边栏设置
+         * @param state 
+         * @param action 
+         */
+        resetSidebar: (state, action) => {
+            state.sidemenuCollapsed = false,
+            state.sideTheme = 'dark',
+            state.sideWidth = 250;
+        }
     }
 });
 
 export type GlobalVarType = {
     isMinScreen: boolean,
     width: number,
-    height: number
+    height: number,
 }
 
 const defaultGlobalVar: GlobalVarType = {
@@ -200,7 +227,7 @@ export const globalVarSlice = createSlice({
             state.height = action.payload.height;
             // console.log("changeSize", action.payload);
             state.isMinScreen = action.payload.width < 576;
-       } 
+       }
     }
 });
 

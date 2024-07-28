@@ -32,6 +32,8 @@ public class Msg {
 	public static final String ERR_UPDATE = "更新失败";
 	public static final String OK_CREATED = "创建成功";
 	public static final String OK_DELETE = "删除成功";
+	public static final String OK_UPLOAD = "上传成功";
+	public static final String ERR_UPLOAD = "上传失败";
 	
 	public static final String ROLE_NOT_CREATE_SYS_ROLE = "禁止创建系统级别的管理员";
 	public static final String ROLE_NOT_CREATE_SUPER_ROLE = "超级管理员只能是系统级管理员或者同为超级管理员的角色创建";

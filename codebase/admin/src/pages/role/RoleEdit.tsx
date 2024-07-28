@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react"
-import { Modal, useRequest } from "../../components"
+import { Modal, useRequest, useTranslation } from "../../components"
 import { Button, Divider, Form, Input, Space, Typography, FormProps, App } from "antd"
 import { useSelector } from "../../redux/hooks"
 import { CloseOutlined, SendOutlined } from "@ant-design/icons"
 import { RoleTypeSelector } from "./RoleType"
 import { api } from "../../common/api"
+import { AdminRole, DefaultNS } from "../../common/I18NNamespace"
 
 export type RoleFormType = {
     id?: number | string,
@@ -39,6 +40,7 @@ export const RoleEdit : React.FC<RoleAddType> = ({
     //     })
     // }
 
+    const {t} = useTranslation(AdminRole);
     const request = useRequest();
     const {message} = App.useApp();
     // const [visible, setVisible] = useState(open);
@@ -84,36 +86,36 @@ export const RoleEdit : React.FC<RoleAddType> = ({
             };
             setDefaultValues(values)
             form.setFieldsValue(values);
-        }else{
+        }else if(open){
             setDefaultValues(null);
             form.resetFields();
         }
     }, [open]);
 
     if(open) {
-        return <Modal open={open} onClose={onModalClose} title="添加角色" width={400}>
+        return <Modal open={open} onClose={onModalClose} title={t("添加角色")} width={400}>
             <>
                 <div style={{width:'100%'}}>
                     <div style={{padding: "0px 20px 10px 20px", width: 340, margin: "0px auto"}}>
-                        <Typography.Title level={4} style={{marginTop: 20, marginBottom: 20, textAlign: "center"}}>添加角色</Typography.Title>
+                        <Typography.Title level={4} style={{marginTop: 20, marginBottom: 20, textAlign: "center"}}>{t("添加角色")}</Typography.Title>
                         <Form<RoleFormType> form = {form} layout='horizontal'
                             onFinish={onFinish}
                         >   
                             <Form.Item name="id" hidden={true}>
                                 <Input></Input>
                             </Form.Item>
-                            <Form.Item<RoleFormType> label="角色名" name="roleName"
-                                rules={[{ required: true, message: '角色名不能为空' }]}
+                            <Form.Item<RoleFormType> label={t("角色名")} name="roleName"
+                                rules={[{ required: true, message: t('角色名不能为空') }]}
                             >
                                 <Input></Input>
                             </Form.Item>
-                            <Form.Item<RoleFormType> label="角色代码" name="code"
-                                rules={[{ required: true, message: '角色代码不能为空' }]}
+                            <Form.Item<RoleFormType> label={t("角色代码")} name="code"
+                                rules={[{ required: true, message: t('角色代码不能为空') }]}
                             >
                                 <Input></Input>
                             </Form.Item>
-                            <Form.Item<RoleFormType> label="角色类型" name="type"
-                                rules={[{ required: true, message: '角色类型不能为空' }]}
+                            <Form.Item<RoleFormType> label={t("角色类型")} name="type"
+                                rules={[{ required: true, message: t('角色类型不能为空') }]}
                             >
                                 <RoleTypeSelector/>
                             </Form.Item>
@@ -121,8 +123,8 @@ export const RoleEdit : React.FC<RoleAddType> = ({
                         <Divider />
                         <div style={{textAlign: 'right'}}>
                             <Space>
-                                <Button onClick={onModalClose} icon={<CloseOutlined />}>取消</Button>
-                                <Button onClick={onSubmit} type="primary" icon={<SendOutlined />}>确定</Button>
+                                <Button onClick={onModalClose} icon={<CloseOutlined />}>{t("取消", DefaultNS)}</Button>
+                                <Button onClick={onSubmit} type="primary" icon={<SendOutlined />}>{t("确定", DefaultNS)}</Button>
                             </Space>
                         </div>
                     </div>

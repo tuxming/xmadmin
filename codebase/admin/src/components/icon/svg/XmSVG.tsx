@@ -93,7 +93,6 @@ export const XmSVG : React.FC<XmSVGType> = ({
             mainColor = token.colorWhite;
             mainHoverColor = token.colorWhite;
         }else if(type == 'ghostPrimary') {
-            console.log(type);
             mainColor = token.colorPrimary;
             mainHoverColor = token.colorPrimaryHover;
         }else if(type == 'ghostDefault') {

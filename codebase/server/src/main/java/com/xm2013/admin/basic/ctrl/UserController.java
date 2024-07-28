@@ -10,7 +10,7 @@ import com.jfinal.aop.Inject;
 import com.xm2013.admin.annotation.Op;
 import com.xm2013.admin.annotation.RequirePermission;
 import com.xm2013.admin.basic.service.UserService;
-import com.xm2013.admin.common.JsonKit;
+import com.xm2013.admin.common.kits.JsonKit;
 import com.xm2013.admin.domain.dto.JsonResult;
 import com.xm2013.admin.domain.dto.PageInfo;
 import com.xm2013.admin.domain.dto.user.UserListQuery;
@@ -31,7 +31,7 @@ public class UserController extends BaseController{
 	 * 获取指定的用户信息，只能获取到有权限的用户信息
 	 */
 //	@RequirePermissions(value={@Per(val="user:get", name="查看用户信息")})
-	@RequirePermission(val="user:get", name="查看用户信息")
+	@RequirePermission(val="sys:user:get", name="查看用户信息", group="system")
 	@Op("查看用户信息")
 	public void get() {
 		int id = getInt("id", 0);
@@ -69,7 +69,7 @@ public class UserController extends BaseController{
 	/**
 	 * 用户列表
 	 */
-	@RequirePermission(val="user:list", name="用户列表")
+	@RequirePermission(val="sys:user:list", name="用户列表", group="system")
 	@Op("用户列表")
 	public void list() {
 		UserListQuery query = JsonKit.getObject(getRawData(), UserListQuery.class);
@@ -81,5 +81,6 @@ public class UserController extends BaseController{
 		PageInfo<User> users = userService.pageList(query, ShiroKit.getLoginUser());
 		renderJson(JsonResult.ok(Msg.OK_GET, users));
 	}
+	
 	
 }

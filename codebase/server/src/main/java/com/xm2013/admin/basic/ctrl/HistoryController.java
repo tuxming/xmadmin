@@ -5,9 +5,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.jfinal.aop.Inject;
+import com.xm2013.admin.annotation.Op;
 import com.xm2013.admin.annotation.RequirePermission;
 import com.xm2013.admin.basic.service.HistoryService;
-import com.xm2013.admin.common.JsonKit;
+import com.xm2013.admin.common.kits.JsonKit;
 import com.xm2013.admin.domain.dto.JsonResult;
 import com.xm2013.admin.domain.dto.PageInfo;
 import com.xm2013.admin.domain.dto.basic.HistoryQuery;
@@ -22,7 +23,7 @@ public class HistoryController extends BaseController{
 	@Inject
 	private HistoryService historyService;
 	
-	@RequirePermission(val="history:get", name="查看日志详情")
+	@RequirePermission(val="sys:history:get", name="查看日志详情", group="system")
 	public void get() {
 		String historyId = getPara("historyId");
 		if(historyId == null) {
@@ -34,7 +35,8 @@ public class HistoryController extends BaseController{
 		renderJson(JsonResult.ok(Msg.OK_GET, history));
 	}
 	
-	@RequirePermission(val="history:get", name="查看日志列表")
+	@RequirePermission(val="sys:history:list", name="查看日志列表", group="system")
+	@Op("查看日志列表")
 	public void list() {
 		HistoryQuery query = JsonKit.getObject(getRawData(), HistoryQuery.class);
 		
@@ -46,7 +48,8 @@ public class HistoryController extends BaseController{
 		renderJson(JsonResult.ok(Msg.OK_GET, users));
 	}
 	
-	@RequirePermission(val="history:delete", name="删除日志")
+	@RequirePermission(val="sys:history:delete", name="删除日志", group="system")
+	@Op("删除日志")
 	public void deletes() {
 		String ids = getPara("ids");
 		if(ids == null || !ids.matches("[\\d,]+")) {

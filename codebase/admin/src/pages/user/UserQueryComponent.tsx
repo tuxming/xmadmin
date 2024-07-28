@@ -18,32 +18,32 @@ export const UserQueryComponent: React.FC<UserQueryComponentType> = ({onQuery}) 
         {
             label: "账号",
             name: "userId",
-            inputElement: <UserSelector name="userId" mode='single' size={size}/>
+            inputElement: <UserSelector name="userId" mode='single' size={size} allowClear/>
         },
         {
             label: "姓名",
             name: "fullname",
-            inputElement: <Input name="fullname" size={size}/>
+            inputElement: <Input name="fullname" size={size} allowClear/>
         },
         {
             label: "邮件地址",
             name: "email",
-            inputElement: <Input name="email" size={size}/>
+            inputElement: <Input name="email" size={size} allowClear/>
         },
         {
             label: "电话",
             name: "phone",
-            inputElement: <Input name="phone" size={size}/>
+            inputElement: <Input name="phone" size={size} allowClear/>
         },
         {
             label: "角色",
             name: "roleIds",
-            inputElement: <RoleSelector mode='multiple'/>  //mode: multiple, single
+            inputElement: <RoleSelector mode='multiple' allowClear/>  //mode: multiple, single
         },
         {
             label: "创建时间",
             name: "created",
-            inputElement: <RangePicker name="created" size={size}/>
+            inputElement: <RangePicker name="created" size={size} allowClear/>
         },
     ]
 

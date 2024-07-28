@@ -22,4 +22,11 @@ public @interface RequirePermission {
      * @return
      */
 	String name();
+	
+	/**
+	 * 分组
+	 * @return
+	 */
+	String group() default "normal";
+	
 }

@@ -11,7 +11,8 @@ export const api = {
     loginPage: "/login",
     backendPage: "/sys/overview",
     menu: {
-        curr: server + "/am/menu/curr"
+        curr: server + "/am/menu/curr",
+        list: server + "/am/menu/list"
     },
     auth: {
         login: server + "/auth/login",
@@ -36,9 +37,22 @@ export const api = {
         update: server + "/am/role/update",
         deletes: server + "/am/role/deletes",
     },
+    permission: {
+        search: server + "/am/permission/search",
+        list: server + "/am/permission/list",
+        create: server + "/am/permission/create",
+        update: server + "/am/permission/update",
+        deletes: server + "/am/permission/deletes",
+        scan: server + "/am/permission/scan",
+    },
     history: {
         get: server + "/am/history/get",
         list: server + "/am/history/list",
         deletes: server + "/am/history/deletes"
-    }
+    },
+    document: { 
+        list: server + "/am/document/list",
+        upload: server + "/am/document/upload",
+        deletes: server + "/am/document/deletes",
+    },
 }

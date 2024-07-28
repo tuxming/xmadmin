@@ -124,14 +124,16 @@ export const useRequest = () => {
         return instance;
     }
 
-    return {
-        get: (url: string, backend = false) => {
-            return getIntance(wwwHeaders, backend).get(url);
-        },
+    const get = (url: string, backend = false) => {
+        return getIntance(wwwHeaders, backend).get(url);
+    }
 
-        post: (url: string, data: any, headers: RequestHeader = jsonHeaders, backend=false) => {
+    const post = (url: string, data: any, headers: RequestHeader = jsonHeaders, backend=false) => {
             return getIntance(headers, backend).post(url, data);
-        }
+    }
 
+    return {
+        get: get,
+        post: post
     };
 }

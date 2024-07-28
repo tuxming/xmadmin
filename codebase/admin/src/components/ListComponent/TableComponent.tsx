@@ -3,7 +3,8 @@ import React, {useEffect, useRef, useState} from 'react';
 import { Table, Tooltip, App } from 'antd';
 import type { TableProps } from 'antd';
 import { useSelector } from "../../redux/hooks"
-import { useRequest } from '../../components';
+import { useRequest, useTranslation } from '../../components';
+import { DefaultNS } from '../../common/I18NNamespace';
 
 export type TableColumnType = {
     title: string,
@@ -80,6 +81,8 @@ export const TableComponent : React.FC<TableType> = ({
         tag: 1
     }
 }) => {
+
+    const {t} = useTranslation();
     const request = useRequest();
     const { message } = App.useApp();
     const tableWrapRef = useRef(null);
@@ -189,7 +192,12 @@ export const TableComponent : React.FC<TableType> = ({
                 }
             }catch(err){
                 setLoading(false);
-                message.error(err as string);
+                let error = (err as any);
+                if(error.code == 'ERR_NETWORK'){
+                    message.error(t("网络错误，请检查是否正常能正常访问服务器", DefaultNS));
+                }else{
+                    message.error(error.message);
+                }
             }
 
         }

@@ -13,7 +13,7 @@ export interface RemoteCompleteProps extends AutoCompleteProps {
 };
 
 /**
- * 自动完成，远程加载, 防抖
+ * 自动完成，远程加载, 防抖，单选： 选中后返回： {label, value, key} 
  * @param props 
  * @returns 
  */
@@ -64,7 +64,8 @@ export const RemoteAutoComplete : React.FC<RemoteCompleteProps> = ({
                     setOptions(Object.keys(data).map(key => {
                         let option = {
                             label: data[key], 
-                            value: key
+                            value: data[key],
+                            key: key
                         }
                         return option as any; 
                     }));

@@ -39,7 +39,8 @@ export const Confirm : React.FC<ConfirmType> = ({
 
     return open ? (
         <Modal open={open} onClose={()=>setOpen(false)} theme={theme}
-            type='modal' showMove={false} showResize={false} 
+            type='modal' showMove={true} showResize={false} 
+            showMaxize={false} showMinize={false}
         >
             <>
             <div style={{

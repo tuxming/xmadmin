@@ -39,9 +39,13 @@ const defaultState : MenusType = {
 export const currMenus = createAsyncThunk(
     "menu/myMenus",
     async (arg, thunkApi) => {
-        const request = useRequest();
-        const result = await request.get(api.menu.curr, true);
-        return result;
+        try{
+            const request = useRequest();
+            const result = await request.get(api.menu.curr, true);
+            return result;
+        }catch(err){
+            console.log(err);
+        }
     }
 );
 

@@ -64,6 +64,14 @@ export type ModalType = {
      */
     showMove?: boolean,
     /**
+     * 是否显示最大化按钮
+     */
+    showMaxize?: boolean,
+    /**
+     * 是否显示最小化那妞
+     */
+    showMinize?: boolean,
+    /**
      * 如果是window窗体：在浏览器尺寸变化的时候，根据浏览器尺寸，改变器大小，位置
      * 如果是类似于确认的弹窗，始终保证其居中显示，默认是window
      */
@@ -93,6 +101,8 @@ export const Modal : React.FC<ModalType> = ({
     btnHoverColor = "#39de99",
     showResize = true,
     showMove = true,
+    showMaxize = true,
+    showMinize = true,
     type= "window"
 }) => {
 
@@ -260,6 +270,8 @@ export const Modal : React.FC<ModalType> = ({
         //那么modalRef所获取到的宽高就是实际的高度，而不用专门减去这些因素
         const handleResize = (event) => {
 
+            if(!modalRef.current) return;
+
             let offsetHeight = modalRef.current.offsetHeight;
             let offsetWidth = modalRef.current.offsetWidth;
             let top = modalRef.current.offsetTop;
@@ -309,14 +321,14 @@ export const Modal : React.FC<ModalType> = ({
                 left: newLeft
             };
             // console.log(offsetHeight, offsetWidth, top, left, winWidth, winHeight);
-            console.log(pos);
+            // console.log(pos);
             setCurrPos(pos);
 
           
             
         };
 
-        if(modalRef ){
+        if(modalRef.current ){
             modalRef.current.addEventListener('focus', focusHandler);
             modalRef.current.addEventListener('blur', blurHandler);
             window.addEventListener('resize', handleResize);
@@ -324,11 +336,11 @@ export const Modal : React.FC<ModalType> = ({
         }
 
         return () => {
-            try{
+            if(modalRef.current){
                 modalRef.current.removeEventListener('focus', focusHandler);
                 modalRef.current.removeEventListener('blur', blurHandler);
-                window.removeEventListener('resize', handleResize);
-            }catch(err){}
+            }
+            window.removeEventListener('resize', handleResize);
         }
 
     }, [modalRef]);
@@ -418,16 +430,16 @@ export const Modal : React.FC<ModalType> = ({
                                 </path>
                             </svg>
                         </span> 
-                        <span style={{display: modalState != 'min'?'inline-block':"none"}} className="x-modal-ctrl-btn x-modal-min-btn" onClick={onClickMinHandler}>
+                        {showMinize && <span style={{display: modalState != 'min'?'inline-block':"none"}} className="x-modal-ctrl-btn x-modal-min-btn" onClick={onClickMinHandler}>
                             <span></span>
-                        </span>
-                        <span className="x-modal-ctrl-btn x-modal-max-btn" onClick={onClickMaxHandler}>
+                        </span>}
+                        {showMaxize &&  <span className="x-modal-ctrl-btn x-modal-max-btn" onClick={onClickMaxHandler}>
                             <svg width="7" height="7" viewBox="0 0 11 11">
                                 <path id="modal-max-path" 
                                     d="M2.3,4.5v4.2h4.2c0.55,0 1,0.45 1,1v0.3c0,0.55 -0.45,1 -1,1h-5c-0.83,0 -1.5,-0.67 -1.5,-1.5v-5c0,-0.55 0.45,-1 1,-1h0.3c0.55,0 1,0.45 1,1zM9.5,0c0.83,0 1.5,0.67 1.5,1.5v5c0,0.55 -0.45,1 -1,1h-0.3c-0.55,0 -1,-0.45 -1,-1v-4.2h-4.2c-0.55,0 -1,-0.45 -1,-1v-0.3c0,-0.55 0.45,-1 1,-1z">
                                 </path>
                             </svg>
-                        </span>
+                        </span>}
                         <span className="x-modal-ctrl-btn x-modal-close-btn" onClick={closeModal}>
                             <svg width="7" height="7" viewBox="0 0 11 11">
                                 <path id="modal-close-path" d="M8.55 10.58L5.5 7.53L2.45 10.58C1.89 11.14 0.98 11.14 0.42 10.58C-0.14 10.02 -0.14 9.11 0.42 8.55L3.47 5.5L0.42 2.45C-0.14 1.89 -0.14 0.98 0.42 0.42C0.98 -0.14 1.89 -0.14 2.45 0.42L5.5 3.47L8.55 0.42C9.11 -0.14 10.02 -0.14 10.58 0.42C11.14 0.98 11.14 1.89 10.58 2.45L7.53 5.5L10.58 8.55C11.14 9.11 11.14 10.02 10.58 10.58C10.02 11.14 9.11 11.14 8.55 10.58Z"></path>

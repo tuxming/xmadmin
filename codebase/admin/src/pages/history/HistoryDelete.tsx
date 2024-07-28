@@ -20,7 +20,7 @@ export const HistoryDelete : React.FC<HistoryDeleteType> = ({
 
     const {t} = useTranslation(AdminHistory);
     const { message } = App.useApp();
-    const requet = useRequest();
+    const request = useRequest();
 
     const msg = t("确定要删除以下日志记录：") 
                 + histories.map(item => item.id+"").join(", ") 
@@ -28,7 +28,7 @@ export const HistoryDelete : React.FC<HistoryDeleteType> = ({
 
     const onOk = (close) => {
         const doDelete = async () => {
-            let result = await requet.get(api.history.deletes+"?ids="+histories.map(hist => hist.id+"").join(","));
+            let result = await request.get(api.history.deletes+"?ids="+histories.map(hist => hist.id+"").join(","));
             if(result.status){
                 message.success(t("删除成功", DefaultNS));
                 successCall();

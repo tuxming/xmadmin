@@ -8,6 +8,7 @@ import { ReactComponent as SettingSVG } from './setting.svg';
 import { ReactComponent as EditSVG } from './edit.svg';
 import { ReactComponent as DeleteSVG } from './delete.svg';
 import { ReactComponent as ViewSVG } from './view.svg';
+import { ReactComponent as ScanSVG } from './scan.svg';
 import { XmSVG } from './XmSVG'
 
 export type XmSVGIconType = {
@@ -115,5 +116,14 @@ export const DeleteIcon : React.FC<XmSVGIconType> = (props) => {
  */
 export const ViewIcon : React.FC<XmSVGIconType> = (props) => {
     return <XmSVG SVGElement={ViewSVG } {...props}/>
+ }
+
+/**
+ * 扫描图标
+ * @param props XmSVGIconType
+ * @returns 
+ */
+export const ScanIcon : React.FC<XmSVGIconType> = (props) => {
+    return <XmSVG SVGElement={ScanSVG } {...props}/>
  }
 

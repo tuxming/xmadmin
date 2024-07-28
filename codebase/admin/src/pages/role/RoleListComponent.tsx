@@ -1,9 +1,10 @@
 
-import { TableComponent, TableColumnType, ModalContext } from '../../components';
+import { TableComponent, TableColumnType, ModalContext, useTranslation } from '../../components';
 import { api } from '../../common/api';
 import { RoleTypeTag } from './RoleType';
 import { useContext, useEffect, useState } from 'react';
 import { computePx } from '../../common/kit';
+import { AdminRole } from '../../common/I18NNamespace';
 
 export type RoleListComponentType = {
     query: any,
@@ -29,16 +30,19 @@ export const RoleListComponent : React.FC<RoleListComponentType> = ({
     onSelect,
     refresh
 }) => {
+
+    const {t} = useTranslation(AdminRole);
+
     const columns : TableColumnType[]= [
         {
-            title: 'ID',
+            title: t('ID'),
             key: 'id',
             sort: true,
             ellipsis: true,
             width: 100
         },
         {
-            title: '角色名',
+            title: t('角色名'),
             key: 'roleName',
             sort: true,
             filter: true,
@@ -46,7 +50,7 @@ export const RoleListComponent : React.FC<RoleListComponentType> = ({
             width: 150
         },
         {
-            title: '角色代码',
+            title: t('角色代码'),
             key: 'code',
             sort: true,
             filter: true,
@@ -54,7 +58,7 @@ export const RoleListComponent : React.FC<RoleListComponentType> = ({
             width: 200
         },
         {
-            title: '角色类型',
+            title: t('角色类型'),
             key: 'type',
             sort: true,
             filter: true,
@@ -65,7 +69,7 @@ export const RoleListComponent : React.FC<RoleListComponentType> = ({
             },
         },
         {
-            title: '创建人',
+            title: t('创建人'),
             key: 'createrName',
             sort: true,
             filter: true,

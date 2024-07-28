@@ -69,3 +69,43 @@ export const computePx = (size, isHeight = false) => {
     }
     return 0;
 }
+
+/**
+ * 判断是否具备权限
+ *   
+ * const userPermissions = ['user', "role:*", "hist:get"];
+ * console.log(hasPermission("user:edit:grant", userPermissions));  //true
+
+ * @param requiredPermission 
+ * @param permissions 
+ * @returns 
+ */
+export function hasPermission(requiredPermission, permissions) {
+    // 首先检查是否存在全局权限
+    if (permissions.includes('*')) {
+        return true;
+    }
+  
+    // 分割权限字符串为资源和操作
+    const requiredParts = requiredPermission.split(':');
+    const requiredResource = requiredParts[0];
+    const requiredOperation = requiredParts.slice(1).join(':');
+  
+    // 遍历用户权限
+    for (const permission of permissions) {
+        const parts = permission.split(':');
+        const permissionResource = parts[0];
+        const permissionOperation = parts.slice(1).join(':') || '*';
+    
+        // 检查资源是否匹配
+        if (requiredResource !== permissionResource) continue;
+    
+        // 使用正则表达式检查操作是否匹配
+        const regex = new RegExp(`^${permissionOperation.replace(/\*/g, '.*')}$`);
+        if (regex.test(requiredOperation)) {
+            return true;
+        }
+    }
+  
+    return false;
+  }

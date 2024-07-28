@@ -3,6 +3,8 @@ import { Button, Tooltip, Space, Divider } from "antd"
 import { useSelector } from "../../redux/hooks"
 import { UserAddIcon, DeleteIcon, EditIcon, } from '../../components/icon/svg/Icons';
 import { UserQueryComponent, UserListComponent } from './index'
+import { AuthButton } from '../../components/wrap/AuthButton';
+import { permission } from '../../common/permission';
 
 export const UserPage : React.FC = () => {
     const onlyIcon = useSelector(state => state.themeConfig.onlyIcon);
@@ -25,7 +27,12 @@ export const UserPage : React.FC = () => {
 
         <Space wrap>
             <Tooltip title="新增用户">
-                <Button type='primary' size={size} icon={<UserAddIcon type='primary'/>}>{!onlyIcon && '新增'}</Button>
+                <AuthButton type='primary' size={size} 
+                    icon={<UserAddIcon type='primary'/>}
+                    requiredPermissions={permission.user.create.expression}
+                >
+                    {!onlyIcon && '新增'}
+                </AuthButton>
             </Tooltip>
             <Tooltip title="编辑用户">
                 <Button type='primary' size={size} icon={<EditIcon type='primary'/>}>{!onlyIcon && '编辑'}</Button>

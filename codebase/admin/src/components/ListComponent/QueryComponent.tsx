@@ -13,7 +13,7 @@ export type QueryComponentItemType = {
 }
 
 export type QueryComponentType = {
-    items: QueryComponentItemType[],  //要查询的字段集合
+    items?: QueryComponentItemType[],  //要查询的字段集合
     onQuery: (values) => void         //点击查询后，获取到的字段集合
 }
 
@@ -22,7 +22,7 @@ export type QueryComponentType = {
  * @param props : QueryComponentType
  * @returns 
  */
-export const QueryComponent : React.FC<QueryComponentType> = ({items, onQuery}) => {
+export const QueryComponent : React.FC<QueryComponentType> = ({items = [], onQuery}) => {
     const collasped = useSelector(state => state.themeConfig.sidemenuCollapsed);
     const width = useSelector(state => state.globalVar.width);
     const [basicValue, setBasicValue] = useState();
@@ -63,7 +63,6 @@ export const QueryComponent : React.FC<QueryComponentType> = ({items, onQuery}) 
 
     const doQuery = (values) => {
         // let fields = form.getFieldsValue();
-        console.log(values);
 
         let param = {}
         Object.keys(values).forEach(key => {
@@ -92,7 +91,7 @@ export const QueryComponent : React.FC<QueryComponentType> = ({items, onQuery}) 
                     marginBottom: '0px'
                 }}
             >
-                <Input name="basicValue" size={size} value={basicValue} 
+                <Input name="basicValue" size={size} value={basicValue} allowClear
                     prefix={<SearchIcon  primaryColor={token.colorPrimary} secondColor={token.colorError} offSetY={3}/>}
                 />
             </Form.Item>
@@ -109,15 +108,17 @@ export const QueryComponent : React.FC<QueryComponentType> = ({items, onQuery}) 
             }
 
             <div style={queryBtnsCss} >
-                <Space>
+                <Space align='center' style={{height: '100%'}}>
                     <Button size={size} icon={<SearchOutlined />} type="primary" onClick={() => form.submit()}>搜索</Button>
                     <Button size={size} icon={<ReloadOutlined />} type="primary" ghost onClick={(()=>form.resetFields())}>重置</Button>
-                    <Button size={size} type="text" iconPosition="end" 
+                    {items.length>0 && <Button size={size} type="text" iconPosition="end" 
                         onClick={() => setIsQueryBasic(!isQueryBasic)}
                         icon={<DoubleLeftOutlined style={{transform: `rotate(${isQueryBasic? '-90deg':'90deg'})`}}/> }
                     >
                         {isQueryBasic?'高级':'基础'}
                     </Button>
+                    }
+                   
                 </Space>
             </div>
         </Form>
