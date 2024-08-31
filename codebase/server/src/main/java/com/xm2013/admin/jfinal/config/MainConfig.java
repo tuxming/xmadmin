@@ -20,8 +20,11 @@ import com.jfinal.plugin.redis.RedisPlugin;
 import com.jfinal.render.ViewType;
 import com.jfinal.template.Engine;
 import com.xm2013.admin.basic.ctrl.AuthController;
+import com.xm2013.admin.basic.ctrl.DeptController;
+import com.xm2013.admin.basic.ctrl.DictController;
 import com.xm2013.admin.basic.ctrl.DocumentController;
 import com.xm2013.admin.basic.ctrl.HistoryController;
+import com.xm2013.admin.basic.ctrl.LangController;
 import com.xm2013.admin.basic.ctrl.MenuController;
 import com.xm2013.admin.basic.ctrl.PermissionController;
 import com.xm2013.admin.basic.ctrl.PublicApiController;
@@ -113,6 +116,9 @@ public class MainConfig extends JFinalConfig {
 		me.add("/am/history", HistoryController.class);
 		me.add("/am/permission", PermissionController.class);
 		me.add("/am/document", DocumentController.class);
+		me.add("/am/dept", DeptController.class);
+		me.add("/am/lang", LangController.class);
+		me.add("/am/dict", DictController.class);
 	}
 	/**
 	 * 是否是生产环境

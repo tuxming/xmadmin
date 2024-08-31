@@ -96,7 +96,7 @@ export const HomeHeader : React.FC = () => {
                         <Space>
                             <Button type='text' icon={ 
                                     user?.photo ? 
-                                    <Avatar style={{background: token.colorPrimary}} src={api.doc.img+"?id"+user.photo} size="small" /> 
+                                    <Avatar style={{background: token.colorPrimary}} src={api.document.img+"?id"+user.photo} size="small" /> 
                                     : <Avatar style={{background: token.colorPrimary}} size="small" icon={<UserOutlined />}/>
                                 }
                                 style={{

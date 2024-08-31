@@ -10,6 +10,16 @@ import com.xm2013.admin.jfinal.generator.Col;
 @SuppressWarnings({"serial", "unchecked"})
 public abstract class BaseMenu<M extends BaseMenu<M>> extends Model<M> implements IBean {
 
+	public static String COL_ID = "id";
+	public static String COL_PARENT_ID = "parent_id";
+	public static String COL_NAME = "name";
+	public static String COL_SORT = "sort";
+	public static String COL_PATH = "path";
+	public static String COL_QUERY = "query";
+	public static String COL_TYPE = "type";
+	public static String COL_STATUS = "status";
+	public static String COL_ICON = "icon";
+
 	public M setId(java.lang.Integer id) {
 		set("id", id);
 		return (M)this;
@@ -113,7 +123,7 @@ public abstract class BaseMenu<M extends BaseMenu<M>> extends Model<M> implement
 	}
 
 	/**
-	 * 类型：0-目录，1-菜单，2-按钮
+	 * 类型：0-目录，1-菜单
 	 */
 	public M setType(java.lang.Integer type) {
 		set("type", type);
@@ -121,11 +131,11 @@ public abstract class BaseMenu<M extends BaseMenu<M>> extends Model<M> implement
 	}
 	
 	/**
-	 * 类型：0-目录，1-菜单，2-按钮
+	 * 类型：0-目录，1-菜单
 	 */
 	@Col(tableName = "sys_menu", tableLabel="菜单权限表", 
 		fieldName = "type", colName = "type", 
-		label = "类型：0-目录，1-菜单，2-按钮")
+		label = "类型：0-目录，1-菜单")
 	public java.lang.Integer getType() {
 		return getInt("type");
 	}

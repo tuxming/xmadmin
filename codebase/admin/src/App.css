@@ -32,3 +32,8 @@
 .keep-alive-render, .cache-component{
     height:100%;
 }
+
+
+.dept-selector.hide-item .ant-select-selection-item{
+    display:none;
+}

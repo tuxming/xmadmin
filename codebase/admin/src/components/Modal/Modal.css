@@ -28,6 +28,7 @@
     position:absolute;
     box-sizing: content-box;
     animation-name: zoomIn;
+    animation-fill-mode: forwards;
     animation-duration: 0.3s; /* 动画持续时间 */
     animation-iteration-count: 1; /* 循环播放 */
     animation-timing-function: ease-in-out; /* 缓动效果 */
@@ -52,6 +53,9 @@
 .x-modal-inner-content{
     padding: 8px;
     box-sizing: content-box;
+    max-height: 100vh;
+    max-width: 100vw;
+    overflow: auto;
 }
 
 .x-modal-ctrl{
@@ -172,6 +176,6 @@
     display:none;
     position: absolute;
     right: -10px; 
-    bottom:-10px;
+    bottom: -10px;
     cursor: nw-resize;
 }

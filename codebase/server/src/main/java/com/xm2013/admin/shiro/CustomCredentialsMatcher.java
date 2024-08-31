@@ -8,7 +8,7 @@ import org.apache.shiro.authc.credential.SimpleCredentialsMatcher;
 public class CustomCredentialsMatcher extends SimpleCredentialsMatcher{
 
 	/**
-	 * 对比传进来的密码和数据库的密码是否相等，其实在构建AuthenticationInfo之前就已经完成了所有的对比，意思就是到这个层面理论上都是合法的。
+	 * 对比传进来的密码和数据库（缓存）的密码是否相等，其实在构建AuthenticationInfo之前就已经完成了所有的对比，意思就是到这个层面理论上都是合法的。
 	 * AuthenticationInfo是在自定的AuthorizingRealm（ShiroRealm）中doGetAuthenticationInfo方法的返回值，
 	 * doGetAuthenticationInfo就是验证登录是否合法，所以到这里可以不需要二次比较。
 	 * 

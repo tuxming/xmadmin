@@ -71,7 +71,7 @@ function App() {
         <ConfigProvider 
             locale={zhCN} theme={{
                 algorithm: themeType == 'dark'? darkAlgorithm : defaultAlgorithm,
-                
+                cssVar: false,
                 token: {
                     colorPrimary: primaryColor,
                     borderRadius: borderRadius,
@@ -90,7 +90,9 @@ function App() {
                     },
                     Menu: {
                         itemBg: getOpacityColor("#ffffff", sideItemOpacity || 1),
+                        subMenuItemBg: getOpacityColor("#ffffff", sideItemOpacity || 1),
                         darkItemBg: `rgba(245,245,245, ${sideItemOpacity || 0.1})`,
+                        darkSubMenuItemBg: `rgba(245,245,245, ${sideItemOpacity || 0.1})`,
                         darkItemSelectedBg: getOpacityColor(primaryColor, sideItemSelectOpacity || 0.8),
                         itemSelectedBg:  getOpacityColor(primaryColor, sideItemSelectOpacity || 0.2),
                     }, 

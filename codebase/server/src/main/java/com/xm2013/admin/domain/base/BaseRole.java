@@ -10,6 +10,12 @@ import com.xm2013.admin.jfinal.generator.Col;
 @SuppressWarnings({"serial", "unchecked"})
 public abstract class BaseRole<M extends BaseRole<M>> extends Model<M> implements IBean {
 
+	public static String COL_ID = "id";
+	public static String COL_ROLE_NAME = "role_name";
+	public static String COL_CODE = "code";
+	public static String COL_TYPE = "type";
+	public static String COL_CREATER = "creater";
+
 	public M setId(java.lang.Integer id) {
 		set("id", id);
 		return (M)this;

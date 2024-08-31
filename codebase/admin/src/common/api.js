@@ -12,7 +12,9 @@ export const api = {
     backendPage: "/sys/overview",
     menu: {
         curr: server + "/am/menu/curr",
-        list: server + "/am/menu/list"
+        list: server + "/am/menu/list",
+        saveOrUpdate: server + "/am/menu/saveOrUpdate",
+        delete: server + "/am/menu/delete"
     },
     auth: {
         login: server + "/auth/login",
@@ -21,8 +23,7 @@ export const api = {
         sendPhoneCode: server + '/auth/sendPhoneCode',
         resetPassword: server + '/auth/resetPassword'
     },
-    doc: {
-        img:  server + "/public/img",
+    wallpaper: {
         wallpaperAllCategories: server + '/public/wallpaperAllCategories',
         wallpaperImageList: server + "/public/wallpaperImageList"
     },
@@ -51,8 +52,37 @@ export const api = {
         deletes: server + "/am/history/deletes"
     },
     document: { 
+        img:  server + "/public/img",
         list: server + "/am/document/list",
         upload: server + "/am/document/upload",
         deletes: server + "/am/document/deletes",
     },
+    dept: {
+        list: server + "/am/dept/list",
+        create: server + "/am/dept/create",
+        update: server + "/am/dept/update",
+        delete: server + "/am/dept/delete",
+    },
+    lang: {
+        groups: server + "/am/lang/groups",
+        langs: server + "/am/lang/langs",
+        resources: server + "/am/lang/resources",
+        addLang: server + "/am/lang/addLang",
+        updateLang: server + "/am/lang/updateLang",
+        deleteLang: server + "/am/lang/deleteLang",
+        updateRes: server + "/am/lang/updateRes",
+        deleteRes: server + "/am/lang/deleteRes",
+        resourceByKey:  server + "/am/lang/resourceByKey",
+    },
+    dict: {
+        groups: server + "/am/dict/groups",
+        dicts: server + "/am/dict/dicts",
+        saveOrUpdateGroup: server + "/am/dict/saveOrUpdateGroup",
+        deleteGroup: server + "/am/dict/deleteGroup",
+        addDict: server + "/am/dict/addDict",
+        updateDict: server + "/am/dict/updateDict",
+        deleteDict: server + "/am/dict/deleteDict",
+        byKey: server + "/am/dict/byKey",
+        
+    }
 }

@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlPrepareStatement;
 import com.jfinal.kit.PropKit;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.redis.Redis;
@@ -34,13 +35,15 @@ public class DocumentService {
 		
 		PageInfo<Document> page = new PageInfo<Document>();
 		
-		List<Document> users = list(query, user);
-		page.setList(users);
+		List<Document> docs = list(query, user);
+		page.setList(docs);
 		
 		
-		if(query.getStart() == 0) {
+		if(query.getIsTotal() && query.getStart() == 0) {
 			int total = total(query, user);
 			page.setTotal(total);
+		}else {
+			page.setTotal(docs.size());
 		}
 		
 		return page;
@@ -56,7 +59,8 @@ public class DocumentService {
 		
 		String sql = "select t.* from sys_document as t "
 				+ " left join sys_user as t1 on t1.id = t.user_id"
-				+ " where 1=1 ";
+				+ " where "
+				+ user.buildAuthCondition("t1");
 		
 		String where = buildWhere(query, user);
 		sql += where + " group by t.id order by t.id desc limit "
@@ -71,7 +75,8 @@ public class DocumentService {
 			
 		String sql = "select count(*) from sys_document as t "
 				+ " left join  sys_user as t1 on t1.id = t.user_id "
-				+ " where 1=1 ";
+				+ " where "
+				+ user.buildAuthCondition("t1");
 		sql += buildWhere(query, user);
 		return Db.queryInt(sql);
 	}
@@ -79,13 +84,6 @@ public class DocumentService {
 		
 	private String buildWhere(DocumentListQuery query, ShiroUser user) {
 		String where = "";
-		if(!user.isAdmin()) {
-			String users = user.getUsers();
-			if(Kit.isNotNull(users)) {
-				where += "and t.creater in ("+users+")";
-			}
-			where += " and t1.dept_path ("+String.join("|", user.getDataPath())+")";
-		}
 		
 		String basicValue = SqlKit.getSafeValue(query.getBasicValue());
 		if(Kit.isNotNull(basicValue)) {
@@ -102,6 +100,7 @@ public class DocumentService {
 		where += SqlKit.eq("t.user_id", query.getCreater());
 		where += SqlKit.eq("t.type", query.getType());
 		where += SqlKit.likeLeft("t.remark", query.getRemark());
+		where += SqlKit.inNo("t.id", query.getIds());
 		
 		where += SqlKit.buildDateRange("t.created", query.getStartDate(), query.getEndDate());
 		

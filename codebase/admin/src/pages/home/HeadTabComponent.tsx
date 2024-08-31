@@ -15,7 +15,6 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 import { useSelector, useDispatch } from '../../redux/hooks';
 import { TabItemsSlice, ActiveTabSlice, openItemSlice } from "../../redux/slice";
-import { IconFont } from '../../components';
 import { TabIcon } from './TabIcon';
 
 

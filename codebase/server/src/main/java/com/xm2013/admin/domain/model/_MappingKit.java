@@ -17,10 +17,13 @@ public class _MappingKit {
 	
 	public static void mapping(ActiveRecordPlugin arp) {
 		arp.addMapping("sys_dept", "id", Dept.class);
+		arp.addMapping("sys_dict", "id", Dict.class);
+		arp.addMapping("sys_dict_group", "code", DictGroup.class);
 		arp.addMapping("sys_document", "id", Document.class);
 		arp.addMapping("sys_history", "id", History.class);
 		arp.addMapping("sys_language", "id", Language.class);
 		arp.addMapping("sys_language_resource", "id", LanguageResource.class);
+		arp.addMapping("sys_language_resource_group", "name", LanguageResourceGroup.class);
 		arp.addMapping("sys_menu", "id", Menu.class);
 		arp.addMapping("sys_permission", "id", Permission.class);
 		arp.addMapping("sys_role", "id", Role.class);

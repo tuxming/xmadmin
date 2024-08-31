@@ -44,5 +44,10 @@ public enum ValidateType {
 	/**
 	 * 验证字符串与指定字符串是不是相等，通过value指定目标字段名，其中value值为字符串类型字段名
 	 */
-	EQUALS;
+	EQUALS,
+	
+	/**
+	 * 验证是否值包含数字，包括A-Za-z0-9-_
+	 */
+	CHAR_AND_NUMBER;
 }

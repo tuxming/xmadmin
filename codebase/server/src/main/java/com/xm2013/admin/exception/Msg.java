@@ -13,8 +13,6 @@ public class Msg {
 	
 	public static final String INVALID_REQUEST = "非法的请求";
 	
-	public static final String OK_GET = "获取成功";
-	
 	//AuthController
 	public static final String AUTH_NULL_NAME = "用户名为空";
 	public static final String AUTH_NULL_PHONE = "电话号码为空";
@@ -31,9 +29,15 @@ public class Msg {
 	public static final String OK_UPDATE = "更新成功";
 	public static final String ERR_UPDATE = "更新失败";
 	public static final String OK_CREATED = "创建成功";
+	public static final String ERR_CREATE = "创建失败";
 	public static final String OK_DELETE = "删除成功";
+	public static final String ERR_DELETE = "删除失败";
 	public static final String OK_UPLOAD = "上传成功";
 	public static final String ERR_UPLOAD = "上传失败";
+	public static final String OK_GET = "获取成功";
+	public static final String ERR_GET = "获取失败";
+	public static final String ID_NULL = "id为空";
+	public static final String DISABLE_EDIT = "禁止编辑";
 	
 	public static final String ROLE_NOT_CREATE_SYS_ROLE = "禁止创建系统级别的管理员";
 	public static final String ROLE_NOT_CREATE_SUPER_ROLE = "超级管理员只能是系统级管理员或者同为超级管理员的角色创建";

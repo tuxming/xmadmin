@@ -10,6 +10,10 @@ import com.xm2013.admin.jfinal.generator.Col;
 @SuppressWarnings({"serial", "unchecked"})
 public abstract class BaseLanguage<M extends BaseLanguage<M>> extends Model<M> implements IBean {
 
+	public static String COL_ID = "id";
+	public static String COL_LABEL = "label";
+	public static String COL_CODE = "code";
+
 	public M setId(java.lang.Integer id) {
 		set("id", id);
 		return (M)this;

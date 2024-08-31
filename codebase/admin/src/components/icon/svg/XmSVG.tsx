@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from "react"
 import { theme } from 'antd'
 import "./XmSVG.css"
+import { useSelector } from "../../../redux/hooks";
 
 type SVGComponent<P = {}> = React.FunctionComponent<P> & React.FC<P>;;
 export type XmSVGType = {
-    SVGElement: SVGComponent,
+    SVGElement?: SVGComponent,
     primaryColor?: string,
-    prrmaryHoverColor?: string,
+    primaryHoverColor?: string,
     secondColor?: string,
     secondHoverColor?: string,
     width?: number | string,
@@ -15,18 +16,21 @@ export type XmSVGType = {
      * 如果是custom那么这个图标就是普通的图标，使用自定义颜色，
      * primary: 是antd的按钮类型：会根据antd的primary类型的按钮颜色一致
      * default: 是antd的按钮类型，会根据antd的default类型的按钮颜色一致
-     * ghostPrimary: 是antd的按钮类型，会根据antd的default类型的按钮颜色一致
-     * ghostDefault: 是antd的按钮类型，会根据antd的default类型的按钮颜色一致
      */
-    type?: 'custom' | 'primary' | 'default' | 'ghostPrimary' | 'ghostDefault',
+    type?: 'primary'|'default',
     /**
-     * antd 的按鈕類型
+     * antd 的按钮类型
      */
     danger?: boolean, 
     /**
      * 图标的上下偏移量，主要用于精确调整图标的上下位置
      */
     offSetY?: number | string,  
+    /**
+     *  antd 的按钮类型
+     */
+    ghost?: boolean,
+    iconName?: string
 }
 
 const isBlackColor = (color: string) => {
@@ -51,56 +55,106 @@ const isBlackColor = (color: string) => {
 export const XmSVG : React.FC<XmSVGType> = ({
     SVGElement,
     primaryColor,
-    prrmaryHoverColor,
+    primaryHoverColor,
     secondColor,
     secondHoverColor,
-    width = 16,
-    height = 16,
-    type = 'custom',
+    width,
+    height,
+    type,
     danger = false,
-    offSetY = 1
+    offSetY = 1,
+    ghost=false,
+    iconName
 }) => {
-    
     const svgRef = useRef(null);
     // const [mainColor, setMainColor] = useState(primaryColor);
     let mainColor = primaryColor;
-    let mainHoverColor = prrmaryHoverColor;
+    let mainHoverColor = primaryHoverColor;
 
     const {token} = theme.useToken();
 
-    if(danger){
-        if(type == 'primary'){
-            mainColor = token.colorWhite;
-            mainHoverColor = token.colorWhite;
-            secondColor = mainColor;
-            secondHoverColor = mainColor;
-        }else if(type == 'ghostPrimary') {
-            mainColor = token.colorError;
-            mainHoverColor = token.colorErrorHover;
-            secondColor = token.colorPrimary;
-            secondHoverColor = token.colorPrimaryHover;
-        }else if(type == 'ghostDefault') {
-            mainColor = token.colorWhite; 
-            mainHoverColor = token.colorPrimary;
-        }else if(type == 'default') {
-            mainColor = token.colorError;
-            mainHoverColor = token.colorErrorHover;
-            secondColor = token.colorPrimary;
-            secondHoverColor = token.colorPrimaryHover;
+    const [pos, setPos] = useState({width, height});
+    const size = useSelector(state => state.themeConfig.componentSize);
+
+    const buildPos = (width, height, size) => {
+        if(width && height){
+            let tw = width, th = height;
+            if(typeof tw == 'number'){
+                tw = tw+"px"
+            }
+            if(typeof th == 'number'){
+                th = th+"px"
+            }
+            
+            return {width: tw, height: th};
+        }else{
+            if(size == 'small'){
+               return {width: "12px", height: "12px"}
+            }else if(size == 'large'){
+                return {width: "20px", height: "20px"};
+            }else {
+                return {width: "16px", height: "16px"};
+            }
         }
-    }else{
+    }
+
+    useEffect(()=>{
+       setPos(buildPos(width, height, size));
+    }, [width, height, size])
+
+    if(type){
         if(type == 'primary'){
-            mainColor = token.colorWhite;
-            mainHoverColor = token.colorWhite;
-        }else if(type == 'ghostPrimary') {
-            mainColor = token.colorPrimary;
-            mainHoverColor = token.colorPrimaryHover;
-        }else if(type == 'ghostDefault') {
-            mainColor = token.colorWhite; 
-            mainHoverColor = token.colorPrimary;
-        }else if(type == 'default') {
-            mainColor = token.colorText;
-            mainHoverColor = token.colorPrimary;
+            if(danger){
+                if(ghost){
+                    mainColor = token.colorError;
+                    mainHoverColor = token.colorErrorHover;
+                    secondColor = token.colorError;
+                    secondHoverColor = token.colorErrorHover;
+                }else{
+                    mainColor = token.colorWhite;
+                    mainHoverColor = token.colorWhite;
+                    secondColor = token.colorWhite;
+                    secondHoverColor = token.colorWhite;
+                }
+            }else{
+                if(ghost){
+                    mainColor = token.colorPrimary;
+                    mainHoverColor = token.colorPrimaryHover;
+                    secondColor = token.colorError;
+                    secondHoverColor = token.colorErrorHover;
+                }else{
+                    mainColor = token.colorWhite;
+                    mainHoverColor = token.colorWhite;
+                    secondColor = token.colorError;
+                    secondHoverColor = token.colorErrorHover;
+                }
+            }
+        }else if(type == 'default'){
+            if(danger){
+                if(ghost){
+                    mainColor = token.colorError;
+                    mainHoverColor = token.colorErrorHover;
+                    secondColor = token.colorPrimary;
+                    secondHoverColor = token.colorPrimaryHover;
+                }else{
+                    mainColor = token.colorError;
+                    mainHoverColor = token.colorErrorHover;
+                    secondColor = token.colorPrimary;
+                    secondHoverColor = token.colorPrimaryHover;
+                }
+            }else{
+                if(ghost){
+                    mainColor = token.colorPrimaryHover;
+                    mainHoverColor = token.colorPrimaryHover;
+                    secondColor = "";
+                    secondHoverColor = "";
+                }else{
+                    mainColor = token.colorText;
+                    mainHoverColor = token.colorPrimaryHover;
+                    secondColor = token.colorPrimary;
+                    secondHoverColor = token.colorPrimaryHover;
+                }
+            }
         }
     }
 
@@ -117,7 +171,7 @@ export const XmSVG : React.FC<XmSVGType> = ({
     if(secondColor) {
         style['--var-xmsvg-second-color'] = secondColor;
     }
-    if(secondColor) {
+    if(secondHoverColor) {
         style['--var-xmsvg-second-color-hover'] = secondHoverColor;
     }
 
@@ -126,8 +180,7 @@ export const XmSVG : React.FC<XmSVGType> = ({
 
         let paths  = svgRef.current.querySelectorAll("path");
         paths.forEach(path => { 
-
-            let fill = path.fill;
+            let fill = path.getAttribute("fill");
             if(!fill){
                 fill = path.style.fill;
             }
@@ -154,11 +207,10 @@ export const XmSVG : React.FC<XmSVGType> = ({
         })
 
         let svg = svgRef.current.querySelector("svg");
-        svg.style=`width:${width}; height:${height}`
+        let pos = buildPos(width, height, size);
+        svg.style=`width:${pos.width}; height:${pos.height}`
 
     }, [svgRef]);
-
-    
 
     return <span ref={svgRef} style={style}>
         <SVGElement />

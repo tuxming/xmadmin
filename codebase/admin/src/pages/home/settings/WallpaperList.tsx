@@ -23,7 +23,7 @@ export const WallpaperList : React.FC<WallpaperListType> = ({category}) => {
 
     let getListData = async (id, start, count, merge: boolean) => {
         // http://wallpaper.apc.360.cn/index.php?c=WallPaper&a=getAppsByCategory&cid=26&start=3&count=2&from=360chrome
-        let result = await request.get(api.doc.wallpaperImageList+"?id="+id+"&start="+start+"&count="+count)
+        let result = await request.get(api.wallpaper.wallpaperImageList+"?id="+id+"&start="+start+"&count="+count)
         if(merge){
             let newList = [...imgList, ...result.data];
             setImgList(newList);

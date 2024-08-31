@@ -3,11 +3,14 @@ package com.xm2013.admin.shiro.dto;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.jfinal.kit.JsonKit;
 import com.jfinal.plugin.activerecord.Db;
 import com.xm2013.admin.common.Kit;
 import com.xm2013.admin.domain.model.Role;
+import com.xm2013.admin.domain.model.UserData;
 
 public class ShiroUser implements java.io.Serializable{
 	/**
@@ -23,14 +26,20 @@ public class ShiroUser implements java.io.Serializable{
 	private String email;
 	private String phone;
 	private int photo;
-	private String users; //所能查看的所有的用户id
 	
 	private List<ShiroRole> roles = new ArrayList<ShiroRole>();
 	private ShiroDept dept;
 	private ShiroDept company;
 	private ShiroDept group;
 	private List<String> permissions;
-	private List<String> dataPath = new ArrayList<>();
+	
+	//以下都是数据权限的设置
+	private List<ShiroUserData> userDatas;
+	
+	private List<Integer> userIds;
+	private List<Integer> deptIds;
+	
+	private List<String> datapaths;
 	
 	/**
 	 * 是否系统管理员
@@ -60,52 +69,107 @@ public class ShiroUser implements java.io.Serializable{
 		return false;
 	}
 	
-	public boolean isOwnerData(String deptpath) {
-		if(Kit.isNull(deptpath)) {
-			return false;
+	/**
+	 * 判断是否具有数据权限，如果是管理员，直接拥有数据权限，
+	 * 如果不是管理员，则判断是否具备数据权限
+	 * @param deptpath
+	 * @param userId
+	 * @return
+	 */
+	@JsonIgnore
+	public boolean isOwnerData(String deptpath, Integer userId) {
+		
+		if(isAdmin()) {
+			return true;
 		}
 		
-		if(dataPath == null || dataPath.size() ==0 ) {
-			return deptpath.startsWith(dept.getPath());
+		if(isOwnerData(userId)) {
+			return true;
 		}else {
-			for (String dp : dataPath) {	
-				if(deptpath.startsWith(dp)) return true;
-			}
-			return false;
+			return isOwnerData(deptpath);
 		}
+	}
+	
+	/**
+	 * 构建数据过滤的查询条件，
+	 * @param alias user表的别名
+	 * @return
+	 */
+	public String buildAuthCondition(String alias) {
+		
+		if(isAdmin())
+			return " 1=1 ";
+
+		if(Kit.isNotNull(alias)) {
+			if(!alias.endsWith(".")) {
+				alias = alias+".";
+			}
+		}else {
+			alias = "";
+		}
+		
+		if(userIds!= null && !userIds.isEmpty()) {
+			if(deptIds!=null && !deptIds.isEmpty()) {
+				return "("+alias+" id in ("
+								+userIds.stream().map(s-> s+"").collect(Collectors.joining(","))
+							+") "
+							+ "or "+alias+"dept_id in ("
+								+deptIds.stream().map(s-> s+"").collect(Collectors.joining(","))
+							+ ")) " ;
+			}else {
+				return alias+" id in ("+userIds.stream().map(s-> s+"").collect(Collectors.joining(","))+") ";
+			}
+		}else {
+			if(deptIds!=null && !deptIds.isEmpty()) {
+				return alias+"dept_id in ("+deptIds.stream().map(s-> s+"").collect(Collectors.joining(","))+") " ;
+			}else {
+				return alias+" id="+id;
+			}
+		}
+		
 	}
 	
 	public boolean isOwnerData(Integer userId) {
 		
-		if(userId == null || userId == 0) return false;
+		if(isAdmin() || userId == id) return true;
 		
-		if(users==null) {
-			if(dataPath == null || dataPath.size() ==0 ) {
-				String path = Db.queryStr("select dept_path from sys_user where user_id=?", userId);
-				if(path == null) return false;
-				
-				return path.startsWith(dept.getPath());
-			}else {
-				String path = Db.queryStr("select dept_path from sys_user where user_id=?", userId);
-				if(path == null) return false;
-				
-				for (String dp : dataPath) {	
-					if(path.startsWith(dp)) return true;
-				}
-				return false;
-			}
+		if(userId == null || userId == 0)
+			return false;
+		
+		if(userIds!=null && userIds.contains(userId.intValue())) {
+			return true;
 		}else {
-			if(users.contains(","+userId+",")) {
-				return true;
-			}else if(users.startsWith(userId+",")) {
-				return true;
-			}else if(users.endsWith(","+userId)) {
-				return true;
+			if(deptIds.size()>0) {
+				Integer total = Db.queryInt("select count(*) from sys_user where dept_id in("+deptIds+")");
+				if(total!=null && total>0) {
+					return true;
+				}else {
+					return false;
+				}
 			}else {
-				return false;
+				return true;
 			}
 		}
+	}
+	
+	public boolean isOwnerData(String deptpath) {
 		
+		if(isAdmin()) return true;
+		
+		if(Kit.isNull(deptpath)) {
+			return false;
+		}
+		
+		if(datapaths == null || datapaths.size() == 0) {
+			return false;
+		}
+		
+		for (String datapath : datapaths) {
+			if(deptpath.startsWith(datapath)) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public Integer getId() {
@@ -210,21 +274,36 @@ public class ShiroUser implements java.io.Serializable{
 		this.id = id;
 		return this;
 	}
-	public List<String> getDataPath() {
-		return dataPath;
-	}
-
-	public ShiroUser setDataPath(List<String> dataPath) {
-		this.dataPath = dataPath;
-		return this;
-	}
 	
-	public String getUsers() {
-		return users;
+	
+	public List<ShiroUserData> getUserDatas() {
+		return userDatas;
 	}
 
-	public void setUsers(String users) {
-		this.users = users;
+	public void setUserDatas(List<ShiroUserData> userDatas) {
+		this.userDatas = userDatas;
+	}
+
+	@JsonIgnore
+	public List<Integer> getUserIds() {
+		return userIds;
+	}
+	@JsonIgnore
+	public void setUserIds(List<Integer> userIds) {
+		this.userIds = userIds;
+	}
+	@JsonIgnore
+	public List<Integer> getDeptIds() {
+		return deptIds;
+	}
+	@JsonIgnore
+	public void setDeptIds(List<Integer> deptIds) {
+		this.deptIds = deptIds;
+	}
+
+	@JsonIgnore
+	public void setDatapaths(List<String> datapaths) {
+		this.datapaths = datapaths;
 	}
 
 	@Override

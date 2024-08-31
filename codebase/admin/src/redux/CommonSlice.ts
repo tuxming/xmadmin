@@ -209,9 +209,11 @@ export type GlobalVarType = {
     isMinScreen: boolean,
     width: number,
     height: number,
+    modalIndex: number,
 }
 
 const defaultGlobalVar: GlobalVarType = {
+    modalIndex: 1000,
     isMinScreen: document.body.clientWidth<576,
     width: document.body.clientWidth,
     height: document.body.clientHeight,
@@ -227,6 +229,9 @@ export const globalVarSlice = createSlice({
             state.height = action.payload.height;
             // console.log("changeSize", action.payload);
             state.isMinScreen = action.payload.width < 576;
+       },
+       addZIndex: (state, action)=>{
+            state.modalIndex = state.modalIndex + 1;
        }
     }
 });

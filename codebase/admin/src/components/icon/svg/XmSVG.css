@@ -2,15 +2,16 @@
 .xmsvg-main{
     fill: var(--var-xmsvg-color);
 }
-.ant-btn:hover  .xmsvg-main, .xmsvg-main:hover{
-    fill: var(--var-xmsvg-color-hover);
-}
 
 .xmsvg-second{
     fill: var(--var-xmsvg-second-color);
 }
 
-.ant-btn:hover  .xmsvg-second, .xmsvg-second:hover{
+.ant-btn:hover  .xmsvg-main, .xmsvg-main:hover{
+    fill: var(--var-xmsvg-color-hover);
+}
+
+.ant-btn:hover .xmsvg-second, .xmsvg-second:hover{
     fill: var(--var-xmsvg-second-color-hover);
 }
 

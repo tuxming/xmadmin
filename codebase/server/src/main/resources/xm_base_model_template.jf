@@ -14,6 +14,10 @@ import com.xm2013.admin.jfinal.generator.Col;
 #end
 public abstract class #(tableMeta.baseModelName)<M extends #(tableMeta.baseModelName)<M>> extends Model<M> implements IBean {
 
+#for(cm : tableMeta.columnMetas)
+	public static String COL_#(cm.name.toUpperCase()) = "#(cm.name)";
+#end
+
 #set(b = generateChainSetter)
 #for(cm : tableMeta.columnMetas)
 	#if (cm.remarks)

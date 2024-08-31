@@ -160,17 +160,4 @@ public class SqlKit {
 		return "";
 	}
 	
-	public static String buildDataAuth(String column, ShiroUser user) {
-		
-		if(user.isAdmin())
-			return "";
-		
-		if(Kit.isNull(user.getUsers())) {
-			return " and "+column+" = "+user.getId();
-		}else {
-			return " and "+column+" in ("+user.getUsers()+")";
-		}
-	}
-	
-	
 }

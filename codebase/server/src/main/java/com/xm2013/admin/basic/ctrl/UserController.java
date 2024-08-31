@@ -40,7 +40,7 @@ public class UserController extends BaseController{
 		}
 		
 		User user = userService.findById(id);
-		user.remove("password", "created");
+		user.remove(User.COL_PASSWORD, User.COL_CREATED);
 		
 		log.debug("获取到用户信息"+user);
 		

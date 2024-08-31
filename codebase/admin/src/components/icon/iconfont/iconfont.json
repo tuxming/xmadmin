@@ -6,6 +6,20 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "1680700",
+      "name": "数据字典",
+      "font_class": "dict",
+      "unicode": "e666",
+      "unicode_decimal": 58982
+    },
+    {
+      "icon_id": "1263309",
+      "name": "组织架构",
+      "font_class": "zuzhijiagou",
+      "unicode": "e62b",
+      "unicode_decimal": 58923
+    },
+    {
       "icon_id": "18126053",
       "name": "Maximize 2",
       "font_class": "maximize",

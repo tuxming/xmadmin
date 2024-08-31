@@ -89,7 +89,7 @@ export const DoubleColumnLayout : React.FC<DoubleColumnLayoutType> = ({
     }, [width, screenWidth])
 
     return <Row style={{height: "100%"}}>
-        <Col span={leftSpan}>{left}</Col>
-        <Col span={rightSpan}>{right}</Col>
+        <Col style={{height: '100%'}} span={leftSpan}>{left}</Col>
+        <Col style={{height: '100%'}} span={rightSpan}>{right}</Col>
     </Row>
 }

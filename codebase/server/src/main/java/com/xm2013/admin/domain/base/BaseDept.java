@@ -10,6 +10,13 @@ import com.xm2013.admin.jfinal.generator.Col;
 @SuppressWarnings({"serial", "unchecked"})
 public abstract class BaseDept<M extends BaseDept<M>> extends Model<M> implements IBean {
 
+	public static String COL_ID = "id";
+	public static String COL_NAME = "name";
+	public static String COL_PARENT_ID = "parent_id";
+	public static String COL_PATH = "path";
+	public static String COL_PATH_NAME = "path_name";
+	public static String COL_TYPE = "type";
+
 	public M setId(java.lang.Integer id) {
 		set("id", id);
 		return (M)this;
@@ -23,25 +30,7 @@ public abstract class BaseDept<M extends BaseDept<M>> extends Model<M> implement
 	}
 
 	/**
-	 * 上级id
-	 */
-	public M setParentId(java.lang.Integer parentId) {
-		set("parent_id", parentId);
-		return (M)this;
-	}
-	
-	/**
-	 * 上级id
-	 */
-	@Col(tableName = "sys_dept", tableLabel="组织结构", 
-		fieldName = "parentId", colName = "parent_id", 
-		label = "上级id")
-	public java.lang.Integer getParentId() {
-		return getInt("parent_id");
-	}
-
-	/**
-	 * 组织名
+	 * 组织显示名
 	 */
 	public M setName(java.lang.String name) {
 		set("name", name);
@@ -49,13 +38,67 @@ public abstract class BaseDept<M extends BaseDept<M>> extends Model<M> implement
 	}
 	
 	/**
-	 * 组织名
+	 * 组织显示名
 	 */
 	@Col(tableName = "sys_dept", tableLabel="组织结构", 
 		fieldName = "name", colName = "name", 
-		label = "组织名")
+		label = "组织显示名")
 	public java.lang.String getName() {
 		return getStr("name");
+	}
+
+	/**
+	 * 上级名称
+	 */
+	public M setParentId(java.lang.Integer parentId) {
+		set("parent_id", parentId);
+		return (M)this;
+	}
+	
+	/**
+	 * 上级名称
+	 */
+	@Col(tableName = "sys_dept", tableLabel="组织结构", 
+		fieldName = "parentId", colName = "parent_id", 
+		label = "上级名称")
+	public java.lang.Integer getParentId() {
+		return getInt("parent_id");
+	}
+
+	/**
+	 * 组织路径
+	 */
+	public M setPath(java.lang.String path) {
+		set("path", path);
+		return (M)this;
+	}
+	
+	/**
+	 * 组织路径
+	 */
+	@Col(tableName = "sys_dept", tableLabel="组织结构", 
+		fieldName = "path", colName = "path", 
+		label = "组织路径")
+	public java.lang.String getPath() {
+		return getStr("path");
+	}
+
+	/**
+	 * 组织名称路径
+	 */
+	public M setPathName(java.lang.String pathName) {
+		set("path_name", pathName);
+		return (M)this;
+	}
+	
+	/**
+	 * 组织名称路径
+	 */
+	@Col(tableName = "sys_dept", tableLabel="组织结构", 
+		fieldName = "pathName", colName = "path_name", 
+		label = "组织名称路径")
+	public java.lang.String getPathName() {
+		return getStr("path_name");
 	}
 
 	/**
@@ -74,42 +117,6 @@ public abstract class BaseDept<M extends BaseDept<M>> extends Model<M> implement
 		label = "组织类型：0-个人，1-小组，2-部门，3-公司，4-集团")
 	public java.lang.Integer getType() {
 		return getInt("type");
-	}
-
-	/**
-	 * 组织path
-	 */
-	public M setPath(java.lang.String path) {
-		set("path", path);
-		return (M)this;
-	}
-	
-	/**
-	 * 组织path
-	 */
-	@Col(tableName = "sys_dept", tableLabel="组织结构", 
-		fieldName = "path", colName = "path", 
-		label = "组织path")
-	public java.lang.String getPath() {
-		return getStr("path");
-	}
-
-	/**
-	 * 组织名字的path
-	 */
-	public M setPathName(java.lang.String pathName) {
-		set("path_name", pathName);
-		return (M)this;
-	}
-	
-	/**
-	 * 组织名字的path
-	 */
-	@Col(tableName = "sys_dept", tableLabel="组织结构", 
-		fieldName = "pathName", colName = "path_name", 
-		label = "组织名字的path")
-	public java.lang.String getPathName() {
-		return getStr("path_name");
 	}
 
 }

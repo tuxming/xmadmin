@@ -1,0 +1,5 @@
+export * from "./DeptPage"
+export * from "./DeptList"
+export * from "./DeptEdit"
+export * from "./DeptType"
+export * from "./DeptSelector"

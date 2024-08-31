@@ -18,6 +18,7 @@ import com.xm2013.admin.domain.dto.JsonResult;
 import com.xm2013.admin.domain.model.Document;
 import com.xm2013.admin.domain.model.Language;
 import com.xm2013.admin.domain.model.LanguageResource;
+import com.xm2013.admin.domain.model.LanguageResourceGroup;
 import com.xm2013.admin.exception.Msg;
 
 
@@ -167,6 +168,14 @@ public class PublicApiController extends BaseController{
 		if(lang== null) {
 			renderNull();
 			return;
+		}
+		
+		try {
+			LanguageResourceGroup g = new LanguageResourceGroup();
+			g.setName(ns);
+			g.save();
+		} catch (Exception e) {
+			// TODO: handle exception
 		}
 		
 		LanguageResource res = new LanguageResource()

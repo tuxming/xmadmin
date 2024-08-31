@@ -4,6 +4,9 @@ import React, { useState, useEffect, useRef, ReactNode } from 'react';
 import './Modal.css';
 import {ModalContext} from './ModalContext';
 import {computePx} from '../../common/kit'
+import { useDispatch, useSelector } from '../../redux/hooks';
+import { globalVarSlice } from '../../redux/CommonSlice';
+import store from '../../redux/store';
 
 /**
  * 包装过的ant modal主要是能够自适应，窗体的变化，在不同尺寸的窗体下，显示大小
@@ -93,7 +96,7 @@ export const Modal : React.FC<ModalType> = ({
     height = "auto",
     showMask = true,
     closeMask = false,
-    zIndex = 1000,
+    zIndex,
     title,
     theme = 'light',
     onClose,
@@ -106,11 +109,18 @@ export const Modal : React.FC<ModalType> = ({
     type= "window"
 }) => {
 
-    if(!open) return <></>
-
+    const [visible, setVisible] = useState(true);
     const modalRef = useRef(null);
     const [modalState, setModalState] = useState(state);
     const [topLevel, setTopLevel] = useState(false);
+
+    const modalIndex = useSelector(state => state.globalVar.modalIndex);
+    const currIndex = useRef<number>(modalIndex);
+    const dispatch = useDispatch();
+
+    useEffect(()=>{
+        dispatch(globalVarSlice.actions.addZIndex(0));
+    },[])
 
     let wheight = computePx(height, true);
 
@@ -161,6 +171,15 @@ export const Modal : React.FC<ModalType> = ({
             setCurrPos(minPos);
         }
     }
+
+    useEffect(()=>{
+        // console.log("open="+open+", visible="+visible);
+        if(open == false && visible){
+            closeModal();
+        }else if(open){
+            setVisible(true);
+        }
+    }, [open]);
 
     useEffect(()=> {
         completePos();
@@ -231,18 +250,28 @@ export const Modal : React.FC<ModalType> = ({
             setIsDraggingSize(false);
         };
         
-        let moveBtn = modalRef.current.querySelector(".x-modal-move-btn");
-        let resizeBtn = modalRef.current.querySelector(".x-modal-resize-btn");
-        
-        moveBtn.addEventListener('mousedown', handleMoveMouseDown);
-        resizeBtn.addEventListener('mousedown', handleResizeMouseDown);
+        let moveBtn = null;
+        let resizeBtn = null;
+        if(showMove){
+            moveBtn = modalRef.current.querySelector(".x-modal-move-btn");
+            moveBtn.addEventListener('mousedown', handleMoveMouseDown);
+        }
+
+        if(showResize){
+            resizeBtn = modalRef.current.querySelector(".x-modal-resize-btn");
+            resizeBtn.addEventListener('mousedown', handleResizeMouseDown);
+        }
 
         document.addEventListener('mousemove', handleMouseMove);
         document.addEventListener('mouseup', handleMouseUp);
     
         return () => {
-            moveBtn.removeEventListener('mousedown', handleMoveMouseDown);
-            resizeBtn.removeEventListener('mousedown', handleResizeMouseDown);
+            if(showMove){
+                moveBtn.removeEventListener('mousedown', handleMoveMouseDown);
+            }
+            if(resizeBtn){
+                resizeBtn.removeEventListener('mousedown', handleResizeMouseDown);
+            }
             document.removeEventListener('mousemove', handleMouseMove);
             document.removeEventListener('mouseup', handleMouseUp);
         };
@@ -253,13 +282,14 @@ export const Modal : React.FC<ModalType> = ({
     //窗口尺寸变化的时候，重新计算位置
     useEffect(()=>{
         const blurHandler = () => {
-            // console.log("blur");
             setTopLevel(false);
         }
 
         const focusHandler = (event) => {
             event.preventDefault(); //阻止浏览器的默认行为，比如选中文字
-
+            dispatch(globalVarSlice.actions.addZIndex(modalIndex));
+            let currModalIndex = store.store.getState().globalVar.modalIndex;
+            currIndex.current = currModalIndex;
             // console.log("focus");
             setTopLevel(true);
         }
@@ -323,9 +353,6 @@ export const Modal : React.FC<ModalType> = ({
             // console.log(offsetHeight, offsetWidth, top, left, winWidth, winHeight);
             // console.log(pos);
             setCurrPos(pos);
-
-          
-            
         };
 
         if(modalRef.current ){
@@ -352,6 +379,8 @@ export const Modal : React.FC<ModalType> = ({
 
         setTimeout(() => {
             css.opacity ="0";
+            css.display = "none";
+            setVisible(false);
             onClose();
         }, 300);
     }
@@ -387,9 +416,10 @@ export const Modal : React.FC<ModalType> = ({
     
     //设置一些css信息
     const overlayStye = {
-        zIndex: topLevel?999999: zIndex,
+        zIndex: topLevel? modalIndex: (currIndex.current || zIndex),
     }
 
+    if(visible){
     return createPortal(
         <div className={theme + " x-modal-overlay "} onClick={onClickMaskHandler}  style={overlayStye}>
             <style dangerouslySetInnerHTML={{
@@ -415,7 +445,7 @@ export const Modal : React.FC<ModalType> = ({
                 className="x-modal-content"
                 onClick={(e) => e.stopPropagation()}
             >
-                <div className="x-modal-inner-content">
+                <div className="x-modal-inner-content" style={{width: currPos.width, height: currPos.height, overflow:'auto'}}>
                     <div className="x-modal-ctrl" style={{
                             right: modalState == 'full'?20:6, maxWidth: modalState=='min'? currPos.width:"auto",
                             position: modalState == 'min'?'relative':'absolute',
@@ -424,12 +454,15 @@ export const Modal : React.FC<ModalType> = ({
                         }}>
                         <span className='x-modal-title' style={{display: modalState=="min"?'block':"none" }}>{title}</span>
 
+                        {showMove && (
                         <span className="x-modal-ctrl-btn x-modal-move-btn" >
-                            <svg width="15" height="15" viewBox="0 0 64 64" style={{display: modalState != 'full' && showMove ? "inline-block": 'none'}}>
+                            <svg width="15" height="15" viewBox="0 0 64 64" style={{display:  "inline-block"}}>
                                 <path d="M36.6,14.5H32h14.9L31.9,0L17.2,14.5h10.3v13.5H13.6v9h13.8v13.6h9.1V37h13.7v-9H36.6V14.5z M31.9,64l13.8-13.4H18.3L31.9,64L31.9,64z M0,32.5L13.6,46v-27L0,32.5L0,32.5z M50.3,19.1v27L64,32.5L50.3,19.1L50.3,19.1z">
                                 </path>
                             </svg>
                         </span> 
+                        )
+                        }
                         {showMinize && <span style={{display: modalState != 'min'?'inline-block':"none"}} className="x-modal-ctrl-btn x-modal-min-btn" onClick={onClickMinHandler}>
                             <span></span>
                         </span>}
@@ -451,17 +484,21 @@ export const Modal : React.FC<ModalType> = ({
                             {children}
                         </ModalContext.Provider>
                     </div>
-                    <span className="x-modal-resize-btn" >
-                        <svg width="24" height="24" viewBox="0 0 64 64" style={{display: modalState == 'win' && showResize? "inline":"none"}} >
-                            <path d="M28.2,32.1l3.8-3.8l-6.1-6.1l4.1-4.1H18v12.1l4.2-4.2L28.2,32.1z M14,2L9.8,6.2L3.7,0.1L0,3.9L6.1,10l-4,3.9H14V2z">
-                            </path>
-                        </svg>
-                    </span> 
                 </div>
-            
-                
+                {showResize && (
+                <span className="x-modal-resize-btn" >
+                    <svg width="24" height="24" viewBox="0 0 64 64">
+                        <path d="M28.2,32.1l3.8-3.8l-6.1-6.1l4.1-4.1H18v12.1l4.2-4.2L28.2,32.1z M14,2L9.8,6.2L3.7,0.1L0,3.9L6.1,10l-4,3.9H14V2z">
+                        </path>
+                    </svg>
+                </span> 
+                )}
             </div>
         </div>,
         document.body
       );
+    }else{
+        return <></>
+    }
+
 }

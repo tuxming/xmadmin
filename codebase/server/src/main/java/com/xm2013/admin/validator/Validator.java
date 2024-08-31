@@ -258,6 +258,8 @@ public class Validator {
 			processMinLength(validate, value);
 		}else if(ValidateType.EQUALS.equals(validate.type())) {
 			processEquals(clazz, bean, validate, value);
+		}else if(ValidateType.CHAR_AND_NUMBER.equals(validate.type())){
+			processCharAndNumber(validate, value);
 		}else if(ValidateType.REG.equals(validate.type())) {
 			processRegexp(validate, value);
 		}
@@ -439,6 +441,31 @@ public class Validator {
 			throw new ValidateException("字段："+validate.field()+", 验证类型错误，EMPTY类型只支持验证String类型");
 		}
 	}
+	
+	/**
+	 * 验证是否值包含数字，包括A-Za-z0-9-_
+	 * @param validate
+	 * @param value
+	 */
+	private void processCharAndNumber(Validate validate, Object value) {
+		try {
+			String val = (String)value;
+			if(val == null || val.trim().length()==0) {
+				hasError = true;
+				addMsg(validate);
+			}
+			
+			String reg = "[A-Za-z0-9\\-\\_]+";
+			if(!val.matches(reg)) {
+				hasError = true;
+				addMsg(validate.field(), validate.msg());
+			}
+			
+		}catch(Exception e) {
+			throw new ValidateException("字段："+validate.field()+", 验证类型错误，CHAR_AND_NUMBER类型只支持验证String类型");
+		}
+	}
+	
 
 	/**
 	 * 验证空对象

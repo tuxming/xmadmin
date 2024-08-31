@@ -9,7 +9,10 @@ import {
     RolePage,
     HistoryPage,
     PermissionPage,
-    DocumentPage
+    DocumentPage, 
+    DeptPage,
+    LangPage,
+    DictPage
 } from "./pages";
 import { basePath, api } from "./common/api";
 import { useEffect } from "react";
@@ -56,6 +59,9 @@ export const AdminRouter : React.FC = () => {
                 <Route path="permission" key="permission" Component={PermissionPage}></Route>
                 <Route path="history"  key="history" Component={HistoryPage}></Route>
                 <Route path="document"  key="document" Component={DocumentPage}></Route>
+                <Route path="dept"  key="dept" Component={DeptPage}></Route>
+                <Route path="lang"  key="lang" Component={LangPage}></Route>
+                <Route path="dict"  key="lang" Component={DictPage}></Route>
                 <Route path="*" element={<>404</>}></Route>
             </Route>
         </Routes>

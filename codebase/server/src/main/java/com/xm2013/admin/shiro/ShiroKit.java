@@ -15,6 +15,7 @@ import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.subject.Subject;
 
 import com.jfinal.aop.Aop;
+import com.jfinal.plugin.activerecord.Db;
 import com.xm2013.admin.basic.service.DeptService;
 import com.xm2013.admin.basic.service.PermissionService;
 import com.xm2013.admin.basic.service.RoleService;
@@ -23,11 +24,11 @@ import com.xm2013.admin.domain.model.Dept;
 import com.xm2013.admin.domain.model.Permission;
 import com.xm2013.admin.domain.model.Role;
 import com.xm2013.admin.domain.model.User;
-import com.xm2013.admin.domain.model.UserData;
 import com.xm2013.admin.exception.Msg;
 import com.xm2013.admin.shiro.dto.ShiroDept;
 import com.xm2013.admin.shiro.dto.ShiroRole;
 import com.xm2013.admin.shiro.dto.ShiroUser;
+import com.xm2013.admin.shiro.dto.ShiroUserData;
 
 public class ShiroKit {
 	
@@ -130,7 +131,18 @@ public class ShiroKit {
 		account.setCompany(dept);
 		account.setGroup(dept);
 		
-		account.getDataPath().add("/");
+		List<ShiroUserData> userDatas = new ArrayList<ShiroUserData>();
+		userDatas.add(new ShiroUserData()
+			.setId(0)
+			.setPath("/")
+			.setPathName("系统")
+			.setPathName("/系统/")
+			.setType(2)
+			.setRefId(1)
+		);
+		account.setUserDatas(userDatas);
+		
+//		account.getDataPath().add(new ShiroUserData());
 	}
 	
 	/**
@@ -169,15 +181,35 @@ public class ShiroKit {
 	    }
 	    
     	//设置数据权限
-	    List<UserData> userDatas = service.findDataPathByUser(user.getId());
-	    if(!userDatas.isEmpty()) {
-	    	account.setDataPath(userDatas.stream().map(s -> s.getDeptPath()).collect(Collectors.toList()));
+	    List<ShiroUserData> suds = service.findUserDataByUser(user.getId());
+	    account.setUserDatas(suds);
+	    
+	    List<Integer> users = new ArrayList<Integer>();
+	    List<String> datapaths = new ArrayList<String>();
+	    
+	    for (ShiroUserData sud : suds) {
+	    	int type = sud.getType();
+	    	if(type == 1) {
+	    		users.add(sud.getRefId());
+	    	}else if(type == 2) {
+	    		datapaths.add(sud.getPath());
+	    	}
+		}
+	    
+	    users.add(user.getId());
+	    account.setUserIds(users);
+	    account.setDatapaths(datapaths);
+	    
+	    List<Integer> deptIds = new ArrayList<Integer>();
+	    for (String datapath : datapaths) {
+	    	List<Dept> ds = Dept.dao.find("select id from sys_dept where path like '"+datapath+"%'");
+	    	if(!ds.isEmpty()) {
+	    		ds.forEach(d -> deptIds.add(d.getId()));
+	    	}
 	    }
 	    
-	    //构建数据权限
-	    String users = service.getUserIdsByDatapath(account.getDataPath());
-	    if(users.length()<10000) {
-	    	account.setUsers(users);
+	    if(!deptIds.isEmpty()) {
+	    	account.setDeptIds(deptIds);
 	    }
 	    
 	    //所在公司

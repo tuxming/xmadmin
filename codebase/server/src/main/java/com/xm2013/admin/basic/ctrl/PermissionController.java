@@ -12,7 +12,9 @@ import java.util.Map;
 
 import com.jfinal.aop.Inject;
 import com.xm2013.admin.annotation.Op;
+import com.xm2013.admin.annotation.Per;
 import com.xm2013.admin.annotation.RequirePermission;
+import com.xm2013.admin.annotation.RequirePermissions;
 import com.xm2013.admin.basic.service.PermissionService;
 import com.xm2013.admin.common.kits.JsonKit;
 import com.xm2013.admin.domain.dto.JsonResult;
@@ -150,14 +152,29 @@ public class PermissionController extends BaseController{
         	for (Method method : methods) {
         			
     			RequirePermission rp = method.getAnnotation(RequirePermission.class);
-    			if(rp == null) continue;
     			
-    			System.out.println(rp.group()+";"+rp.name()+";"+rp.val());
-    			permissions.add(
-					new Permission().setGroupName(rp.group())
-						.setName(rp.name())
-						.setExpression(rp.val())
-				);
+    			if(rp!=null) {
+    				System.out.println(rp.group()+";"+rp.name()+";"+rp.val());
+        			permissions.add(
+    					new Permission().setGroupName(rp.group())
+    						.setName(rp.name())
+    						.setExpression(rp.val())
+    				);
+    			}
+    			
+    			RequirePermissions rps = method.getAnnotation(RequirePermissions.class);
+    			if(rps != null) {
+    				Per[] values = rps.value();
+    				for(int i=0; i<values.length; i++) {
+    					Per p = values[i];
+    					System.out.println(p.group()+";"+p.name()+";"+p.val());
+    					permissions.add(
+	    					new Permission().setGroupName(p.group())
+	    						.setName(p.name())
+	    						.setExpression(p.val())
+	    				);
+    				}
+    			}
         		
 			}
         	

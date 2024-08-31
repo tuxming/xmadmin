@@ -10,6 +10,12 @@ import com.xm2013.admin.jfinal.generator.Col;
 @SuppressWarnings({"serial", "unchecked"})
 public abstract class BaseLanguageResource<M extends BaseLanguageResource<M>> extends Model<M> implements IBean {
 
+	public static String COL_ID = "id";
+	public static String COL_LANGUAGE_ID = "language_id";
+	public static String COL_CATEGORY = "category";
+	public static String COL_RES_KEY = "res_key";
+	public static String COL_RES_VALUE = "res_value";
+
 	public M setId(java.lang.Integer id) {
 		set("id", id);
 		return (M)this;

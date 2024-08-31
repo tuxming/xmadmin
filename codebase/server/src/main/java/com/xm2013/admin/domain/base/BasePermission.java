@@ -10,6 +10,11 @@ import com.xm2013.admin.jfinal.generator.Col;
 @SuppressWarnings({"serial", "unchecked"})
 public abstract class BasePermission<M extends BasePermission<M>> extends Model<M> implements IBean {
 
+	public static String COL_ID = "id";
+	public static String COL_GROUP_NAME = "group_name";
+	public static String COL_NAME = "name";
+	public static String COL_EXPRESSION = "expression";
+
 	public M setId(java.lang.Integer id) {
 		set("id", id);
 		return (M)this;

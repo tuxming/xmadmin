@@ -25,7 +25,7 @@ export const WallpaperModal : React.FC<WallpaperModalType> = ({open, close}) => 
     useEffect(()=>{
         let get = async () => {
             // http://cdn.apc.360.cn/index.php?c=WallPaper&a=getAllCategoriesV2&from=360chrome
-            let result = await request.get(api.doc.wallpaperAllCategories) as any;
+            let result = await request.get(api.wallpaper.wallpaperAllCategories) as any;
             if(result.errno == "0"){
                 let data = result.data;
                 // setCategories(data);

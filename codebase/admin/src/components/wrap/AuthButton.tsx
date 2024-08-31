@@ -1,11 +1,12 @@
 import React, {useRef} from 'react'
-import { Button, ButtonProps } from "antd"
+import { Button, ButtonProps,Tooltip } from "antd"
 import { hasPermission } from "../../common/kit";
 import { useSelector } from "../../redux/hooks";
 
 
 export type AuthButtonProps = ButtonProps & {
-    requiredPermissions: string[] | string
+    requiredPermissions: string[] | string,
+    tip?: string
 };
 
 /**
@@ -13,6 +14,7 @@ export type AuthButtonProps = ButtonProps & {
  */
 export const AuthButton = React.forwardRef<HTMLButtonElement, AuthButtonProps>(({
     requiredPermissions,
+    tip,
     ...props
 }, ref) => {
     const permissions = useSelector(state => state.persistedUser.permissions);
@@ -30,5 +32,13 @@ export const AuthButton = React.forwardRef<HTMLButtonElement, AuthButtonProps>((
     //解决报错
     const tagRef = ref || useRef<HTMLButtonElement>(null);
 
-    return isPermitted ? <Button ref={tagRef} {...props}></Button> : <></>
+    if(tip){
+        return isPermitted ? (<Tooltip title={tip}>
+           <Button ref={tagRef} {...props}></Button>
+        </Tooltip>)
+        :<></>
+    }else{
+        return isPermitted ? <Button ref={tagRef} {...props}></Button> : <></>
+    }
+
 })

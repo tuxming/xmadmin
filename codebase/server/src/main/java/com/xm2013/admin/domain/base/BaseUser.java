@@ -10,6 +10,22 @@ import com.xm2013.admin.jfinal.generator.Col;
 @SuppressWarnings({"serial", "unchecked"})
 public abstract class BaseUser<M extends BaseUser<M>> extends Model<M> implements IBean {
 
+	public static String COL_ID = "id";
+	public static String COL_USERNAME = "username";
+	public static String COL_FULLNAME = "fullname";
+	public static String COL_PASSWORD = "password";
+	public static String COL_TOKEN = "token";
+	public static String COL_CREATED = "created";
+	public static String COL_PARENT_ID = "parent_id";
+	public static String COL_CODE = "code";
+	public static String COL_GENDER = "gender";
+	public static String COL_EMAIL = "email";
+	public static String COL_PHONE = "phone";
+	public static String COL_PHOTO = "photo";
+	public static String COL_DEPT_ID = "dept_id";
+	public static String COL_DEPT_PATH = "dept_path";
+	public static String COL_STATUS = "status";
+
 	public M setId(java.lang.Integer id) {
 		set("id", id);
 		return (M)this;

@@ -53,9 +53,9 @@
     flex-direction: column;
 }
 
-.collapsed-menu .ant-menu-item .ant-menu-title-content{
+/* .collapsed-menu .ant-menu-item .ant-menu-title-content{
     visibility: hidden;
-}
+} */
 
 .home-header{
     display: flex;

@@ -18,7 +18,14 @@ export interface MenuType {
 
 
 export interface MenusType {
+    /**
+     * 菜单数组，方便遍历
+     */
     menus: MenuType[],
+    /**
+     * 菜单树形结构，构建菜单
+     */
+    treeMenu: MenuType[],
     loading: boolean,
     error: string | null,
 }
@@ -27,12 +34,19 @@ export interface MenusType {
 const defaultState : MenusType = {
     loading: true, 
     error: null,
-    menus: [ {
+    menus: [{
+        id: 2,
+        icon: 'icon-dashboard',
+        name: "主面板",
+        path: '/sys/overview',
+    }],
+    treeMenu: [{
         id: 2,
         icon: 'icon-dashboard',
         name: "主面板",
         path: '/sys/overview',
     },
+    
   ]
 }
 
@@ -73,6 +87,22 @@ export const myMenusSlice = createSlice({
                     })
 
                     state.menus = menus;
+
+                    //将menus转换成treeMenu;
+                    let mapMenu = {};
+                    menus.forEach(menu => mapMenu[menu.id] = menu);
+                    mapMenu[0] = {name: "root", label:"根菜单", id: 0, parentId: null, children: [] };
+                    menus.forEach(menu => {
+                        let parentId = menu.parentId;
+                        if(parentId || parentId === 0){
+                            let parent = mapMenu[parentId];
+                            if(parent){
+                                parent.children.push(menu);
+                            }
+                        }
+                    })
+                    // console.log(mapMenu);
+                    state.treeMenu = mapMenu[1].children;
                 }else{
                     state.error = result.msg;
                 }

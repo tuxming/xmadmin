@@ -28,6 +28,7 @@ import {
     combineReducers, 
     configureStore
 } from '@reduxjs/toolkit'
+import { DictSlice } from '../common/dict';
 
 // const rootReducer = combineReducers({
 //     myMenus: myMenusSlice
@@ -51,7 +52,8 @@ const rootReducer = combineReducers({
     jwtToken: jwtTokenSlice.reducer,
     themeConfig: themeConfigSlice.reducer,
     globalVar: globalVarSlice.reducer,
-    openItem: openItemSlice.reducer
+    openItem: openItemSlice.reducer,
+    dicts: DictSlice.reducer
 })
 
 

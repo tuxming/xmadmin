@@ -9,6 +9,7 @@ import java.lang.annotation.Target;
  * 定义权限表达式的注解类，多一个name，方便启动的时候获取到权限列表一次性添加到数据库
  */
 @Target({ElementType.TYPE, ElementType.METHOD})
+//@Retention(RetentionPolicy.RUNTIME)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Per {
 	/**
@@ -22,4 +23,10 @@ public @interface Per {
      * @return
      */
 	String name();
+	
+	/**
+	 * 分组
+	 * @return
+	 */
+	String group() default "normal";
 }

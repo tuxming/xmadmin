@@ -10,6 +10,11 @@ import com.xm2013.admin.jfinal.generator.Col;
 @SuppressWarnings({"serial", "unchecked"})
 public abstract class BaseUserData<M extends BaseUserData<M>> extends Model<M> implements IBean {
 
+	public static String COL_ID = "id";
+	public static String COL_USER_ID = "user_id";
+	public static String COL_REF_ID = "ref_id";
+	public static String COL_TYPE = "type";
+
 	public M setId(java.lang.Integer id) {
 		set("id", id);
 		return (M)this;
@@ -41,21 +46,39 @@ public abstract class BaseUserData<M extends BaseUserData<M>> extends Model<M> i
 	}
 
 	/**
-	 * 拥有的组织节点
+	 * 引用id: type=1, 为用户id, 2-为组织id
 	 */
-	public M setDeptPath(java.lang.String deptPath) {
-		set("dept_path", deptPath);
+	public M setRefId(java.lang.Integer refId) {
+		set("ref_id", refId);
 		return (M)this;
 	}
 	
 	/**
-	 * 拥有的组织节点
+	 * 引用id: type=1, 为用户id, 2-为组织id
 	 */
 	@Col(tableName = "sys_user_data", tableLabel="数据权限	", 
-		fieldName = "deptPath", colName = "dept_path", 
-		label = "拥有的组织节点")
-	public java.lang.String getDeptPath() {
-		return getStr("dept_path");
+		fieldName = "refId", colName = "ref_id", 
+		label = "引用id: type=1, 为用户id, 2-为组织id")
+	public java.lang.Integer getRefId() {
+		return getInt("ref_id");
+	}
+
+	/**
+	 * 数据权限类型： 1-具体的用户id, 2-组织节点的id
+	 */
+	public M setType(java.lang.Integer type) {
+		set("type", type);
+		return (M)this;
+	}
+	
+	/**
+	 * 数据权限类型： 1-具体的用户id, 2-组织节点的id
+	 */
+	@Col(tableName = "sys_user_data", tableLabel="数据权限	", 
+		fieldName = "type", colName = "type", 
+		label = "数据权限类型： 1-具体的用户id, 2-组织节点的id")
+	public java.lang.Integer getType() {
+		return getInt("type");
 	}
 
 }

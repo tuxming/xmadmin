@@ -1,6 +1,10 @@
 package com.xm2013.admin.basic.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.redis.Redis;
@@ -9,12 +13,14 @@ import com.xm2013.admin.common.Kit;
 import com.xm2013.admin.common.SqlKit;
 import com.xm2013.admin.domain.dto.PageInfo;
 import com.xm2013.admin.domain.dto.user.UserListQuery;
+import com.xm2013.admin.domain.model.Dept;
 import com.xm2013.admin.domain.model.User;
 import com.xm2013.admin.domain.model.UserData;
 import com.xm2013.admin.shiro.dto.ShiroUser;
+import com.xm2013.admin.shiro.dto.ShiroUserData;
 
 public class UserService {
-
+	
 	/**
 	 * 根据用户名查找用户
 	 * @param username
@@ -25,14 +31,7 @@ public class UserService {
 		return user;
 	}
 	
-	/**
-	 * 根据id查找用户的数据权限
-	 * @param userId
-	 * @return
-	 */
-	public List<UserData> findDataPathByUser(Integer userId) {
-		return UserData.dao.findByCache(CacheKey.USER_ID, userId, "select * from sys_user_data where user_id=?", userId);
-	}
+	
 
 	public User findById(int id) {
 		User user = User.dao.findFirstByCache(CacheKey.USER_NAME, id, "select * from sys_user where id=?", id);
@@ -167,13 +166,8 @@ public class UserService {
 	
 	private String buildWhere(UserListQuery query, ShiroUser user) {
 		String where = "";
-		if(!user.isAdmin()) {
-			String users = user.getUsers();
-			if(Kit.isNotNull(users)) {
-				where += "and t.id in ("+users+")";
-			}
-			where += " and t.dept_path ("+String.join("|", user.getDataPath())+")";
-		}
+		
+		where += user.buildAuthCondition("t");
 		
 		String basicValue = SqlKit.getSafeValue(query.getBasicValue());
 		if(Kit.isNotNull(basicValue)) {
@@ -218,17 +212,89 @@ public class UserService {
 
 		key = SqlKit.getSafeValue(key);
 		
-		String sql = "select id, username, fullname from sys_user where (username like '%"+key+"%' or fullname like '%"+key+"%') limit 50";
-		if(!user.isAdmin()) {
-			if(Kit.isNotNull(user.getUsers())) {
-				sql += " and creater in ("+user.getUsers()+")";
-			}else {
-				sql += " and creater="+user.getId();
-			}
-		}
+		String sql = "select id, username, fullname from sys_user where"
+				+ user.buildAuthCondition("")
+				+ " and (username like '%"+key+"%' or fullname like '%"+key+"%') limit 50";
 		
 		List<User> users = User.dao.find(sql);
 		return users;
+	}
+
+
+
+	/**
+	 * 获取用户的数据权限，
+	 * 所有授权的用户id,
+	 * 所有授权的节点权限
+	 * @param userId
+	 * @return
+	 */
+	public List<ShiroUserData> findUserDataByUser(Integer userId) {
+		
+		List<UserData> userDatas = UserData.dao.find("select * from sys_user_data where user_id=?");
+		if(!userDatas.isEmpty()) {
+			Map<Integer, List<UserData>> mapByType = userDatas.stream().collect(Collectors.groupingBy(s -> s.getType()));
+			
+			List<UserData> users = mapByType.get(1);
+			List<UserData> depts = mapByType.get(2);
+			
+			if(users!=null && !users.isEmpty()) {
+				String[] userIds = new String[users.size()];
+				Map<Integer, UserData> map1 = new HashMap<Integer, UserData>();
+				for (int i=0; i<users.size(); i++) {
+					UserData ud = users.get(i);
+					userIds[i] = ud.getRefId()+"";
+					map1.put(ud.getRefId(), ud);
+				}
+				
+				List<User> userInfos = User.dao.find("select id, fullname, username from sys_user where id in ("+String.join(",", userIds)+")");
+				for (User user : userInfos) {
+					UserData ud = map1.get(user.getId().intValue());
+					String name = user.getFullname()+"("+user.getUsername()+")";
+					ud.put("username", name);
+				}
+					
+			}
+			
+			if(depts!=null && !depts.isEmpty()) {
+				String[] deptIds = new String[depts.size()];
+				Map<Integer, UserData> map1 = new HashMap<Integer, UserData>();
+				for(int i=0; i<depts.size(); i++) {
+					UserData us = depts.get(i);
+					deptIds[i] = us.getId()+"";
+					map1.put(us.getRefId(), us);
+				}
+				
+				List<Dept> deptInfos = Dept.dao.find("select * from sys_dept where id in ("+String.join(",", deptIds)+")");
+				for (Dept dept : deptInfos) {
+					UserData ud = map1.get(dept.getId().intValue());
+					ud.put("path",dept.getPath());
+					ud.put("pathName", dept.getPathName());
+				}
+				
+			}
+			
+		}
+		
+		List<ShiroUserData> suds = new ArrayList<>();
+		for (UserData userData : userDatas) {
+			
+			ShiroUserData sd = new ShiroUserData();
+			sd.setId(userData.getId());
+			sd.setUserId(userData.getId());
+			sd.setRefId(userData.getRefId());
+			int type = userData.getType();
+			sd.setType(type);
+			if(type == 1) {
+				sd.setUsername(userData.getStr("username"));
+			}else {
+				sd.setPath(userData.getStr("path"));
+				sd.setPathName(userData.getStr("pathName"));
+			}
+			
+		}
+		
+		return suds;
 	}
 
 

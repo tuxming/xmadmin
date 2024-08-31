@@ -1,5 +1,8 @@
 package com.xm2013.admin.domain.dto.basic;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.xm2013.admin.domain.dto.Query;
 
 public class DocumentListQuery extends Query{
@@ -8,6 +11,12 @@ public class DocumentListQuery extends Query{
 	private String type;
 	private String name;
 	private String remark;
+	private List<Integer> ids = new ArrayList<Integer>();
+	
+	/**
+	 * 是否查询总数： 默认查询：
+	 */
+	private Boolean isTotal = true;
 	public Integer getCreater() {
 		return creater;
 	}
@@ -32,5 +41,17 @@ public class DocumentListQuery extends Query{
 	public void setRemark(String remark) {
 		this.remark = remark;
 	}
-
+	public Boolean getIsTotal() {
+		return isTotal;
+	}
+	public void setIsTotal(Boolean isTotal) {
+		this.isTotal = isTotal;
+	}
+	public List<Integer> getIds() {
+		return ids;
+	}
+	public void setIds(List<Integer> ids) {
+		this.ids = ids;
+	}
+	
 }

@@ -10,6 +10,16 @@ import com.xm2013.admin.jfinal.generator.Col;
 @SuppressWarnings({"serial", "unchecked"})
 public abstract class BaseHistory<M extends BaseHistory<M>> extends Model<M> implements IBean {
 
+	public static String COL_ID = "id";
+	public static String COL_USER_ID = "user_id";
+	public static String COL_USERNAME = "username";
+	public static String COL_IP_ADDR = "ip_addr";
+	public static String COL_TYPE = "type";
+	public static String COL_CREATED = "created";
+	public static String COL_REMARK = "remark";
+	public static String COL_SEQ = "seq";
+	public static String COL_HISTORY_ID = "history_id";
+
 	public M setId(java.lang.Integer id) {
 		set("id", id);
 		return (M)this;

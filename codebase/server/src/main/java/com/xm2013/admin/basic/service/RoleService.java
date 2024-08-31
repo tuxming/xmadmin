@@ -34,14 +34,10 @@ public class RoleService {
 		
 		key = SqlKit.getSafeValue(key);
 		
-		String sql = "select * from sys_role where 1=1 and (role_name like '%"+key+"%' or code like '%"+key+"%')";
-		if(!user.isAdmin()) {
-			if(Kit.isNotNull(user.getUsers())) {
-				sql += " and creater in ("+user.getUsers()+")";
-			}else {
-				sql += " and creater="+user.getId();
-			}
-		}
+		String sql = "select t.* from sys_role as t left join sys_user as t1 on t1.id = t.creater "
+				+ " where "
+				+  user.buildAuthCondition("t1")
+				+ " (t.role_name like '%"+key+"%' or t.code like '%"+key+"%')";
 		
 		List<Role> roles = Role.dao.find(sql);
 		
@@ -73,7 +69,8 @@ public class RoleService {
 		
 		String sql = "select t.*, t1.fullname as createrName from sys_role as t "
 				+ " left join sys_user as t1 on t1.id = t.creater "
-				+ " where 1=1 ";
+				+ " where "
+				+ user.buildAuthCondition("t1");
 		
 		String where = buildWhere(query, user);
 		sql += where + " order by t.id desc limit "
@@ -92,7 +89,10 @@ public class RoleService {
 	 */
 	public int total(RoleListQuery query, ShiroUser user) {
 		
-		String sql = " select count(*) from sys_role as t where 1=1 ";
+		String sql = " select count(*) from sys_role as t"
+				+ " left join sys_user as t1 on t1.id = t.creater "
+				+ " where " 
+				+ user.buildAuthCondition("t1");
 		
 		sql += buildWhere(query, user);
 		
@@ -103,13 +103,6 @@ public class RoleService {
 	
 	private String buildWhere(RoleListQuery query, ShiroUser user) {
 		String where = "";
-		if(!user.isAdmin()) {
-			String users = user.getUsers();
-			if(Kit.isNotNull(users)) {
-				where += "and t.creater in ("+users+")";
-			}
-			where += " and t.creater in (select id from sys_user where dept_path ("+String.join("|", user.getDataPath())+")) ";
-		}
 		
 		String basicValue = SqlKit.getSafeValue(query.getBasicValue());
 		if(Kit.isNotNull(basicValue)) {

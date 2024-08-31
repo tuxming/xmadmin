@@ -13,9 +13,11 @@ public class Test {
 //		byte[] decode = Base64.getEncoder().encode(en.getBytes());
 //		String base64 = new String(decode);
 //		System.out.println(base64);
-		for(int i=0; i<1000; i++) {
-			System.out.println(UUID.randomUUID().toString().replace("-", "").substring(24));
-		}
+//		for(int i=0; i<1000; i++) {
+//			System.out.println(UUID.randomUUID().toString().replace("-", "").substring(24));
+//		}
+		
+		System.out.println("AA-0012".matches("[a-zA-Z]{1,2}.{1}[0-9]{3,4}"));
 	}
 	
 }

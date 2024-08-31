@@ -10,6 +10,14 @@ import com.xm2013.admin.jfinal.generator.Col;
 @SuppressWarnings({"serial", "unchecked"})
 public abstract class BaseDocument<M extends BaseDocument<M>> extends Model<M> implements IBean {
 
+	public static String COL_ID = "id";
+	public static String COL_FILE_NAME = "file_name";
+	public static String COL_PATH = "path";
+	public static String COL_CREATED = "created";
+	public static String COL_USER_ID = "user_id";
+	public static String COL_TYPE = "type";
+	public static String COL_REMARK = "remark";
+
 	public M setId(java.lang.Integer id) {
 		set("id", id);
 		return (M)this;
