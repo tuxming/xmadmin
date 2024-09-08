@@ -1,9 +1,9 @@
-import { Upload, Image, App  } from "antd"
+import { Upload, Image } from "antd"
 import { PlusOutlined } from '@ant-design/icons';
 import type { GetProp, UploadFile, UploadProps } from 'antd';
 import { useEffect, useState } from "react";
 import { api } from "../../../common/api";
-import { useRequest, useTranslation } from "../../../components";
+import { useLayer, useRequest, useTranslation } from "../../../components";
 import { DefaultNS } from "../../../common/I18NNamespace";
 
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
@@ -33,17 +33,19 @@ export const FileUploadFormItem : React.FC<{
     category?: string,
     maxCount?: number,
     value?: number[], 
-    onChange?: (values: number[])=>void
+    onChange?: (values: number[])=>void,
+    onRemove?: (value: number) => void,
 }> = ({
     listType,
     category,
     value,
     maxCount,
-    onChange
+    onChange,
+    onRemove
 }) => {
 
     const {t} = useTranslation(DefaultNS);
-    const {message} = App.useApp();
+    const {message} = useLayer();
     const request = useRequest();
     const [previewOpen, setPreviewOpen] = useState(false);
     const [previewImage, setPreviewImage] = useState('');
@@ -79,7 +81,6 @@ export const FileUploadFormItem : React.FC<{
 
     const handleChange: UploadProps['onChange'] = (info) => {
         setFileList(info.fileList);
-        console.log(info);
         let ids = [];
         info.fileList.forEach(file => {
             if(file.status == 'done'){
@@ -100,7 +101,9 @@ export const FileUploadFormItem : React.FC<{
 
     const handleRemove = (file)=>{
         const doDelete = async () => {
-            let result = await request.get(api.document.deletes+"?ids="+file.uid)
+            let id = file.response?.data || file.uid; 
+            
+            let result = await request.get(api.document.deletes+"?ids="+id)
             if(result.status){
                 let txt = Object.keys(result.data).map(filename => {
                     let msg = result.data[filename];
@@ -121,6 +124,9 @@ export const FileUploadFormItem : React.FC<{
             }
         }
         doDelete();
+        if(onRemove){
+            onRemove(file.response?.data || file.uid);
+        }
     }
 
     // const customRequest = (options) => {
@@ -129,8 +135,8 @@ export const FileUploadFormItem : React.FC<{
 
     const uploadButton = (
         <button style={{ border: 0, background: 'none' }} type="button">
-        <PlusOutlined />
-        <div style={{ marginTop: 8 }}>Upload</div>
+            <PlusOutlined />
+            <div style={{ marginTop: 8 }}>Upload</div>
         </button>
     );
 

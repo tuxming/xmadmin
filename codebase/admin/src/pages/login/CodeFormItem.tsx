@@ -1,8 +1,8 @@
 
 import { useEffect, useState } from "react";
-import { Form, Input, App  } from 'antd';
+import { Form, Input } from 'antd';
 import { SendOutlined, NumberOutlined} from '@ant-design/icons';
-import { useRequest } from '../../components/index';
+import { useRequest, useLayer } from '../../components/index';
 
 export type CodeFormItemType = {
     label: string, 
@@ -18,7 +18,7 @@ export const CodeFormItem : React.FC<CodeFormItemType> = ({label,name='code', ru
     const request = useRequest();
     const [resend, setResend] = useState(true);
     const [balanceSeconds, setBalanceSeconds] = useState(60);
-    const { message } = App.useApp();
+    const { message } = useLayer();
 
     const sendCode = () => {
         let url = validate();

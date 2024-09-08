@@ -3,9 +3,11 @@ import { ReactNode, useEffect, useState } from "react";
 import { useSelector } from "../../redux/hooks";
 import { computePx } from '../../common/kit'
 
-const widths = [576, 768, 992, 1200, 1600];
+// const widths = [576, 768, 992, 1200, 1600];
 
-
+/**
+ * 双列布局，左边一列是具体的数字宽度
+ */
 export type DoubleColumnLayoutType = {
     /**
      * 容器的宽度, 如果没有设置容器的宽度则已整个屏幕宽度作为容器的宽度

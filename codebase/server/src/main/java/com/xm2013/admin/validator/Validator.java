@@ -13,7 +13,7 @@ import com.xm2013.admin.basic.ctrl.BaseController;
 import com.xm2013.admin.common.Kit;
 
 /**
- * 正则表达式验证类
+ * 验证器验证类
  * @author tuxming@sina.com
  * @created 2018年12月15日
  */

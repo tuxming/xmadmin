@@ -1,7 +1,10 @@
 import { Button, Space } from "antd"
 import { DeleteIcon } from "../../components/icon/svg/Icons"
+import { useLayer } from "../../components"
 
 export const OverviewPage : React.FC = () => {
+
+    const {message} = useLayer();
 
     return <>
         
@@ -11,7 +14,7 @@ export const OverviewPage : React.FC = () => {
             padding: 20
         }}>
             <Space>
-                <Button icon={<DeleteIcon type="default"/> } type="default">text</Button>
+                <Button icon={<DeleteIcon type="default"/> } onClick={() => message.open({content: "打开了一个提示消息", type: "success"})} type="default">text</Button>
                 <Button icon={<DeleteIcon type="default" danger/> } type="default" danger>text</Button>
                 <Button icon={<DeleteIcon type="default" ghost/> } type="default" ghost>text</Button>
                 <Button icon={<DeleteIcon type="default" ghost danger/> } type="default" ghost danger>text</Button>

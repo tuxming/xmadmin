@@ -11,7 +11,13 @@ import com.xm2013.admin.jfinal.generator.Col;
 public abstract class BaseRolePermission<M extends BaseRolePermission<M>> extends Model<M> implements IBean {
 
 	public static String COL_ID = "id";
+	/**
+	 * 权限id
+	 */
 	public static String COL_PERMISSION_ID = "permission_id";
+	/**
+	 * 角色id
+	 */
 	public static String COL_ROLE_ID = "role_id";
 
 	public M setId(java.lang.Integer id) {

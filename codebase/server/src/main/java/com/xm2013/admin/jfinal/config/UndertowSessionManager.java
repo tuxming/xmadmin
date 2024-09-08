@@ -36,7 +36,8 @@ import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.Transaction;
 
 /**
- * 实现自定义SessionManager主要用于处理session存入到redis中，这样就可以共享session,已达到分布式的目的
+ * 实现自定义SessionManager主要用于处理session存入到redis中，这样就可以共享session,以达到分布式的目的
+ * 由于这里由redis接管了session，所以必须先启动redis才能正常启动项目
  */
 public class UndertowSessionManager implements SessionManager, SessionManagerStatistics {
 	private final static String CACHE_KEY_SESSION_ID = "undertow_session_id";

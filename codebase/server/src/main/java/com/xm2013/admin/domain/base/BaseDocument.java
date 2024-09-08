@@ -11,11 +11,29 @@ import com.xm2013.admin.jfinal.generator.Col;
 public abstract class BaseDocument<M extends BaseDocument<M>> extends Model<M> implements IBean {
 
 	public static String COL_ID = "id";
+	/**
+	 * 文件名
+	 */
 	public static String COL_FILE_NAME = "file_name";
+	/**
+	 * 文件路径
+	 */
 	public static String COL_PATH = "path";
+	/**
+	 * 创建时间
+	 */
 	public static String COL_CREATED = "created";
+	/**
+	 * 创建人
+	 */
 	public static String COL_USER_ID = "user_id";
+	/**
+	 * 文件类型
+	 */
 	public static String COL_TYPE = "type";
+	/**
+	 * 文件说明
+	 */
 	public static String COL_REMARK = "remark";
 
 	public M setId(java.lang.Integer id) {

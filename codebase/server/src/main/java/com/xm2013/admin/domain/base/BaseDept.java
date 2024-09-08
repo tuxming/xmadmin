@@ -11,10 +11,25 @@ import com.xm2013.admin.jfinal.generator.Col;
 public abstract class BaseDept<M extends BaseDept<M>> extends Model<M> implements IBean {
 
 	public static String COL_ID = "id";
+	/**
+	 * 组织显示名
+	 */
 	public static String COL_NAME = "name";
+	/**
+	 * 上级名称
+	 */
 	public static String COL_PARENT_ID = "parent_id";
+	/**
+	 * 组织路径
+	 */
 	public static String COL_PATH = "path";
+	/**
+	 * 组织名称路径
+	 */
 	public static String COL_PATH_NAME = "path_name";
+	/**
+	 * 组织类型：0-个人，1-小组，2-部门，3-公司，4-集团
+	 */
 	public static String COL_TYPE = "type";
 
 	public M setId(java.lang.Integer id) {

@@ -9,6 +9,8 @@ import java.util.stream.Collectors;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.IAtom;
 import com.jfinal.plugin.activerecord.Record;
+import com.jfinal.plugin.redis.Redis;
+import com.xm2013.admin.common.CacheKey;
 import com.xm2013.admin.common.kits.FileKit;
 import com.xm2013.admin.domain.dto.PageInfo;
 import com.xm2013.admin.domain.dto.basic.DeptQuery;
@@ -16,16 +18,45 @@ import com.xm2013.admin.domain.model.Dept;
 import com.xm2013.admin.exception.BusinessErr;
 import com.xm2013.admin.exception.BusinessException;
 import com.xm2013.admin.shiro.dto.ShiroUser;
+import static com.xm2013.admin.common.CacheKey.SESSION_KEY_DEPT_ID;
+import static com.xm2013.admin.common.CacheKey.SESSION_KEY_DEPT_PARENT_ID;
+import static com.xm2013.admin.common.CacheKey.SESSION_KEY_DEPT_PATH;
+import static com.xm2013.admin.common.CacheKey.SESSION_KEY_DEPT_CHILD_PATH;
 
 public class DeptService {
 	
+	private static String sql = "select t.*, "
+			+ " t1.name as parentName, t1.path as parentPath, t1.pathName as parentPathName "
+			+ " from sys_dept as t left "
+			+ " join sys_dept as t1 on t1.id = t.id "
+			+ " where ";
+	
 	public Dept findById(int deptId) {
-		return Dept.dao.findById(deptId);
+		return Dept.dao.findFirstByCache(SESSION_KEY_DEPT_ID, deptId, sql += " t.id = ?", deptId);
 	}
 
 	public List<Dept> findByParent(int id) {
-		return Dept.dao.find("select * from sys_dept where parent_id=?", id);
+		return Dept.dao.findByCache(SESSION_KEY_DEPT_PARENT_ID, id, sql + " t.parent_id=?", id);
 	}
+	
+	public Dept findByPath(String path){
+		return Dept.dao.findFirstByCache(SESSION_KEY_DEPT_PATH, path, sql += " t.path = ?", path); 
+	}
+	
+	public List<Dept> findByChildPath(String path){
+		return Dept.dao.find(SESSION_KEY_DEPT_CHILD_PATH, path, sql += " t.like = '"+path+"%'"); 
+	}
+	
+	private void removeCache(Dept dept) {
+		if(dept == null) {
+			return;
+		}
+		Redis.use().hdel(CacheKey.SESSION_KEY_DEPT_ID, dept.getId());
+		Redis.use().hdel(CacheKey.SESSION_KEY_DEPT_PARENT_ID, dept.getParentId());
+		Redis.use().hdel(CacheKey.SESSION_KEY_DEPT_PATH, dept.getPath());
+		Redis.use().hdel(CacheKey.SESSION_KEY_DEPT_CHILD_PATH, dept.getPath());
+	}
+	
 
 	/**
 	 * 新建节点, 只能保存在自己具有数据权限的组织下面，如果没有组织权限，则不能保存
@@ -211,17 +242,26 @@ public class DeptService {
 				Dept updateDept = new Dept()
 						.setId(dept.getId());
 				
-				if(!db.getName().equals(dept.getName())) {
-					updateDept.setName(dept.getName().trim());
-				}
+				List<Dept> updateChilds = null;
 				
 				//是否修改了父级节点
 				Integer parentId = dept.getParentId();
 				if(parentId!=null && parentId.intValue()!=db.getParentId()) {
+					//不能把上级节点设置为自己
+					if(dept.getParentId() == dept.getId()) {
+						throw new BusinessException(BusinessErr.INVALID_PARAM, "上级节点不能是自己");
+					}
+					
 					//判断修改后的节点是否具有权限
 					Dept targetParent = Dept.dao.findById(parentId);
+					
 					if(targetParent == null) {
 						throw new BusinessException(BusinessErr.NO_DATA, "目标节点不存在");
+					}
+					
+					//不能把上级节点设置为自己的下级
+					if(targetParent.getPath().startsWith(db.getPath())) {
+						throw new BusinessException(BusinessErr.INVALID_PARAM, "上级节点不能是自己的子节点");
 					}
 					
 					if(!user.isOwnerData(targetParent.getPath())) {
@@ -229,22 +269,57 @@ public class DeptService {
 					}
 					
 					updateDept.setParentId(parentId);
-					updateDept.setPath(FileKit.compilePath(targetParent.getPath(), dept.getId()+""));
-					updateDept.setPathName(FileKit.compilePath(targetParent.getPathName(), dept.getName()+""));
+					updateDept.setPath(FileKit.compilePath(targetParent.getPath(), dept.getId()+"/"));
+					updateDept.setPathName(FileKit.compilePath(targetParent.getPathName(), dept.getName()+"/"));
 					
+					//更新所有子节点
+					updateChilds=updateChildrens(db.getPath(), updateDept.getPath(), db.getPathName(), updateDept.getPathName());
 				}
+				
+				if(!db.getName().equals(dept.getName())) {
+					updateDept.setName(dept.getName().trim());
+					Dept parent = Dept.dao.findById(db.getParentId());
+					//更新子节点
+					String newPathName = FileKit.compilePath(parent.getPathName(), dept.getName()+"/");
+					updateDept.setPathName(newPathName);
+					if(updateChilds!=null) {
+						updateChilds.forEach(d -> {
+							d.setPathName(d.getPathName().replace(db.getPathName(), newPathName).replace("//", "/"));
+						});
+					}else {
+						updateChilds = updateChildrens(db.getPath(), db.getPath(), db.getPathName(), newPathName);
+					}
+				}
+				
 				
 				if(dept.getType()!=null && db.getType().intValue()!= dept.getType()) {
 					updateDept.setType(dept.getType());
 				}
 				
 				updateDept.update();
+				if(updateChilds!=null && updateChilds.size()>0) {
+					Db.batchUpdate(updateChilds, updateChilds.size());
+				}
 				
+				removeCache(db);
 				return true;
 			}
 		});
-		
-		
+	}
+	
+	private List<Dept> updateChildrens(String oldPath, String newPath, String oldPathName, String newPathName){
+		List<Dept> depts = findByChildPath(oldPath);
+		List<Dept> udepts = new ArrayList<Dept>();
+		if(!depts.isEmpty()) {
+			depts.forEach(d -> {
+				udepts.add(
+					new Dept().setId(d.getId())
+						.setPath(d.getPath().replace(oldPath, newPath).replace("//", "/"))
+						.setPathName(d.getPathName().replace(oldPathName, newPathName).replace("//", "/"))
+				);
+			});
+		}
+		return udepts;
 	}
 
 	/**
@@ -265,6 +340,7 @@ public class DeptService {
 		dept.delete();
 		
 		Db.delete("delete from sys_dept where path like '"+dept.getPath()+"%'");
+		removeCache(dept);
 		
 		return null;
 	}

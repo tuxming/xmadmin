@@ -1,26 +1,6 @@
 
-import { createSlice } from '@reduxjs/toolkit';
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 // import { TabItemType } from '../pages/home/HeadTab'
-
-const defaultLoadingState  = {
-    value: false
-};
-
-/**
- * 全屏加载
- */
-export const LoadingSlice = createSlice({
-    name: "loading",
-    initialState: defaultLoadingState,
-    reducers: {
-        start: (state) => {
-            state.value = true;
-        },
-        end: (state) => {
-            state.value = false;
-        },
-    }
-});
 
 const defaultActiveTabKeyState  = {
     value: null
@@ -209,11 +189,13 @@ export type GlobalVarType = {
     isMinScreen: boolean,
     width: number,
     height: number,
+    windowIndex: number,
     modalIndex: number,
 }
 
 const defaultGlobalVar: GlobalVarType = {
-    modalIndex: 1000,
+    modalIndex: 2000,
+    windowIndex: 500,
     isMinScreen: document.body.clientWidth<576,
     width: document.body.clientWidth,
     height: document.body.clientHeight,
@@ -230,19 +212,12 @@ export const globalVarSlice = createSlice({
             // console.log("changeSize", action.payload);
             state.isMinScreen = action.payload.width < 576;
        },
-       addZIndex: (state, action)=>{
-            state.modalIndex = state.modalIndex + 1;
-       }
+       addWindowZIndex: (state, action)=>{
+            state.windowIndex = state.windowIndex + 1;
+       },
+       addModalZIndex: (state, action)=>{
+        state.modalIndex = state.modalIndex + 1;
+   }, 
     }
 });
 
-//全局消息定义
-export type MessageType = {
-    msg: "",
-    type: "success" | "error" | "info" | "warning"
-}
-
-const defaultMessage: MessageType = {
-    msg: "",
-    type: "info"
-}

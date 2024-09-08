@@ -5,7 +5,7 @@ import { UserSelector } from '../user/index';
 import { AdminRole } from '../../../common/I18NNamespace';
 
 
-export type RoleQueryComponentType = {
+export type RoleQueryType = {
     onQuery: (values) => void         //点击查询后，获取到的字段集合
 }
 
@@ -13,7 +13,7 @@ export type RoleQueryComponentType = {
  * 角色搜索条件表单
  * @returns 
  */
-export const RoleQueryComponent: React.FC<RoleQueryComponentType> = ({onQuery}) => {
+export const RoleQuery: React.FC<RoleQueryType> = ({onQuery}) => {
 
     const size = useSelector(state => state.themeConfig.componentSize);
     const {t} = useTranslation(AdminRole);

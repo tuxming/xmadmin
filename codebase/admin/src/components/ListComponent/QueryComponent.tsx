@@ -95,8 +95,7 @@ export const QueryComponent : React.FC<QueryComponentType> = ({items = [], onQue
                     prefix={<SearchIcon  primaryColor={token.colorPrimary} secondColor={token.colorError} offSetY={3}/>}
                 />
             </Form.Item>
-            {
-                items.map(item => <Form.Item  key={item.label} label={item.label} name={item.name}
+            {items.map(item => <Form.Item  key={item.label} label={item.label} name={item.name}
                         style={{
                             display: isQueryBasic?"none":"block", flexShrink:0, flexGrow:1,
                             marginBottom: 0

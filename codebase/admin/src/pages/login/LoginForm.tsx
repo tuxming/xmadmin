@@ -1,15 +1,14 @@
 import { useEffect, useState } from "react";
 import  "./LoginPage.css"
-import { Form, Button,Tooltip, FormProps, App  } from 'antd';
+import { Form, Button,Tooltip, FormProps } from 'antd';
 import { MailOutlined, PhoneFilled} from '@ant-design/icons';
 import { useNavigate } from "react-router-dom";
 import {PasswordLoginForm, PhoneLoginForm, MailLoginForm} from "./index";
-import { IconFont } from '../../components/index';
+import { IconFont, useLayer, useTranslation } from '../../components';
 import { jwtTokenSlice, login, LoginType, persistedUserSlice } from '../../redux/slice'
 import { useSelector, useDispatch } from '../../redux/hooks';
 import { api } from "../../common/api";
 import { useSearchParams   } from 'react-router-dom';
-import { useTranslation } from "../../components/useTranslation";
 import { AdminLogin } from "../../common/I18NNamespace";
 
 interface LoginFormProp {
@@ -21,7 +20,7 @@ export const LoginForm: React.FC<LoginFormProp> = ({onClickForget}) => {
 
     let [searchParams] = useSearchParams ();
 
-    const { message } = App.useApp();
+    const { message } = useLayer();
 
     const [form] = Form.useForm();
     const [type, setType] = useState(searchParams.get("t") || 1);

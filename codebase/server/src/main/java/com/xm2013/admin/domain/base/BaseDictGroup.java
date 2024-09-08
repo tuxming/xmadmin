@@ -10,8 +10,17 @@ import com.xm2013.admin.jfinal.generator.Col;
 @SuppressWarnings({"serial", "unchecked"})
 public abstract class BaseDictGroup<M extends BaseDictGroup<M>> extends Model<M> implements IBean {
 
+	/**
+	 * 字典值
+	 */
 	public static String COL_CODE = "code";
+	/**
+	 * 显示名
+	 */
 	public static String COL_LABEL = "label";
+	/**
+	 * 字典分类说明
+	 */
 	public static String COL_REMARK = "remark";
 
 	/**

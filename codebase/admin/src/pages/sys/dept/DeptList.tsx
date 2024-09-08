@@ -1,10 +1,9 @@
 import { useContext, useEffect, useState } from "react";
 import { AdminDept, DefaultNS } from "../../../common/I18NNamespace";
-import { useTranslation, TableColumnType, ModalContext, TableComponent, useRequest } from "../../../components";
+import { useTranslation, TableColumnType, ModalContext, TableComponent, useRequest, useLayer } from "../../../components";
 import { computePx } from "../../../common/kit";
 import { api } from "../../../common/api";
 import { LoadingOutlined, MinusSquareTwoTone, PlusSquareTwoTone } from "@ant-design/icons";
-import { App } from "antd";
 import { DeptTypeTag } from "./index";
 
 
@@ -12,6 +11,7 @@ export type DeptListType = {
     query: any,
     onSelect: (rows: any[]) => void,
     needUpdateId?: any,
+    onChildUpdated?: (children: any[]) => void
 }
 
 
@@ -22,16 +22,18 @@ export type DeptListType = {
 export const DeptList : React.FC<DeptListType> = ({
     query,
     onSelect,
-    needUpdateId
+    needUpdateId,
+    onChildUpdated
 }) => {
     const {t} = useTranslation(AdminDept);
     const request = useRequest();
-    const {message} = App.useApp();
+    const {message} = useLayer();
     const [updateChildren, setUpdateChildren] = useState({
         data: null,
         parentId: null
     });
-
+    const [selectedRowKeys, setSelectedRowKeys] = useState<any[]>();
+    
     const columns : TableColumnType[]= [
         {
             title: t('名称'),
@@ -113,11 +115,17 @@ export const DeptList : React.FC<DeptListType> = ({
                 setUpdateChildren({
                     parentId: needUpdateId,
                     data: result.data.list
-                })
+                });
+                if(onChildUpdated){
+                    onChildUpdated(result.data.list);
+                }
+                setSelectedRowKeys([]);
             }
         }
 
-        get();
+        if(needUpdateId){
+            get();
+        }
     }, [needUpdateId])
 
     //获取数据
@@ -153,13 +161,20 @@ export const DeptList : React.FC<DeptListType> = ({
         post();
     }
 
+    const onTableSelectChange =  (selectedRows: any[]) => {
+        onSelect(selectedRows);
+        setSelectedRowKeys(selectedRows.map(row => row.id));
+    }
 
     const [loadingMap, setLoadingMap] = useState({});
 
     return <TableComponent pageSize={20} query={query} apiUrl={api.dept.list} 
         width={pos?.width} height={pos?.height} 
-        onSelect={onSelect}
+        onSelect={onTableSelectChange}
         columns={columns}
+        rowSelection={{
+            selectedRowKeys: selectedRowKeys
+        }}
         updateChildren={updateChildren}
         selectType="radio"
         expandable={{

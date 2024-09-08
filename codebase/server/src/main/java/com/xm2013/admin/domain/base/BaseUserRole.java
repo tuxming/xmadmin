@@ -11,7 +11,13 @@ import com.xm2013.admin.jfinal.generator.Col;
 public abstract class BaseUserRole<M extends BaseUserRole<M>> extends Model<M> implements IBean {
 
 	public static String COL_ID = "id";
+	/**
+	 * 角色id
+	 */
 	public static String COL_ROLE_ID = "role_id";
+	/**
+	 * 用户id
+	 */
 	public static String COL_USER_ID = "user_id";
 
 	public M setId(java.lang.Integer id) {

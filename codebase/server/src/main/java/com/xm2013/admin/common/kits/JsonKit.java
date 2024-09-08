@@ -1,6 +1,5 @@
 package com.xm2013.admin.common.kits;
 
-import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -18,9 +17,11 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.jfinal.json.Jackson;
-import com.jfinal.kit.FileKit;
 import com.xm2013.admin.common.Kit;
 
+/**
+ * json工具类
+ */
 public class JsonKit {
 	private static Logger log = Logger.getLogger(JsonKit.class);
 	

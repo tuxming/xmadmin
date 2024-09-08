@@ -119,4 +119,6 @@ export type TableType = {
      * 是否在初始的时候加载，为false的时候不加载
      */
     initLoad?: boolean
+    //加载成功后，返回数组
+    onDataLoaded?: (data: any[]) => void,
 } & TableProps;

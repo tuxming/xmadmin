@@ -1,10 +1,10 @@
 
 import React, {useState} from 'react';
-import { Button, Tooltip, Space, Divider, App } from "antd"
+import { Button, Tooltip, Space, Divider } from "antd"
 import { useSelector } from "../../../redux/hooks"
 import { DeleteIcon, EditIcon, ScanIcon, AddIcon, } from '../../../components/icon/svg/Icons';
 import { PermissionList, PermissionEdit, PermissionDelete } from './index'
-import { QueryComponent, useTranslation } from '../../../components';
+import { QueryComponent, useLayer, useTranslation } from '../../../components';
 import { AdminPermission } from '../../../common/I18NNamespace';
 import { PermissionScan } from './PermissionScan';
 
@@ -14,7 +14,7 @@ export const PermissionPage : React.FC = () => {
     const {t} = useTranslation(AdminPermission);
     const onlyIcon = useSelector(state => state.themeConfig.onlyIcon);
     const size = useSelector(state => state.themeConfig.componentSize);
-    const {message} = App.useApp();
+    const {message} = useLayer();
     const [query, setQuery] = useState({});
     const [selectedRows, setSelectedRows] = useState<any>();
 

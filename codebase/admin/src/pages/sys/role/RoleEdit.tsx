@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
-import { Modal, useRequest, useTranslation } from "../../../components"
-import { Button, Divider, Form, Input, Space, Typography, FormProps, App } from "antd"
+import { Modal, useLayer, useRequest, useTranslation } from "../../../components"
+import { Button, Divider, Form, Input, Space, Typography, FormProps } from "antd"
 import { CloseOutlined, SendOutlined } from "@ant-design/icons"
 import { RoleTypeSelector } from "./RoleType"
 import { api } from "../../../common/api"
@@ -41,7 +41,7 @@ export const RoleEdit : React.FC<RoleAddType> = ({
 
     const {t} = useTranslation(AdminRole);
     const request = useRequest();
-    const {message} = App.useApp();
+    const {message} = useLayer();
     // const [visible, setVisible] = useState(open);
     const [form] = Form.useForm();
 

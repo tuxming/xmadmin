@@ -1,7 +1,6 @@
-import { Confirm, useRequest, useTranslation } from "../../../components";
+import { Confirm, useRequest, useTranslation, useLayer } from "../../../components";
 import { api } from "../../../common/api";
-import { App } from 'antd'
-import { AdminDocument, DefaultNS } from "../../../common/I18NNamespace";
+import { AdminDocument } from "../../../common/I18NNamespace";
 
 export type DocumentDeleteType = {
     docs: any[],
@@ -18,7 +17,7 @@ export const DocumentDelete : React.FC<DocumentDeleteType> = ({
 }) => {
     
     const {t} = useTranslation(AdminDocument);
-    const { message } = App.useApp();
+    const { message } = useLayer();
     const request = useRequest();
 
     const msg = t("确定要删除以下文件：") 
@@ -54,7 +53,6 @@ export const DocumentDelete : React.FC<DocumentDeleteType> = ({
         doDelete();
     }
 
-
-    return (docs && docs.length>0) ? (<Confirm text={msg} onOk={onOk}></Confirm>)
+    return (docs && docs.length>0) ? (<Confirm content={msg} onOk={onOk}></Confirm>)
             : (<></> )
 }

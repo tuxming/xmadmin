@@ -100,6 +100,11 @@ public class DocumentController extends BaseController{
 			} catch (IOException e) {
 				log.error(e.getMessage(), e);
 				saved = false;
+			} finally {
+				try {
+					file.delete();
+				} catch (Exception e2) {
+				}
 			}
 		}else {
 			saved = file.renameTo(new File(targetPath, targetFilename));
@@ -125,7 +130,11 @@ public class DocumentController extends BaseController{
 			renderJson(JsonResult.error(Msg.ERR_UPLOAD));
 		}
 		
-		CommandKit.delete(path);
+//		try {
+//			CommandKit.delete(path);
+//		} catch (Exception e) {
+//			log.error(e.getMessage(), e);
+//		}
 //		try {
 //			File tmpFile = new File(path);
 //			if(tmpFile.exists()) {

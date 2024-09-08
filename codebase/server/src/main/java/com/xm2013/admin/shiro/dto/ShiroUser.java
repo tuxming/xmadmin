@@ -6,11 +6,12 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.jfinal.aop.Aop;
 import com.jfinal.kit.JsonKit;
 import com.jfinal.plugin.activerecord.Db;
+import com.xm2013.admin.basic.service.UserService;
 import com.xm2013.admin.common.Kit;
 import com.xm2013.admin.domain.model.Role;
-import com.xm2013.admin.domain.model.UserData;
 
 public class ShiroUser implements java.io.Serializable{
 	/**
@@ -83,11 +84,21 @@ public class ShiroUser implements java.io.Serializable{
 			return true;
 		}
 		
-		if(isOwnerData(userId)) {
-			return true;
-		}else {
+		if(userId!=null) {
+			if(isOwnerData(userId)) {
+				return true;
+			}else {
+				if(Kit.isNull(deptpath)) {
+					return isOwnerData(Aop.get(UserService.class).findById(userId).getStr("deptPath"));
+				}
+			}
+		}
+		
+		if(Kit.isNotNull(deptpath)) {
 			return isOwnerData(deptpath);
 		}
+		
+		return false;
 	}
 	
 	/**
@@ -129,7 +140,7 @@ public class ShiroUser implements java.io.Serializable{
 		
 	}
 	
-	public boolean isOwnerData(Integer userId) {
+	private boolean isOwnerData(Integer userId) {
 		
 		if(isAdmin() || userId == id) return true;
 		
@@ -138,18 +149,12 @@ public class ShiroUser implements java.io.Serializable{
 		
 		if(userIds!=null && userIds.contains(userId.intValue())) {
 			return true;
-		}else {
-			if(deptIds.size()>0) {
-				Integer total = Db.queryInt("select count(*) from sys_user where dept_id in("+deptIds+")");
-				if(total!=null && total>0) {
-					return true;
-				}else {
-					return false;
-				}
-			}else {
-				return true;
-			}
 		}
+		return false;
+//		else {
+//			String deptPath = Aop.get(UserService.class).findById(userId).getDeptPath();
+//			return isOwnerData(deptPath);
+//		}
 	}
 	
 	public boolean isOwnerData(String deptpath) {

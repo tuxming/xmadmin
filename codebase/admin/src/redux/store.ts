@@ -16,12 +16,11 @@ import {
     loginedUserSlice, 
     persistedUserSlice, 
     jwtTokenSlice,
-    LoadingSlice, 
     ActiveTabSlice, 
     TabItemsSlice, 
     themeConfigSlice,
     globalVarSlice,
-    openItemSlice
+    openItemSlice,
 } from './slice'
 
 import {
@@ -44,7 +43,6 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
     myMenus: myMenusSlice.reducer,
-    loading: LoadingSlice.reducer,
     activeTabKey: ActiveTabSlice.reducer,
     tabItems: TabItemsSlice.reducer,
     loginedUser: loginedUserSlice.reducer,
@@ -53,7 +51,7 @@ const rootReducer = combineReducers({
     themeConfig: themeConfigSlice.reducer,
     globalVar: globalVarSlice.reducer,
     openItem: openItemSlice.reducer,
-    dicts: DictSlice.reducer
+    dicts: DictSlice.reducer,
 })
 
 

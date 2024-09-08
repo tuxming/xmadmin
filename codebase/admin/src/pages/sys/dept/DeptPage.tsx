@@ -1,8 +1,8 @@
-import { App, Divider, Space, Tooltip } from "antd";
+import { App, Divider, Space } from "antd";
 import { AdminDept, DefaultNS } from "../../../common/I18NNamespace";
-import { AuthButton, useRequest, useTranslation } from "../../../components";
+import { AuthButton, useRequest, useTranslation,useLayer } from "../../../components";
 import { useSelector } from "../../../redux/hooks";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { DeptList, DeptEdit, DeptEditFormType } from "./index";
 import { AddIcon, DeleteIcon, EditIcon } from "../../../components/icon/svg/Icons";
 import { permission } from "../../../common/permission";
@@ -14,13 +14,15 @@ export const DeptPage : React.FC = () => {
 
     const onlyIcon = useSelector(state => state.themeConfig.onlyIcon);
     const size = useSelector(state => state.themeConfig.componentSize);
-    const {message, modal} = App.useApp();
+    const {message, confirm} = useLayer();
     const [query, setQuery] = useState({});
     const [selectedRows, setSelectedRows] = useState<any>();
     const [isEditOpen, setIsEditOpen] = useState(false);
     const [title, setTitle] = useState("");
     const [dept, setDept] = useState<DeptEditFormType>();
     const request = useRequest();
+
+    const updateQueue = useRef<number[]>([]);
 
     const [needUpdateId, setNeedUpdateId] = useState<any>();
 
@@ -61,6 +63,17 @@ export const DeptPage : React.FC = () => {
         }
     }
 
+    const setUpdate = (updateId) => {
+        if(updateId == needUpdateId){
+            setNeedUpdateId(null);
+            setTimeout(() => {
+                setNeedUpdateId(updateId);
+            }, 100);
+        }else{
+            setNeedUpdateId(updateId);
+        }
+    }
+
     //删除组织
     const onDelete = () => {
         if(selectedRows && selectedRows.length==0){
@@ -74,14 +87,15 @@ export const DeptPage : React.FC = () => {
             return;
         }
 
-        modal.confirm({
-            title: f("确定要删除组织：%s?, 该组织及其子节点都会被一起删除，请确定无误在删除！", [row.name]),
-            onOk: () => {
+        confirm({
+            content: f("确定要删除组织：%s?, 该组织及其子节点都会被一起删除，请确定无误在删除！", [row.name]),
+            onOk: (onClose) => {
                 let doDelete = async () => {
                     let result = await request.get(api.dept.delete+"?id="+row.id);
                     if(result.status){
                         message.success(t(result.msg, DefaultNS));
-                        setNeedUpdateId(row.parentId);
+                        setUpdate(row.parentId);
+                        onClose();
                     }else{
                         message.warning(t(result.msg));
                     }
@@ -89,15 +103,31 @@ export const DeptPage : React.FC = () => {
                 doDelete();
             }
         });
-
     }
 
-    const onAddClose = (needUpdateId) => {
-        if(needUpdateId){
-            setNeedUpdateId(needUpdateId);
+    const onUpdateChildren = () => {
+        updateFromQueue();
+    }
+
+    const onAddClose = (updateIds) => {
+        if(updateIds){
+            setSelectedRows([]);
+            updateIds.forEach(id => updateQueue.current.push(id));
+            updateFromQueue();
         }
         setIsEditOpen(false)
     }
+
+    const updateFromQueue = () => {
+        let arr = updateQueue.current;
+        if(arr.length>0){
+            let id = arr[0];
+            arr.splice(0,1);
+            updateQueue.current = arr;
+            setUpdate(id);
+        }
+    }
+
 
     return <>
         <Space wrap style={{marginTop: 20}}>
@@ -124,7 +154,7 @@ export const DeptPage : React.FC = () => {
             </AuthButton>
         </Space>
         <Divider />
-        <DeptList onSelect={onTableSelectChange} query={query} needUpdateId={needUpdateId}/>
+        <DeptList onSelect={onTableSelectChange} query={query} needUpdateId={needUpdateId} onChildUpdated={onUpdateChildren}/>
         {isEditOpen && <DeptEdit open={isEditOpen} onClose={onAddClose} title={title} dept={dept} />}
     </>
 }

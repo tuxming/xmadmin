@@ -4,7 +4,6 @@ import com.xm2013.admin.jfinal.config.MainConfig;
 import com.xm2013.admin.jfinal.config.UndertowSessionManager;
 import com.xm2013.admin.shiro.ShiroConst;
 
-import io.undertow.server.session.SessionConfig;
 import io.undertow.server.session.SessionCookieConfig;
 import io.undertow.server.session.SessionManager;
 import io.undertow.servlet.api.Deployment;

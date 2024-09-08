@@ -1,8 +1,7 @@
-import Axios, { AxiosResponse, AxiosInstance, AxiosRequestConfig} from 'axios';
+import Axios, { AxiosInstance, AxiosRequestConfig} from 'axios';
 import { message, Modal } from 'antd';
-import { LoadingSlice } from "../redux/CommonSlice";
-import store from '../redux/store';
 import {api} from '../common/api'
+import { layerRef, useLayer } from './Modal';
 
 export const jsonHeaders = {
     "Content-Type" : "application/json; charset=utf-8",
@@ -77,6 +76,20 @@ const goLogin = () => {
  * @returns 
  */
 export const useRequest = () => {
+
+    let loading = null, destory = null;
+    try{
+        let layer = useLayer();
+        loading = layer.loading;
+        destory = layer.destory;
+    }catch(err){
+        //useLayer是在react的Context中，所以，如果useRequest是在React内部使用，可以正常拿到layer对象，
+        //如果不是就会拿不到layer对象，这时候我们可以通过layerRef这个全局引用获取
+        // console.error(err);
+        loading = layerRef.current.loading;
+        destory = layerRef.current.destory;
+    }
+
     const getIntance = (headers: RequestHeader, backend:boolean) => {
         const instance: RequestInstance = Axios.create({
             ...headers,
@@ -85,10 +98,12 @@ export const useRequest = () => {
             withCredentials: true, // default
         });
 
+        let loadingKey = null;
+
         //拦截器错误回调
         const interceptorErr = (error) => {
             if(backend){
-                store.store.dispatch(LoadingSlice.actions.end());
+                loadingKey = loading();
             }
             handlerError(error);
             return Promise.reject(error);
@@ -96,8 +111,8 @@ export const useRequest = () => {
 
         //请求拦截器
         instance.interceptors.request.use((config)=>{
-            if(backend){
-               store.store.dispatch(LoadingSlice.actions.start());
+            if(backend && loadingKey){
+                destory(loadingKey);
             }
             return config;
         }, (error) => {
@@ -107,8 +122,8 @@ export const useRequest = () => {
         //返回拦截器
         instance.interceptors.response.use((response) => {
             // console.log(response);
-            if(backend){
-                store.store.dispatch(LoadingSlice.actions.end());
+            if(backend && loadingKey){
+                destory(loadingKey);
             }
             if(!response.data.status && response.data.code == '1' || response.data.code == '2'){
                 goLogin();

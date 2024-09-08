@@ -1,9 +1,9 @@
 
 
 import { useEffect, useState } from 'react';
-import { Descriptions, DescriptionsProps, Skeleton, theme as antdTheme, App  } from 'antd';
+import { Descriptions, DescriptionsProps, Skeleton, theme as antdTheme } from 'antd';
 import { useSelector } from '../../../redux/hooks';
-import { Modal, useRequest, useTranslation } from '../../../components';
+import { Modal, useLayer, useRequest, useTranslation } from '../../../components';
 import { api } from '../../../common/api';
 import { AdminHistory, DefaultNS } from '../../../common/I18NNamespace';
 
@@ -19,13 +19,9 @@ export const HistoryDetail : React.FC<HistoryDetailType> = ({
     close,
 }) => {
 
-    // if(!(open && historyId)){
-    //     return <></>
-    // }
-
     const [loading, setLoading] = useState(true);
     const theme = useSelector(state => state.themeConfig.theme);
-    const { message } = App.useApp();
+    const { message } = useLayer();
 
     const [items, setItems] = useState<DescriptionsProps['items']>();
     const size = useSelector(state => state.themeConfig.componentSize);
@@ -81,12 +77,6 @@ export const HistoryDetail : React.FC<HistoryDetailType> = ({
             btnColor={token.colorPrimary}
             btnHoverColor={token.colorPrimaryHover}
         >
-            {/* <Descriptions 
-                    bordered
-                        size={size == 'large'?'default':size}
-                        column={{ xs: 1, sm: 2, md: 2, lg: 2, xl: 2, xxl: 2 }}
-                        items={items}
-                    /> */}
             {
                 loading?(
                     <Skeleton active />

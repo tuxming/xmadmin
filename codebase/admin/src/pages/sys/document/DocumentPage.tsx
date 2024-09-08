@@ -1,10 +1,10 @@
 
 import React, {useState} from 'react';
-import {Tooltip, Space, Divider, App, UploadProps, Upload } from "antd"
+import {Tooltip, Space, Divider, UploadProps, Upload } from "antd"
 import { useSelector } from "../../../redux/hooks"
-import { UserAddIcon, DeleteIcon, UploadIcon } from '../../../components/icon/svg/Icons';
+import { DeleteIcon, UploadIcon } from '../../../components/icon/svg/Icons';
 import { DocumentQuery, DocumentList, DocumentDelete } from './index'
-import { useTranslation } from '../../../components';
+import { useTranslation, useLayer } from '../../../components';
 import { AdminDocument } from '../../../common/I18NNamespace';
 import { AuthButton } from '../../../components/wrap/AuthButton';
 import { permission } from '../../../common/permission';
@@ -15,7 +15,7 @@ export const  DocumentPage : React.FC = () => {
     const {t} = useTranslation(AdminDocument);
     const onlyIcon = useSelector(state => state.themeConfig.onlyIcon);
     const size = useSelector(state => state.themeConfig.componentSize);
-    const {message} = App.useApp();
+    const {message} = useLayer();
     const [query, setQuery] = useState({});
     const [selectedRows, setSelectedRows] = useState<any>();
 
@@ -80,7 +80,7 @@ export const  DocumentPage : React.FC = () => {
                 <Upload {...uploadProps} >
                     <AuthButton type='primary' size={size} 
                         icon={<UploadIcon type='primary'/>} 
-                        requiredPermissions={permission.role.create.expression}
+                        requiredPermissions={permission.document.create.expression}
                     >
                         {!onlyIcon && t('上传')}
                     </AuthButton>
@@ -90,7 +90,7 @@ export const  DocumentPage : React.FC = () => {
                 <AuthButton type='primary' size={size} danger  ghost
                     icon={<DeleteIcon type='primary' danger ghost />} 
                     onClick={onDelete}
-                    requiredPermissions={permission.role.delete.expression}
+                    requiredPermissions={permission.document.delete.expression}
                 >
                     {!onlyIcon && t('删除')}
                 </AuthButton>

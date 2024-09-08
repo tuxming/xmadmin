@@ -1,6 +1,6 @@
 
 
-import { Confirm, useRequest, useTranslation } from "../../../components";
+import { Confirm, useLayer, useRequest, useTranslation } from "../../../components";
 import { api } from "../../../common/api";
 import { App } from 'antd'
 import { AdminRole, DefaultNS } from "../../../common/I18NNamespace";
@@ -20,7 +20,7 @@ export const RoleDelete : React.FC<RoleDeleteType> = ({
 }) => {
     
     const {t} = useTranslation(AdminRole);
-    const { message } = App.useApp();
+    const { message } = useLayer();
     const request = useRequest();
 
     const msg = t("确定要删除以下角色：") 
@@ -42,6 +42,6 @@ export const RoleDelete : React.FC<RoleDeleteType> = ({
     }
 
 
-    return (roles && roles.length>0) ? (<Confirm text={msg} onOk={onOk}></Confirm>)
+    return (roles && roles.length>0) ? (<Confirm content={msg} onOk={onOk}></Confirm>)
             : (<></> )
 }

@@ -11,13 +11,37 @@ import com.xm2013.admin.jfinal.generator.Col;
 public abstract class BaseHistory<M extends BaseHistory<M>> extends Model<M> implements IBean {
 
 	public static String COL_ID = "id";
+	/**
+	 * 操作人
+	 */
 	public static String COL_USER_ID = "user_id";
+	/**
+	 * 操作人名
+	 */
 	public static String COL_USERNAME = "username";
+	/**
+	 * ip地址
+	 */
 	public static String COL_IP_ADDR = "ip_addr";
+	/**
+	 * 操作类型
+	 */
 	public static String COL_TYPE = "type";
+	/**
+	 * 操作时间
+	 */
 	public static String COL_CREATED = "created";
+	/**
+	 * 请求参数
+	 */
 	public static String COL_REMARK = "remark";
+	/**
+	 * 序号，当一个请求的参数过长时，会分成多段存储起来
+	 */
 	public static String COL_SEQ = "seq";
+	/**
+	 * id: 当一个请求过长是，这个多个存储使用这一个id
+	 */
 	public static String COL_HISTORY_ID = "history_id";
 
 	public M setId(java.lang.Integer id) {

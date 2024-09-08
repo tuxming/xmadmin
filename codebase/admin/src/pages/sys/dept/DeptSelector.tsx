@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import type { GetProp, TreeSelectProps } from 'antd';
-import { Button, TreeSelect } from 'antd';
+import { Button, TreeSelect, Typography } from 'antd';
 import { useRequest } from '../../../components';
 import { api } from '../../../common/api';
 import { ArrowsAltOutlined } from '@ant-design/icons';
@@ -8,7 +8,7 @@ import { ArrowsAltOutlined } from '@ant-design/icons';
 const fieldNames = {
     label: "name", 
     value: "id", 
-    children: "children"
+    children: "children",
 }
 
 /**
@@ -112,4 +112,49 @@ export const DeptSelector : React.FC<TreeSelectProps> = (props) => {
             {...props}
         />
       );
+}
+
+/**
+ * 作为form Item的子节点必须要能实现onChange接口，还要能提供value的传入接口
+ * @returns 
+ */
+export const DeptSelectorWraper : React.FC<{
+    showName?: string,
+    wrapStyle?: {[key:string]: any}
+    showNamePos?: {
+        bottom?: number, 
+        left?: number,
+        right?: number,
+        top?: number,
+    }
+} & TreeSelectProps>= ({
+    showName,
+    wrapStyle,
+    showNamePos,
+    ...props
+}) => {
+
+    const [showLabel, setShowLabel] = useState<string>(showName);
+    const deptOnSelect = (value, node) => {
+        // console.log(value, node);
+        if(node){
+            setShowLabel(null);
+        }
+        if(props.onSelect){ 
+            props.onSelect(value, node);
+        }
+    }
+
+    return (
+        <span style={{...wrapStyle, position: 'relative'}}>
+            <DeptSelector 
+                {...props}
+                className={'dept-selector '+(showLabel? 'hide-item': "")+(props.className?props.className:"")}
+                onSelect={deptOnSelect}
+            ></DeptSelector>
+            {showLabel && <Typography.Text 
+                style={{position: 'absolute', bottom: -1, left: 10, pointerEvents: 'none', ...showNamePos}}
+            >{showLabel || ''}</Typography.Text>}
+        </span>
+    )
 }

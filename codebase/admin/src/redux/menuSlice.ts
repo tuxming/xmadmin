@@ -63,6 +63,18 @@ export const currMenus = createAsyncThunk(
     }
 );
 
+const sortMenu = (menus) => {
+    
+    menus.sort((m1, m2)=> m1.sort - m2.sort);
+
+    menus.forEach(menu => {
+        if(menu.children && menu.children.length>0){
+            sortMenu(menu.children);
+        }
+    });
+
+}
+
 export const myMenusSlice = createSlice({
     name: "myMenus",
     initialState: defaultState,
@@ -102,7 +114,9 @@ export const myMenusSlice = createSlice({
                         }
                     })
                     // console.log(mapMenu);
-                    state.treeMenu = mapMenu[1].children;
+                    let currMenus = mapMenu[1].children;
+                    sortMenu(currMenus)
+                    state.treeMenu = currMenus;
                 }else{
                     state.error = result.msg;
                 }

@@ -46,4 +46,15 @@ public class Msg {
 	public static final String ROLE_NOT_EDIT_SYS_ROLE = "禁止修改系统级别的角色";
 	public static final String ROLE_NOT_DELETE_SYS_ROLE = "禁止删除系统级别的角色";
 	
+	public static final String UNEXIST_DEPT = "组织不存在";
+	public static final String NO_DEPT_AUTH = "无组织权限";
+	public static final String NO_UPDATE_DATA = "没有要更新的数据";
+	public static final String UNEQUAL_PASSWORD = "两次密码输入不一致";
+	public static final String INVALID_GENDER = "非法的性别选项";
+	public static final String INVALID_STATUS = "非法的状态";
+	public static final String INVALID_EMAIL = "邮箱地址不合法";
+	public static final String INVALID_PHONE = "非法的电话号码";
+	public static final String ERR_PWD = "密码错误";
+	public static final String NO_DATA_AUTH = "没有数据权限";
+	
 }

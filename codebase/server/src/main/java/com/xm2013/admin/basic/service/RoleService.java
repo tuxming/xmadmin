@@ -37,7 +37,7 @@ public class RoleService {
 		String sql = "select t.* from sys_role as t left join sys_user as t1 on t1.id = t.creater "
 				+ " where "
 				+  user.buildAuthCondition("t1")
-				+ " (t.role_name like '%"+key+"%' or t.code like '%"+key+"%')";
+				+ " and (t.role_name like '%"+key+"%' or t.code like '%"+key+"%')";
 		
 		List<Role> roles = Role.dao.find(sql);
 		

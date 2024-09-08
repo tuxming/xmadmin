@@ -109,3 +109,28 @@ export function hasPermission(requiredPermission, permissions) {
   
     return false;
   }
+
+/**
+ * 计算字符的长度，半角算0.5，全角算1
+ * @returns 
+ */
+export function calculateLength(str) {
+    let length = 0;
+
+    if(!str){
+        return 0;
+    }
+
+    for (let i = 0; i < str.length; i++) {
+        const charCode = str.charCodeAt(i);
+
+        // 判断是否为全角字符
+        if ((charCode >= 0xFF01 && charCode <= 0xFF5E) || (charCode >= 0x4E00 && charCode <= 0x9FFF)) {
+            length += 1; // 全角字符
+        } else {
+            length += 0.5; // 半角字符
+        }
+    }
+
+    return length ;
+}

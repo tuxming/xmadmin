@@ -1,8 +1,7 @@
 
 
-import { Confirm, useRequest, useTranslation } from "../../../components";
+import { Confirm, useLayer, useRequest, useTranslation } from "../../../components";
 import { api } from "../../../common/api";
-import { App } from 'antd'
 import { AdminPermission, DefaultNS } from "../../../common/I18NNamespace";
 
 export type PermissionDeleteType = {
@@ -20,7 +19,7 @@ export const PermissionDelete : React.FC<PermissionDeleteType> = ({
 }) => {
     
     const {t} = useTranslation(AdminPermission);
-    const { message } = App.useApp();
+    const { message } = useLayer();
     const request = useRequest();
 
     const msg = t("确定要删除以下权限：") 
@@ -42,6 +41,6 @@ export const PermissionDelete : React.FC<PermissionDeleteType> = ({
     }
 
 
-    return (permissions && permissions.length>0) ? (<Confirm text={msg} onOk={onOk}></Confirm>)
+    return (permissions && permissions.length>0) ? (<Confirm content={msg} onOk={onOk}></Confirm>)
             : (<></> )
 }

@@ -4,6 +4,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.security.MessageDigest;
 import java.util.Formatter;
+import java.util.Random;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -190,5 +191,23 @@ public class Kit {
 	public static String doubleMd5WidthSalt(String text) {
 		String encrypt = MD5(text);
 		return MD5(encrypt+SALT);
+	}
+	
+	
+	/**
+	 * 随机生成code
+	 */
+	public static String randomCode(int length) {
+		
+		String str = "ABCDEFGHIJILMNOPQRSTUVWXYZ0123456789";
+		Random random = new Random();
+		int len = str.length();
+		String code = "";
+		for(int i=0; i<length; i++) {
+			code += str.charAt(random.nextInt(len));
+		}
+		
+		return code;
+		
 	}
 }

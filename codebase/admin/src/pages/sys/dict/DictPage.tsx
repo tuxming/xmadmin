@@ -1,9 +1,12 @@
 import { useContext, useEffect, useState } from "react";
-import { AuthButton, DoubleColumnLayout, ModalContext, QueryComponent, useRequest, useTranslation } from "../../../components"
+import { 
+    AuthButton, DoubleColumnLayout, ModalContext, QueryComponent, 
+    useRequest, useTranslation, useLayer
+} from "../../../components"
 import { useSelector } from "../../../redux/hooks";
 import { api } from "../../../common/api";
 import { AdminDict, DefaultNS } from "../../../common/I18NNamespace";
-import { App, Divider, Menu, Space } from "antd";
+import { Divider, Menu, Space } from "antd";
 import { DictEdit, DictGroupEdit, DictList } from "./index";
 import { FileAddIcon, FileDeleteIcon, FileEditIcon, DictAddIcon, DictDeleteIcon, DictEditIcon } from "../../../components/icon/svg/Icons";
 import { permission } from "../../../common/permission";
@@ -16,7 +19,7 @@ import { computePx } from "../../../common/kit";
 export const DictPage : React.FC = () => {
 
     const {t, f} = useTranslation(AdminDict);
-    const {message, modal} = App.useApp();
+    const {message, confirm} = useLayer();
     const [containerWidth, setContainerWidth] = useState<number>();
     const screenWidth = useSelector(state => state.globalVar.width);
     const screenHeight = useSelector(state => state.globalVar.height);
@@ -128,7 +131,7 @@ export const DictPage : React.FC = () => {
             message.warning(t("请选中字典后，删除"));
             return;
         }
-        modal.confirm({
+        confirm({
             title: f("确定要删除：%s?", [selectedGroup.label]),
             content: t("删除语言将会删除对应的所有数据"),
             onOk: () => {
@@ -171,9 +174,9 @@ export const DictPage : React.FC = () => {
             message.warning(t("请选中字典数据后，再点击删除"));
             return;
         }
-        modal.confirm({
-            title: f("确定要删除字典：%s?", [selectedDictRows[0].dictLabel]),
-            onOk: () => {
+        confirm({
+            content: f("确定要删除字典：%s?", [selectedDictRows[0].dictLabel]),
+            onOk: (onClose) => {
                 let doDelete = async () => {
                     let result = await request.get(api.dict.deleteDict
                             +"?id="+selectedDictRows[0].id
@@ -184,6 +187,7 @@ export const DictPage : React.FC = () => {
                             reset: true,
                             tag: refresh.tag+1
                         });
+                        onClose();
                     }else{
                         message.warning(t(result.msg));
                     }

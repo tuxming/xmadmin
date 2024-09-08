@@ -28,8 +28,11 @@ export const api = {
         wallpaperImageList: server + "/public/wallpaperImageList"
     },
     user: {
+        get: server + "/am/user/get",
         list: server + "/am/user/list",
-        search: server + "/am/user/search"
+        search: server + "/am/user/search",
+        delete: server + "/am/user/delete",
+        update: server + "/am/user/update",
     },
     role: {
         search: server + "/am/role/search",

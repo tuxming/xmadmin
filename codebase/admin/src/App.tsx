@@ -1,5 +1,5 @@
 import './App.css';
-import { ConfigProvider, Spin, theme, App as AntdApp } from 'antd';
+import { ConfigProvider, theme} from 'antd';
 import zhCN from 'antd/locale/zh_CN';
 import {AdminRouter} from "./AdminRouter";
 import { useSelector, useDispatch } from './redux/hooks';
@@ -9,6 +9,7 @@ import { getOpacityColor } from './common/kit';
 import { useTranslation } from './components/useTranslation';
 
 import 'dayjs/locale/zh-cn';
+import { LayerProvider } from './components';
 
 /**
  * 在开发环境中react的所有组件会被渲染两次
@@ -32,7 +33,6 @@ function App() {
     const sideThemeType = useSelector(state => state.themeConfig.sideTheme);
     const primaryColor = useSelector(state => state.themeConfig.colorPrimary);
     const borderRadius = useSelector(state => state.themeConfig.borderRadius);
-    const loading = useSelector(state => state.loading);
 
     const bgOpacity = useSelector(state => state.themeConfig.bgOpacity);                  //背景透明度
     const containerOpacity = useSelector(state => state.themeConfig.containerOpacity);           //容器的透明度
@@ -99,13 +99,12 @@ function App() {
                 }
             }}
         >
-            
-            <AntdApp>
-                <Spin spinning={loading.value} tip={t("加载中...")} size='large' fullscreen />
+            {/* 这里不使用antd的App包裹，使用自定义的LayerProvider来包裹 */}
+            <LayerProvider>
                 <div className="App">
                     <AdminRouter />
                 </div>
-            </AntdApp>
+            </LayerProvider>
         </ConfigProvider>
     );
 }

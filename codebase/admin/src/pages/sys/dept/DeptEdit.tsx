@@ -1,9 +1,9 @@
-import { Form, Input, Typography,App, Divider, Space, Button } from "antd"
-import { Modal, useRequest, useTranslation } from "../../../components"
+import { Form, Input, Typography, Divider, Space, Button } from "antd"
+import { Modal, useRequest, useTranslation, useLayer } from "../../../components"
 import { AdminDept, DefaultNS } from "../../../common/I18NNamespace"
 import { api } from "../../../common/api"
 import { CloseOutlined, SendOutlined } from "@ant-design/icons"
-import { DeptTypeSelector, DeptSelector } from "./index"
+import { DeptTypeSelector, DeptSelectorWraper } from "./index"
 import { useEffect, useState } from "react"
 import { useSelector } from "../../../redux/hooks"
 
@@ -20,36 +20,8 @@ export type DeptEditFormType = {
 export type DeptEditType = {
     dept?: DeptEditFormType,
     open: boolean,
-    onClose: (refresh:boolean) => void,
+    onClose: (updateIds: number[]) => void,
     title: string
-}
-
-/**
- * 作为form Item的子节点必须要能实现onChange接口，还要能提供value的传入接口
- * @returns 
- */
-const DeptSelectorWraper : React.FC<{
-    onSelect?: (value, node) => void,
-    onChange?: (value) => void,
-    showName?: string,
-    value?: any
-}>= ({
-    onSelect,
-    onChange,
-    showName,
-    value
-}) => {
-
-    return (
-        <span style={{position: 'relative'}}>
-            <DeptSelector onSelect={onSelect} onChange={onChange} value={value}
-                className={'dept-selector '+ (showName? 'hide-item': "")}
-            ></DeptSelector>
-            <Typography.Text 
-                style={{position: 'absolute', bottom: -1, left: 10, pointerEvents: 'none'}}
-            >{showName || ''}</Typography.Text>
-        </span>
-    )
 }
 
 export const DeptEdit: React.FC<DeptEditType> = ({
@@ -60,17 +32,16 @@ export const DeptEdit: React.FC<DeptEditType> = ({
 }) => {
     const {t} = useTranslation(AdminDept);
     const request = useRequest();
-    const {message} = App.useApp();
+    const {message} = useLayer();
     const [visible, setVisible] = useState(true);
     const size = useSelector(state => state.themeConfig.componentSize);
 
-    const [parentName, setParentName] = useState<string>(dept?.parentName);
     const [form] = Form.useForm();
 
     const onModalClose = () => {
         setVisible(false);
         setTimeout(()=>{
-            onClose(false);
+            onClose(null);
         }, 500)
     }
 
@@ -85,6 +56,8 @@ export const DeptEdit: React.FC<DeptEditType> = ({
         data.type = data.type * 1;
         data.id = dept?.id || null;
 
+        let isUpdate = data.id ? true: false;
+
         // console.log(values);
         const create = async () => {
             let result = await request.post(
@@ -93,20 +66,24 @@ export const DeptEdit: React.FC<DeptEditType> = ({
             );
             if(result.status){
                 message.success(result.msg);
-                onClose(data.parentId);
+                setVisible(false);
+                setTimeout(() => {
+                    if(isUpdate){
+                        if(dept.parentId !== values.parentId){
+                            onClose([dept.parentId, values.parentId]);
+                        }else{
+                            onClose([dept.parentId]);
+                        }
+                    }else{
+                        onClose([data.parentId]);
+                    }
+                }, 500);
             }else{
                 message.error(result.msg);
             }
         }
         create();
     };
-
-    const deptOnSelect = (value, node) => {
-        // console.log(value, node);
-        if(node){
-            setParentName("");
-        }
-    }
 
     useEffect(()=>{
         if(open && dept){
@@ -126,6 +103,10 @@ export const DeptEdit: React.FC<DeptEditType> = ({
                             onFinish={onFinish}
                             size={size}
                         >   
+                            {dept && dept.path && dept.pathName && <Form.Item<DeptEditFormType> label={t("组织信息")} >
+                                <Typography.Paragraph>{dept.path}<br/>{dept.pathName}</Typography.Paragraph>
+                            </Form.Item>
+                            }
                             <Form.Item<DeptEditFormType> name="id" hidden={true}>
                                 <Input></Input>
                             </Form.Item>
@@ -137,7 +118,7 @@ export const DeptEdit: React.FC<DeptEditType> = ({
                             <Form.Item<DeptEditFormType> label={t("上级组织")} name="parentId"
                                 rules={[{ required: true, message: t('上级组织不能为空') }]}
                             >
-                                <DeptSelectorWraper onSelect={deptOnSelect} showName={parentName}></DeptSelectorWraper>
+                                <DeptSelectorWraper  showName={dept?.parentName}></DeptSelectorWraper>
                             </Form.Item>
                             <Form.Item<DeptEditFormType> label={t("类型")} name="type"
                                 rules={[{ required: true, message: t('类型不能为空') }]}

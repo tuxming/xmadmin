@@ -11,19 +11,61 @@ import com.xm2013.admin.jfinal.generator.Col;
 public abstract class BaseUser<M extends BaseUser<M>> extends Model<M> implements IBean {
 
 	public static String COL_ID = "id";
+	/**
+	 * 账号
+	 */
 	public static String COL_USERNAME = "username";
+	/**
+	 * 姓名
+	 */
 	public static String COL_FULLNAME = "fullname";
+	/**
+	 * 密码
+	 */
 	public static String COL_PASSWORD = "password";
+	/**
+	 * 授权码
+	 */
 	public static String COL_TOKEN = "token";
+	/**
+	 * 创建时间
+	 */
 	public static String COL_CREATED = "created";
+	/**
+	 * 上级id
+	 */
 	public static String COL_PARENT_ID = "parent_id";
+	/**
+	 * 唯一码
+	 */
 	public static String COL_CODE = "code";
+	/**
+	 * 性别：0-男，1-女，2-保密
+	 */
 	public static String COL_GENDER = "gender";
+	/**
+	 * 电子邮件
+	 */
 	public static String COL_EMAIL = "email";
+	/**
+	 * 电话
+	 */
 	public static String COL_PHONE = "phone";
+	/**
+	 * 照片id
+	 */
 	public static String COL_PHOTO = "photo";
+	/**
+	 * 组织id
+	 */
 	public static String COL_DEPT_ID = "dept_id";
+	/**
+	 * 所在组织的path
+	 */
 	public static String COL_DEPT_PATH = "dept_path";
+	/**
+	 * 状态：0-待审核,1-正常,2-禁用，3-删除
+	 */
 	public static String COL_STATUS = "status";
 
 	public M setId(java.lang.Integer id) {
@@ -252,24 +294,6 @@ public abstract class BaseUser<M extends BaseUser<M>> extends Model<M> implement
 		label = "组织id")
 	public java.lang.Integer getDeptId() {
 		return getInt("dept_id");
-	}
-
-	/**
-	 * 所在组织的path
-	 */
-	public M setDeptPath(java.lang.String deptPath) {
-		set("dept_path", deptPath);
-		return (M)this;
-	}
-	
-	/**
-	 * 所在组织的path
-	 */
-	@Col(tableName = "sys_user", tableLabel="用户表", 
-		fieldName = "deptPath", colName = "dept_path", 
-		label = "所在组织的path")
-	public java.lang.String getDeptPath() {
-		return getStr("dept_path");
 	}
 
 	/**

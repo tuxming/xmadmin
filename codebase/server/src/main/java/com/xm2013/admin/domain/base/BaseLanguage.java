@@ -11,7 +11,13 @@ import com.xm2013.admin.jfinal.generator.Col;
 public abstract class BaseLanguage<M extends BaseLanguage<M>> extends Model<M> implements IBean {
 
 	public static String COL_ID = "id";
+	/**
+	 * 显示名
+	 */
 	public static String COL_LABEL = "label";
+	/**
+	 * 语言代码
+	 */
 	public static String COL_CODE = "code";
 
 	public M setId(java.lang.Integer id) {

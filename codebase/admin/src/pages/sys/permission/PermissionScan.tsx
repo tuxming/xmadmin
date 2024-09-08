@@ -1,7 +1,6 @@
-import { Confirm, useRequest, useTranslation } from "../../../components"
+import { Confirm, useLayer, useRequest, useTranslation } from "../../../components"
 import { AdminPermission, DefaultNS } from "../../../common/I18NNamespace"
 import { api } from "../../../common/api"
-import { App } from "antd"
 
 
 type PermissionScanType = {
@@ -18,7 +17,7 @@ export const PermissionScan : React.FC<PermissionScanType> = ({
 
     const {t} = useTranslation(AdminPermission);
     const request = useRequest();
-    const {message} = App.useApp();
+    const {message} = useLayer();
 
     const msg = t("确定要扫描整个系统的权限吗?");
 
@@ -37,5 +36,5 @@ export const PermissionScan : React.FC<PermissionScanType> = ({
     }
 
 
-    return open? (<Confirm text={msg} onOk={onOk} onCancel={()=>onClose(false)}></Confirm>) : (<></>)
+    return open? (<Confirm content={msg} onOk={onOk} onCancel={()=>onClose(false)}></Confirm>) : (<></>)
 }

@@ -79,7 +79,8 @@ public class GlobalInterceptor implements Interceptor{
 		
 		String[] params = getRequestParam(inv);
 		
-		String uniqueId = UUID.randomUUID().toString().replace("-", "").substring(24);;
+		//将日志分成多段存入数据库，并设置historyId作为同一日志的标志id
+		String uniqueId = UUID.randomUUID().toString().replace("-", "").substring(24);
 		for(int i=0; i<params.length; i++) {
 			String para = params[i];
 			
@@ -123,8 +124,8 @@ public class GlobalInterceptor implements Interceptor{
 			String body = inv.getController().getRawData();
 			
 			boolean bodyNotNull = Kit.isNotNull(body);
-			if(body.indexOf("password")>-1) {
-				body = body.replaceAll("password\"\\s*\\:\"[\\w\\W]*?\"", "password\":\"******\"");
+			if(body.indexOf("assword")>-1) {
+				body = body.replaceAll("assword\"\\s*\\:\"[\\w\\W]*?\"", "assword\":\"******\"");
 			}
 			
 			if(bodyNotNull) {

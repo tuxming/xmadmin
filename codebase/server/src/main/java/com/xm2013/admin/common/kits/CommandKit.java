@@ -9,7 +9,7 @@ import org.apache.log4j.Logger;
 
 public class CommandKit {
 	private static Logger log = Logger.getLogger(CommandKit.class);
-	public static String exec(String cmd) {
+	public static String exec(String[] cmd) {
 		
 		String result = "";
 		
@@ -48,9 +48,12 @@ public class CommandKit {
 			File dir = new File(path);
 			dir.mkdirs();
 		}else {
-			exec("mkdir -p "+path);
-			exec("chown txm.txm -R "+path);
-			exec("chmod 755 "+path);
+			String[] cmds = new String[] {
+					"mkdir -p "+path,
+					"chown txm.txm -R "+path,
+					"chmod 755 "+path
+			};
+			exec(cmds);
 		}
 	}
 	
@@ -67,15 +70,21 @@ public class CommandKit {
 		
 		String os = System.getProperty("os.name").toLowerCase();
 		if(os.indexOf("windows")>-1) {
-//			path = path.replace("/", "\\");
-			exec("del /Q /F /S "+path);
+			path = path.replace("/", "\\");
+			String cmd = "del /Q /F /S "+path;
+			System.out.println(cmd);
+			exec(new String[] {
+					"cmd.exe",
+					"/c", "del", "/Q", "/F", "/S",
+					path
+			});
+			
 //			File file = new File(path);
 //			boolean res = file.delete();
-			System.out.println("rm -rf "+path);
 //			System.out.println(path+":"+res);
 			
 		}else {
-			exec("rm -rf "+path);
+			exec(new String[] {"rm -rf "+path});
 		}
 	}
 	

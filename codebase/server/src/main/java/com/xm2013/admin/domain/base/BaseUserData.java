@@ -11,8 +11,17 @@ import com.xm2013.admin.jfinal.generator.Col;
 public abstract class BaseUserData<M extends BaseUserData<M>> extends Model<M> implements IBean {
 
 	public static String COL_ID = "id";
+	/**
+	 * 用户id
+	 */
 	public static String COL_USER_ID = "user_id";
+	/**
+	 * 引用id: type=1, 为用户id, 2-为组织id
+	 */
 	public static String COL_REF_ID = "ref_id";
+	/**
+	 * 数据权限类型： 1-具体的用户id, 2-组织节点的id
+	 */
 	public static String COL_TYPE = "type";
 
 	public M setId(java.lang.Integer id) {

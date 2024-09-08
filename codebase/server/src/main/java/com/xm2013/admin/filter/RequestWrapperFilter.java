@@ -11,8 +11,6 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.xm2013.admin.common.Kit;
-
 /**
  * 响应OPTIONS请求，设置跨域
  */

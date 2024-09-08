@@ -1,5 +1,8 @@
 package com.xm2013.admin.common.http;
 
+/**
+ * 自己封装的简单的http请求类，可以方便的实现链式调用
+ */
 public class Http {
 	public static Request xdo(String url) {
 		return connect(url);

@@ -11,11 +11,29 @@ import com.xm2013.admin.jfinal.generator.Col;
 public abstract class BaseDict<M extends BaseDict<M>> extends Model<M> implements IBean {
 
 	public static String COL_ID = "id";
+	/**
+	 * 分类名
+	 */
 	public static String COL_GROUP_NAME = "group_name";
+	/**
+	 * key
+	 */
 	public static String COL_DICT_KEY = "dict_key";
+	/**
+	 * 值
+	 */
 	public static String COL_DICT_VALUE = "dict_value";
+	/**
+	 * 显示名
+	 */
 	public static String COL_DICT_LABEL = "dict_label";
+	/**
+	 * 值类型：0-文本，1-数值，3-图片id, 4-json
+	 */
 	public static String COL_TYPE = "type";
+	/**
+	 * 附加值
+	 */
 	public static String COL_REMARK = "remark";
 
 	public M setId(java.lang.Integer id) {

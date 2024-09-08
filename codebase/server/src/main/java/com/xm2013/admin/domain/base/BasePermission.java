@@ -11,8 +11,17 @@ import com.xm2013.admin.jfinal.generator.Col;
 public abstract class BasePermission<M extends BasePermission<M>> extends Model<M> implements IBean {
 
 	public static String COL_ID = "id";
+	/**
+	 * 分组名：防止权限多了不容易区分，使用分组容易区分
+	 */
 	public static String COL_GROUP_NAME = "group_name";
+	/**
+	 * 权限名
+	 */
 	public static String COL_NAME = "name";
+	/**
+	 * 权限表达式
+	 */
 	public static String COL_EXPRESSION = "expression";
 
 	public M setId(java.lang.Integer id) {

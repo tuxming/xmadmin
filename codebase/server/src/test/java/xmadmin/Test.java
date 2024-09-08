@@ -1,10 +1,8 @@
 package xmadmin;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Base64;
-import java.util.UUID;
-
-import com.xm2013.admin.common.Kit;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Test {
 	public static void main(String[] args) throws UnsupportedEncodingException {
@@ -17,7 +15,9 @@ public class Test {
 //			System.out.println(UUID.randomUUID().toString().replace("-", "").substring(24));
 //		}
 		
-		System.out.println("AA-0012".matches("[a-zA-Z]{1,2}.{1}[0-9]{3,4}"));
+		System.out.println(String.format("%08d", 125));
+		
+		
 	}
 	
 }

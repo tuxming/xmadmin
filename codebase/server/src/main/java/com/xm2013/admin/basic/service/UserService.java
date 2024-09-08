@@ -1,25 +1,39 @@
 package com.xm2013.admin.basic.service;
 
 import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.jfinal.aop.Inject;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.redis.Redis;
 import com.xm2013.admin.common.CacheKey;
 import com.xm2013.admin.common.Kit;
 import com.xm2013.admin.common.SqlKit;
 import com.xm2013.admin.domain.dto.PageInfo;
+import com.xm2013.admin.domain.dto.user.UpdateUserDto;
 import com.xm2013.admin.domain.dto.user.UserListQuery;
 import com.xm2013.admin.domain.model.Dept;
 import com.xm2013.admin.domain.model.User;
 import com.xm2013.admin.domain.model.UserData;
+import com.xm2013.admin.exception.Msg;
 import com.xm2013.admin.shiro.dto.ShiroUser;
 import com.xm2013.admin.shiro.dto.ShiroUserData;
 
 public class UserService {
+	
+	@Inject
+	private DeptService deptService;
+	@Inject
+	private DocumentService documentSerivce;
+	
+	private static String sql = "select t.*, t1.path as deptPath, t1.name as deptName, t1.path_name as deptPathName "
+			+ " from sys_user as t left join sys_dept as t1 on t1.id = t.dept_id where ";
 	
 	/**
 	 * 根据用户名查找用户
@@ -27,24 +41,22 @@ public class UserService {
 	 * @return
 	 */
 	public User findByUsername(String username) {
-		User user = User.dao.findFirstByCache(CacheKey.USER_NAME, username, "select * from sys_user where username=?", username);
+		User user = User.dao.findFirstByCache(CacheKey.USER_NAME, username, sql + " t.username=?", username);
 		return user;
 	}
-	
-	
 
 	public User findById(int id) {
-		User user = User.dao.findFirstByCache(CacheKey.USER_NAME, id, "select * from sys_user where id=?", id);
+		User user = User.dao.findFirstByCache(CacheKey.USER_ID, id, sql + " t.id=?", id);
 		return user;
 	}
 
 	public User findByPhone(String phone) {
-		User user = User.dao.findFirstByCache(CacheKey.USER_EMAIL, phone, "select * from sys_user where phone=?", phone);
+		User user = User.dao.findFirstByCache(CacheKey.USER_EMAIL, phone, sql + " t.phone=?", phone);
 		return user;
 	}
 	
 	public User findByEmail(String email) {
-		User user = User.dao.findFirstByCache(CacheKey.USER_PHONE, email, "select * from sys_user where email=?", email);
+		User user = User.dao.findFirstByCache(CacheKey.USER_PHONE, email, sql + " t.email=?", email);
 		return user;
 	}
 
@@ -110,6 +122,9 @@ public class UserService {
 		PageInfo<User> page = new PageInfo<User>();
 		
 		List<User> users = list(query, user);
+		for (User u : users) {
+			u.remove("password");
+		}
 		page.setList(users);
 		
 		
@@ -129,9 +144,10 @@ public class UserService {
 	 */
 	public List<User> list(UserListQuery query, ShiroUser user) {
 		
-		String sql = "select t.* from sys_user as t "
-				+ " left join sys_user_role as t1 on t1.user_id = t.id"
-				+ " where 1=1 ";
+		String sql = "select t.*, t2.name as deptName, t2.path as deptPath, t2.path_name as deptPathName from sys_user as t "
+				+ " left join sys_user_role as t1 on t1.user_id = t.id "
+				+ " left join sys_dept as t2 on t2.id = t.dept_id "
+				+ " where ";
 		
 		String where = buildWhere(query, user);
 		sql += where + " group by t.id order by t.id desc limit "
@@ -152,11 +168,9 @@ public class UserService {
 		
 		String sql = "select count(t.id) as total from sys_user as t"
 				+ " left join sys_user_role as t1 on t1.user_id = t.id "
-				+ " where 1=1 ";
-		
+				+ " where ";
 		sql += buildWhere(query, user);
-		
-		sql += "group by t.id ";
+		sql += " group by t.id ";
 		
 		sql = "select sum(total) from ("+sql+") as f ";
 //		System.out.println(sql);
@@ -168,6 +182,9 @@ public class UserService {
 		String where = "";
 		
 		where += user.buildAuthCondition("t");
+//		if(!user.isAdmin()) {
+//			query.getStatus().add(User.STATUS_DELETE);
+//		}
 		
 		String basicValue = SqlKit.getSafeValue(query.getBasicValue());
 		if(Kit.isNotNull(basicValue)) {
@@ -185,22 +202,15 @@ public class UserService {
 		where += SqlKit.eq("t.fullname", query.getFullname());
 		where += SqlKit.eq("t.email", query.getEmail());
 		where += SqlKit.eq("t.phone", query.getPhone());
+		where += SqlKit.inNo("t.status", query.getStatus());
 		
 		where += SqlKit.inNo("t1.role_id", query.getRoleIds());
 		
 		where += SqlKit.eq("t.dept_id", query.getDeptId());
 		where += SqlKit.buildDateRange("t.created", query.getStartDate(), query.getEndDate());
+		where += " and t.status != "+User.STATUS_DELETE;
 		
 		return where;
-	}
-
-	/**
-	 * 根据datapath获取指定的datapath所有的用户id
-	 * @param userDatas
-	 * @return
-	 */
-	public String getUserIdsByDatapath(List<String> userDatas) {
-		return Db.queryStr("select group_concat(id) from sys_user where dept_path regexp '"+String.join("|", userDatas)+"'");
 	}
 
 	/**
@@ -298,6 +308,205 @@ public class UserService {
 	}
 
 
-	
+	/**
+	 * 删除用户，将用户设置为删除状态
+	 * 前5个账户为预留账户，不能删除
+	 * @param id
+	 * @param loginUser
+	 * @return
+	 */
+	public boolean delete(Integer id, ShiroUser loginUser) {
+		if(id < 5 || !loginUser.isOwnerData(null, id)) {
+			return false;
+		}
+		
+		User user = findById(id);
+		if(user == null) {
+			return false;
+		}
+		
+		boolean result = Db.update("update sys_user set status=3 where id=?", id)>0;
+		removeUserCache(user);
+		
+		return result;
+	}
+
+
+	/**
+	 * 创建用户
+	 * @param user
+	 * @param loginUser
+	 * @return
+	 */
+	public String create(User user, ShiroUser loginUser) {
+		
+		//密码加密
+		user.setPassword(Kit.doubleMd5WidthSalt(user.getPassword()));
+		user.setParentId(loginUser.getId());
+		//设置性别
+		if(user.getGender() == null || user.getGender()>2 || user.getGender()<0) {
+			user.setGender(2);
+		}
+		
+		Dept dept = deptService.findById(user.getDeptId());
+		if(dept == null) {
+			return Msg.UNEXIST_DEPT;
+		}
+		
+		//设置组织
+		if(!loginUser.isOwnerData(dept.getPath())) {
+			return Msg.NO_DEPT_AUTH;
+		}
+		
+		user.setDeptId(dept.getId());
+		
+		String token = UUID.randomUUID().toString();
+		token = new String(Base64.getEncoder().encode(token.getBytes()));
+		user.setToken(token);
+		
+		user.setCreated(new Date());
+		user.setCode("");
+		if(user.getPhoto() == null) {
+			user.setPhoto(0);
+		}
+		
+		user.setStatus(1);
+		user.save();
+		
+		new User().setId(user.getId())
+			.setCode(String.format("%08d", user.getId()))
+			.update();
+		
+		return null;
+	}
+
+	/**
+	 * 更新用户
+	 * @param user
+	 * @param loginUser
+	 * @return
+	 */
+	public void update(UpdateUserDto user, ShiroUser loginUser) {
+		User db = findById(user.getId());
+
+		if(!loginUser.isOwnerData(user.getStr("deptPath"), user.getId())) {
+			user.setResultMsg(Msg.NO_DATA_AUTH);
+			return;
+		}
+		
+		User u = new User();
+		
+		//设置名字
+		String fullname = user.getFullname();
+		if(Kit.isNotNull(fullname) && !db.getFullname().equals(fullname)) {
+			u.setFullname(fullname);
+		}
+		
+		//设置密码
+		String password = user.getPassword();
+		String newPassword = user.getNewPassword();
+		if(Kit.isNotNull(password) && Kit.isNotNull(newPassword) ) {
+			//判断原始密码是否相等
+			if(loginUser.isAdmin() == false &&  !db.getPassword().equals(Kit.doubleMd5WidthSalt(user.getPassword()))) {
+				user.setResultMsg(Msg.ERR_PWD);
+				return ;
+			}
+			
+			//判断两次密码输入是否一致
+			if(!newPassword.equals(user.getRePassword())) {
+				user.setResultMsg(Msg.UNEQUAL_PASSWORD);
+				return ;
+			}
+			
+			u.setPassword(Kit.doubleMd5WidthSalt(newPassword));
+		}
+		
+		//刷新token
+		boolean refreshToken = user.isRefreshToken();
+		if(refreshToken) {
+			String token = UUID.randomUUID().toString();
+			token = new String(Base64.getEncoder().encode(token.getBytes()));
+			u.setToken(token);
+			user.setResultData(token);
+		}
+		
+		//更新状态
+		Integer status = user.getStatus();
+		if(status !=null && status != db.getStatus().intValue()) {
+			if(status >=0 && status<=2) {
+				u.setStatus(status);
+			}else {
+				user.setResultMsg(Msg.INVALID_STATUS);
+				return ;
+			}
+		}
+		
+		//更新性别
+		Integer gender = user.getGender();
+		if(gender != null && db.getGender()!= gender.intValue()) {
+			if(gender >=0 && gender<=2) {
+				u.setGender(gender);
+			}else {
+				user.setResultMsg( Msg.INVALID_GENDER);
+				return;
+			}
+		}
+		
+		//更新email
+		String email = user.getEmail();
+		if(Kit.isNotNull(email) && !email.equals(db.getEmail())) {
+			if(email.matches("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}")) {
+				u.setEmail(email);
+			}else {
+				user.setResultMsg(Msg.INVALID_EMAIL);
+				return ;
+			}
+		}
+		
+		//更新电话号码
+		String phone = user.getPhone();
+		if(Kit.isNotNull(phone) && !phone.equals(db.getPhone())) {
+			if(phone.matches("1[\\d]{10}")) {
+				u.setPhone(phone);
+			}else {
+				user.setResultMsg(Msg.INVALID_PHONE);
+				return ;
+			}
+		}
+		
+		//更新照片
+		Integer photo = user.getPhoto();
+		if(photo != null && photo.intValue()!=db.getPhoto()) {
+			u.setPhoto(photo);
+			
+			//这个表示，数据库存在照片id, 传进来的不是一个非0的照片id,
+			//说明要直接覆盖掉原来的照片，所以需要删除
+			//如果photo=0, 说明照片照片已经删除，这里只是单纯的将用户照片索引设置为0而已
+			if(db.getPhoto() > 0 && photo > 0)
+				documentSerivce.deletes(db.getPhoto()+"", loginUser);
+		}
+		
+		//更新组织
+		Integer deptId = user.getDeptId();
+		if(deptId!=null && deptId.intValue()!=db.getDeptId()) {
+			
+			Dept dept = deptService.findById(deptId);
+			if(dept == null || !loginUser.isOwnerData(dept.getPath())) {
+				user.setResultMsg(Msg.NO_DEPT_AUTH);
+				return ;
+			}
+			
+			u.setDeptId(dept.getId());
+		}
+		
+		if(u._getAttrNames().length == 0) {
+			user.setResultMsg(Msg.NO_UPDATE_DATA);
+			return ;
+		}
+		u.setId(user.getId());
+		removeUserCache(db);
+		u.update();
+		
+	}
 	
 }

@@ -1,5 +1,5 @@
 import { useEffect, useState} from "react";
-import { useRequest, useTranslation } from "../../../components"
+import { useRequest } from "../../../components"
 import { Modal, Tabs } from 'antd';
 import { api } from "../../../common/api";
 import { useSelector } from "../../../redux/hooks";

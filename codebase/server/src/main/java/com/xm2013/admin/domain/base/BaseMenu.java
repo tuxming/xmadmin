@@ -11,13 +11,37 @@ import com.xm2013.admin.jfinal.generator.Col;
 public abstract class BaseMenu<M extends BaseMenu<M>> extends Model<M> implements IBean {
 
 	public static String COL_ID = "id";
+	/**
+	 * 上级节点id, 顶级为0
+	 */
 	public static String COL_PARENT_ID = "parent_id";
+	/**
+	 * 菜单名
+	 */
 	public static String COL_NAME = "name";
+	/**
+	 * 显示顺序，从小到大排序
+	 */
 	public static String COL_SORT = "sort";
+	/**
+	 * 菜单跳转链接
+	 */
 	public static String COL_PATH = "path";
+	/**
+	 * 附加参数
+	 */
 	public static String COL_QUERY = "query";
+	/**
+	 * 类型：0-目录，1-菜单
+	 */
 	public static String COL_TYPE = "type";
+	/**
+	 * 状态：0-正常，1-禁用
+	 */
 	public static String COL_STATUS = "status";
+	/**
+	 * 菜单图标
+	 */
 	public static String COL_ICON = "icon";
 
 	public M setId(java.lang.Integer id) {

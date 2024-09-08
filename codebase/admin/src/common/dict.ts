@@ -11,18 +11,24 @@ import { useDispatch, useSelector } from '../redux/hooks';
 import { useEffect } from 'react';
 import { useRequest } from '../components';
 
-type dictType = {
-    [key: string] : {
-        key: any,
-        label: string,
-        value: any,
-        type: number, 
-        color?: string,
-    }[],
+
+
+export type DictType = {
+    key: any,
+    label: string,
+    value: any,
+    type: number, 
+    color?: string,
+}
+
+type DictsType = {
+    [key: string]: DictType[]
 }
 
 //自定的类型
-const defaultDicts: dictType = {}
+const defaultDicts: DictsType = {}
+
+const requests = {}
 
 //从远程获取字典数据
 export const getDict = createAsyncThunk(
@@ -51,12 +57,13 @@ export const DictSlice = createSlice({
                     const dicts = result.data.map(d => ({
                         key: d.dictKey,
                         label: d.dictLabel,
-                        value: d.dictValue,
+                        value: (d.type == 1 || d.type == 3) ? d.dictValue*1 : d.dictValue,
                         type: d.type,
                         color: d.remark,
                     }));
                     let key = result.data.find(s => s.groupName);
                     state[key.groupName] = dicts;
+                    delete requests[key]
                 }
             })
     }
@@ -73,7 +80,10 @@ export function useDict(key: string) {
     const dispatch = useDispatch();
     
     useEffect(() => {
-        dispatch(getDict(key));
+        if(!requests[key]){
+            requests[key] = key;
+            dispatch(getDict(key));
+        }
     }, [key]);
 
     return data;

@@ -3,6 +3,8 @@
 export const permission = {
     user: {
         create: { groupName: "system",  name: "新增用户", expression: "sys:user:create"},
+        update: { groupName: "system",  name: "编辑用户", expression: "sys:user:update"},
+        delete: { groupName: "system",  name: "删除用户", expression: "sys:user:delete"},
     },
     role: {
         create: { groupName: "system",  name: "新增角色", expression: "sys:role:create"},
@@ -34,4 +36,13 @@ export const permission = {
         groupUpdate: { groupName: "system",  name: "更新字典名", expression: "sys:dictGroup:update"},
         groupDelete: { groupName: "system",  name: "删除字典名", expression: "sys:dictGroup:delete"},
     },
+    document: {
+        create: { groupName: "system",  name: "上传文件", expression: "sys:doc:delete"},
+        delete: { groupName: "system",  name: "删除文件", expression: "sys:doc:upload"},
+    },
+    history: {
+        get: { groupName: "system",  name: "查看日志详情", expression: "sys:history:get"},
+        delete: { groupName: "system",  name: "删除日志", expression: "sys:history:create"},
+    },
+    
 }

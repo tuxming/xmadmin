@@ -78,7 +78,13 @@ export type ModalType = {
      * 如果是window窗体：在浏览器尺寸变化的时候，根据浏览器尺寸，改变器大小，位置
      * 如果是类似于确认的弹窗，始终保证其居中显示，默认是window
      */
-    type?: "window" | "modal"
+    type?: "window" | "modal",
+    /**
+     * modal窗体尺寸
+     * @param pos 尺寸: {width, height, left, top}
+     * @returns 
+     */
+    onSizeChange?: (pos) => void
 }
 
 /**
@@ -93,7 +99,7 @@ export const Modal : React.FC<ModalType> = ({
     state = "win",
     children,
     width=500,
-    height = "auto",
+    height,
     showMask = true,
     closeMask = false,
     zIndex,
@@ -106,20 +112,27 @@ export const Modal : React.FC<ModalType> = ({
     showMove = true,
     showMaxize = true,
     showMinize = true,
-    type= "window"
+    type= "window",
+    onSizeChange,
 }) => {
+
+    const inited = useRef(height && height!='auto');
 
     const [visible, setVisible] = useState(true);
     const modalRef = useRef(null);
     const [modalState, setModalState] = useState(state);
     const [topLevel, setTopLevel] = useState(false);
 
-    const modalIndex = useSelector(state => state.globalVar.modalIndex);
-    const currIndex = useRef<number>(modalIndex);
+    const windowIndex = useSelector(state => state.globalVar.windowIndex);
+    const currIndex = useRef<number>(windowIndex);
     const dispatch = useDispatch();
 
     useEffect(()=>{
-        dispatch(globalVarSlice.actions.addZIndex(0));
+        if(type == 'window'){
+            dispatch(globalVarSlice.actions.addWindowZIndex(0));
+        }else{
+            dispatch(globalVarSlice.actions.addModalZIndex(0));
+        }
     },[])
 
     let wheight = computePx(height, true);
@@ -128,8 +141,10 @@ export const Modal : React.FC<ModalType> = ({
     const [winPos, setWinPos] = useState<any>({
         width: computePx(width),
         height: wheight || 'auto',
-        top: (window.innerHeight - wheight) /5,
-        left: (window.innerWidth - computePx(width)) /2
+        top: (window.innerHeight - wheight) / 2,
+        left: (window.innerWidth - computePx(width)) /2,
+        visibility: height && height!='auto'? 'visible' : "hidden",
+        animationName: 'zoomIn'
     })
 
     //全屏模式下的弹窗位置大小信息
@@ -137,7 +152,8 @@ export const Modal : React.FC<ModalType> = ({
         width: "100vw",
         height: "100vh",
         top: "0px",
-        left: "0px"
+        left: "0px",
+        visibility: 'visible'
     })
 
     //最小化模式下的弹窗位置大小信息
@@ -145,7 +161,8 @@ export const Modal : React.FC<ModalType> = ({
         maxWidth: "300px",
         // maxHeight: "20px",
         top: window.innerHeight - 35,
-        left: window.innerWidth - 315
+        left: window.innerWidth - 315,
+        visibility: 'visible'
     })
 
     //当前正在应用的弹窗位置的大小信息
@@ -163,12 +180,29 @@ export const Modal : React.FC<ModalType> = ({
     
     //根据当前模式设置窗体信息
     const completePos = () => {
+        //在初始的化的时候，会被调用两次，意思就是useEffect监听modalState的时候，
+        //在modalState没有变化的情况下执行了两次，所以在inited设置为true的地方，
+        //延时设置为true, 这样这两次执行到这里的时候，都是false, 后面的逻辑就不会别执行，
+        //导致这个的原因是因为，react在开发模式下，每各个组件在初始化的时候都会执行两次
+        //在产品模式下就只会执行一次，所以在产品模式下是没有这个问题的
+
+        if(!inited.current)
+            return;
         if(modalState == "win"){
             setCurrPos(winPos);
+            if(onSizeChange){
+                onSizeChange(winPos);
+            }
         }else if(modalState == 'full'){
             setCurrPos(fullPos);
+            if(onSizeChange){
+                onSizeChange(fullPos);
+            }
         }else if(modalState == 'min'){
             setCurrPos(minPos);
+            if(onSizeChange){
+                onSizeChange(minPos);
+            }
         }
     }
 
@@ -188,7 +222,6 @@ export const Modal : React.FC<ModalType> = ({
     //添加移动，改变窗口的拖拽监听
     useEffect(() => {
         const handleMoveMouseDown = (event) => {
-
             setIsDragging(true);
             setPosition({
                 x: event.clientX - modalRef.current.offsetLeft,
@@ -224,6 +257,7 @@ export const Modal : React.FC<ModalType> = ({
             if(isDragging){
                 if(modalState == 'win'){
                     setWinPos({...winPos, 
+                        visibility: 'visible',
                         top: modalRef.current.offsetTop,
                         left: modalRef.current.offsetLeft
                     })
@@ -235,14 +269,17 @@ export const Modal : React.FC<ModalType> = ({
                 }
             }else if(isDraggingSize){
                 setTimeout(() => {
-                    let pos = {
-                        ...winPos,
-                        width: modalRef.current.style.width,
-                        height: modalRef.current.style.height
-                    };
-                    setWinPos(pos);
                     if(modalState == 'win'){
+                        let pos = {...currPos, 
+                            visibility: 'visible',
+                            width: modalRef.current.style.width,
+                            height: modalRef.current.style.height
+                        }
+                        setWinPos(pos);
                         setCurrPos(pos);
+                        if(onSizeChange){
+                            onSizeChange(pos);
+                        }
                     }
                 }, 60);
             }
@@ -281,15 +318,43 @@ export const Modal : React.FC<ModalType> = ({
     //添加聚焦事件，modal获得聚焦的时候，显示在最顶层，
     //窗口尺寸变化的时候，重新计算位置
     useEffect(()=>{
+        //ref存在了，重新设置定位
+        //初始化，只执行一次
+        if(modalRef.current && modalState == 'win' && !inited.current && currPos.visibility == 'hidden'){
+            let aheight = modalRef.current.offsetHeight;
+            // let aheight = modalRef.current.querySelector(".x-modal-body").offsetHeight;
+            // console.log(aheight)
+            // console.log(modalRef.current.innerHeight, modalRef.current.clientHeight, modalRef.current.offsetHeight);
+            
+            let winHeight = window.innerHeight;
+            let npos = {
+                width: computePx(width),
+                height: wheight || aheight,
+                top:   aheight>winHeight?0:(winHeight - aheight) / 3,
+                left: (window.innerWidth - computePx(width)) /2,
+                visibility: 'visible',
+                animationName: 'zoomIn'
+            }
+            setWinPos(npos);
+            setCurrPos(npos);
+            if(onSizeChange){
+                onSizeChange(npos);
+            }
+
+            setTimeout(() => {
+                inited.current = true;
+            }, 1000);
+        }
+
         const blurHandler = () => {
             setTopLevel(false);
         }
 
         const focusHandler = (event) => {
             event.preventDefault(); //阻止浏览器的默认行为，比如选中文字
-            dispatch(globalVarSlice.actions.addZIndex(modalIndex));
-            let currModalIndex = store.store.getState().globalVar.modalIndex;
-            currIndex.current = currModalIndex;
+            dispatch(globalVarSlice.actions.addWindowZIndex(windowIndex));
+            let currWindowIndex = store.store.getState().globalVar.windowIndex;
+            currIndex.current = currWindowIndex;
             // console.log("focus");
             setTopLevel(true);
         }
@@ -348,26 +413,33 @@ export const Modal : React.FC<ModalType> = ({
                 width: newWidth,
                 height: newHeight,
                 top: newTop,
-                left: newLeft
+                left: newLeft,
+                visibility: 'visible',
             };
             // console.log(offsetHeight, offsetWidth, top, left, winWidth, winHeight);
             // console.log(pos);
             setCurrPos(pos);
+            if(onSizeChange){
+                onSizeChange(pos);
+            }
         };
 
         if(modalRef.current ){
-            modalRef.current.addEventListener('focus', focusHandler);
-            modalRef.current.addEventListener('blur', blurHandler);
+            if(type === 'window'){
+                modalRef.current.addEventListener('focus', focusHandler);
+                modalRef.current.addEventListener('blur', blurHandler);
+            }
             window.addEventListener('resize', handleResize);
-
         }
 
         return () => {
             if(modalRef.current){
-                modalRef.current.removeEventListener('focus', focusHandler);
-                modalRef.current.removeEventListener('blur', blurHandler);
+                if(type === 'window'){
+                    modalRef.current.removeEventListener('focus', focusHandler);
+                    modalRef.current.removeEventListener('blur', blurHandler);
+                }
+                window.removeEventListener('resize', handleResize);
             }
-            window.removeEventListener('resize', handleResize);
         }
 
     }, [modalRef]);
@@ -409,6 +481,9 @@ export const Modal : React.FC<ModalType> = ({
             }else if(modalState == "min"){
                 setModalState("win");
             }else if(modalState == 'full'){
+                let pos = {...winPos};
+                delete pos.animationName;
+                setWinPos(pos);
                 setModalState('win');
             }
         }
@@ -416,7 +491,7 @@ export const Modal : React.FC<ModalType> = ({
     
     //设置一些css信息
     const overlayStye = {
-        zIndex: topLevel? modalIndex: (currIndex.current || zIndex),
+        zIndex: topLevel? windowIndex: (currIndex.current || zIndex),
     }
 
     if(visible){
@@ -445,7 +520,7 @@ export const Modal : React.FC<ModalType> = ({
                 className="x-modal-content"
                 onClick={(e) => e.stopPropagation()}
             >
-                <div className="x-modal-inner-content" style={{width: currPos.width, height: currPos.height, overflow:'auto'}}>
+                <div className="x-modal-inner-content" style={{width: currPos.width, height: currPos.height, overflow:'hidden', boxSizing: 'border-box'}}>
                     <div className="x-modal-ctrl" style={{
                             right: modalState == 'full'?20:6, maxWidth: modalState=='min'? currPos.width:"auto",
                             position: modalState == 'min'?'relative':'absolute',
@@ -479,7 +554,7 @@ export const Modal : React.FC<ModalType> = ({
                             </svg>
                         </span>
                     </div>
-                    <div className="x-modal-body" style={{display: modalState == 'min'?'none': 'block'}}>
+                    <div className="x-modal-body" style={{display: modalState == 'min'?'none': 'block', height: '100%' }}>
                         <ModalContext.Provider value={currPos}>
                             {children}
                         </ModalContext.Provider>

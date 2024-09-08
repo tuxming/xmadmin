@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
-import {Space, Divider, App } from "antd"
+import {Space, Divider } from "antd"
 import { useSelector } from "../../../redux/hooks"
 import { DeleteIcon, EditIcon, AddIcon, } from '../../../components/icon/svg/Icons';
-import { RoleQueryComponent, RoleListComponent, RoleEdit, RoleDelete } from './index'
-import { useTranslation } from '../../../components';
+import { RoleQuery, RoleList, RoleEdit, RoleDelete } from './index'
+import { useLayer, useTranslation } from '../../../components';
 import { AdminRole } from '../../../common/I18NNamespace';
 import { AuthButton } from '../../../components/wrap/AuthButton';
 import { permission } from '../../../common/permission';
@@ -16,7 +16,7 @@ export const RolePage : React.FC = () => {
     const {t} = useTranslation(AdminRole);
     const onlyIcon = useSelector(state => state.themeConfig.onlyIcon);
     const size = useSelector(state => state.themeConfig.componentSize);
-    const {message} = App.useApp();
+    const {message} = useLayer();
     const [query, setQuery] = useState({});
     const [selectedRows, setSelectedRows] = useState<any>();
 
@@ -82,7 +82,7 @@ export const RolePage : React.FC = () => {
     }
 
     return <>
-        <RoleQueryComponent onQuery={onQuery}/>
+        <RoleQuery onQuery={onQuery}/>
         <Divider />
         <Space wrap>
             <AuthButton type='primary' size={size} tip={t("新增角色")}
@@ -108,7 +108,7 @@ export const RolePage : React.FC = () => {
             </AuthButton>
         </Space>
         <Divider />
-        <RoleListComponent onSelect={onTableSelectChange} query={query} refresh={refresh}/>
+        <RoleList onSelect={onTableSelectChange} query={query} refresh={refresh}/>
         <RoleEdit open={isOpenEdit} onClose={onAddClose} role={role}/>
         <RoleDelete roles={deletes} successCall={onRefresh}/>
     </>

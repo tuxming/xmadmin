@@ -1,6 +1,6 @@
 
 import { ReactNode, useState } from 'react';
-import {Modal, ModalType} from './index'
+import {Modal} from './index'
 import { Button, Divider, Typography } from 'antd';
 import { useSelector } from '../../redux/hooks';
 import { useTranslation } from '../useTranslation';
@@ -8,68 +8,88 @@ import { DefaultNS } from '../../common/I18NNamespace';
 
 export type ConfirmType = {
     title?: ReactNode,
-    text: ReactNode,
+    content: ReactNode,
     showOk?: boolean,
     showCancel?: boolean,
     onOk?: (close: ()=>void) => void,
     onCancel?: ()=>void,
+    open?: boolean,
+    onClose?: () => void,
 };
 
 
 export const Confirm : React.FC<ConfirmType> = ({
     title,
-    text,
-    showOk,
-    showCancel,
+    content,
+    showOk = true,
+    showCancel = true,
     onOk,
-    onCancel
+    onCancel,
+    open = true,
+    onClose,
 })=>{
-    
     const {t} = useTranslation(DefaultNS);
-    const [open, setOpen] = useState(true);
+    const [visible, setVisible] = useState<boolean>(open);
     const theme = useSelector(state => state.themeConfig.theme);
     const screenHeight = useSelector(state => state.globalVar.height);
-    
+
+    const onModalClose = () => {
+        setVisible(false);
+        if(onClose){
+            setTimeout(()=>{
+                onClose();
+            }, 300);
+        }
+    }
+
     const onClickCancel = () => {
-        setOpen(false);
-        if(onCancel) onCancel();
+        onModalClose();
+        if(onCancel) {
+            setTimeout(()=>{
+                onCancel();
+            }, 300)
+        };
     }
 
     const onClickOk = () => {
         if(onOk){
             onOk(()=>{
-                onClickCancel();
+                onModalClose();
             });
         }
     }
 
-    return <Modal open={open} onClose={()=>setOpen(false)} theme={theme}
-            type='modal' showMove={true} showResize={false} 
-            showMaxize={false} showMinize={false}
-        >
-            <>
-            <div style={{
-                padding: "15px", 
-                textAlign: "center",
-            }}> 
-                <Typography.Text  style={{fontWeight: 'bold',paddingTop: title?0:15, marginBottom: 15, display: 'block'}}>{title}</Typography.Text>
-                <div style={{ maxHeight: screenHeight / 3, overflowY: 'auto'}}
-                >
-                    <Typography.Text>
-                    {text}
-                    </Typography.Text>
-                </div>
-                <Divider />
+    if(open){
+        return <Modal open={visible} onClose={onModalClose} theme={theme}
+                type='modal' showMove={true} showResize={false} 
+                showMaxize={false} showMinize={false} 
+            >
+                <>
                 <div style={{
-                    textAlign: "right",
-                }}>
-                    <Button onClick={onClickCancel}>{t('取消')}</Button>
-                    <Button onClick={onClickOk} type="primary" style={{
-                        marginLeft: 20
-                    }}>{t('确定')}</Button>
+                    padding: "15px", 
+                    textAlign: "center",
+                }}> 
+                    {(title && typeof title === 'string') ? 
+                        <Typography.Text style={{fontWeight: 'bold',paddingTop: title?0:15, marginBottom: 15, display: 'block'}}>{title}</Typography.Text>: title}
+                    <div style={{ maxHeight: screenHeight / 3, overflowY: 'auto'}}>
+                        {(typeof content === 'string') ? <Typography.Paragraph 
+                                style={{margin: "30px 15px 15px 15px"}}
+                            >{content}</Typography.Paragraph>: content}
+                    </div>
+                    <Divider />
+                    <div style={{
+                        textAlign: "right",
+                    }}>
+                        {showCancel && <Button onClick={onClickCancel}>{t('取消')}</Button>}
+                        {showOk && <Button onClick={onClickOk} type="primary" style={{
+                            marginLeft: 20
+                        }}>{t('确定')}</Button>}
+                    </div>
                 </div>
-            </div>
-            </>
-    </Modal>
+                </>
+        </Modal>
+    }else{
+        return <></>
+    }
    
 }

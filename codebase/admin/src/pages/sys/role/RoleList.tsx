@@ -6,7 +6,7 @@ import { useContext, useEffect, useState } from 'react';
 import { computePx } from '../../../common/kit';
 import { AdminRole } from '../../../common/I18NNamespace';
 
-export type RoleListComponentType = {
+export type RoleListType = {
     query: any,
     onSelect: (rows: any[]) => void,
     refresh?: {
@@ -25,7 +25,7 @@ export type RoleListComponentType = {
  * 角色列表组件
  * @returns 
  */
-export const RoleListComponent : React.FC<RoleListComponentType> = ({
+export const RoleList : React.FC<RoleListType> = ({
     query,
     onSelect,
     refresh

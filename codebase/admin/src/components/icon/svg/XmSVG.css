@@ -7,11 +7,11 @@
     fill: var(--var-xmsvg-second-color);
 }
 
-.ant-btn:hover  .xmsvg-main, .xmsvg-main:hover{
+.ant-btn:hover  .xmsvg-main, .svg-icon-wrap:hover .xmsvg-main{
     fill: var(--var-xmsvg-color-hover);
 }
 
-.ant-btn:hover .xmsvg-second, .xmsvg-second:hover{
+.ant-btn:hover .xmsvg-second, .svg-icon-wrap:hover .xmsvg-second{
     fill: var(--var-xmsvg-second-color-hover);
 }
 

@@ -1,6 +1,6 @@
 
 
-import { Confirm, useRequest, useTranslation } from "../../../components";
+import { Confirm, useRequest, useTranslation, useLayer } from "../../../components";
 import { api } from "../../../common/api";
 import { App } from 'antd'
 import { AdminHistory, DefaultNS } from "../../../common/I18NNamespace";
@@ -16,7 +16,7 @@ export const HistoryDelete : React.FC<HistoryDeleteType> = ({
 }) => {
     
     const {t} = useTranslation(AdminHistory);
-    const { message } = App.useApp();
+    const { message } = useLayer();
     const request = useRequest();
 
     const msg = t("确定要删除以下日志记录：") 
@@ -38,7 +38,7 @@ export const HistoryDelete : React.FC<HistoryDeleteType> = ({
     }
 
 
-    return (histories && histories.length>0)?(<Confirm text={msg} onOk={onOk}></Confirm>):(<></>)
+    return (histories && histories.length>0)?(<Confirm content={msg} onOk={onOk}></Confirm>):(<></>)
 
     // const [rows, setRows] = useState<any[]>([]);
 

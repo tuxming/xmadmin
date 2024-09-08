@@ -1,10 +1,13 @@
 package com.xm2013.admin.common;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.xm2013.admin.shiro.dto.ShiroUser;
 
+/**
+ * sql查询条件拼接的工具类，简化操作，做安全防护
+ */
 public class SqlKit {
 	public static String getSafeValue(String value) {
 		if(Kit.isNull(value)) return "";
@@ -23,10 +26,9 @@ public class SqlKit {
 	 * @return
 	 */
 	public static String eq(String column, String value) {
-		if(value == null) return "";
-		value = value.trim().replace("'", "\\'").replace("--", "").replace(";", "");
+		value = getSafeValue(value);
 		
-		if(Kit.isNull(value)) return null;
+		if(Kit.isNull(value)) return "";
 		
 		return " and "+column+"='"+value+"' ";
 	}
@@ -49,7 +51,7 @@ public class SqlKit {
 	 * @author tuxming
 	 * @date 2021年5月30日
 	 */
-	public static String in(String column, List<String> values) {
+	public static String in(String column, Collection<String> values) {
 		
 		if(values==null || values.size()==0) return "";
 		
@@ -65,11 +67,11 @@ public class SqlKit {
 	 * @author tuxming
 	 * @date 2021年5月30日
 	 */
-	public static String inNo(String column, List<? extends Number> values) {
+	public static String inNo(String column, Collection<? extends Number> values) {
 		
 		if(values==null || values.size()==0) return "";
 		if(values.size() == 1) {
-			return " and "+column+" in ("+values.get(0)+") ";
+			return " and "+column+"="+values.iterator().next()+" ";
 		}
 		
 		String idsStr = values.stream()
@@ -77,6 +79,25 @@ public class SqlKit {
 				.map(v -> v+"")
 				.collect(Collectors.joining(","));
 		return " and "+column+" in ("+idsStr+") ";
+	}
+	
+	/**
+	 * 构建sql 的not in条件，List<Number> values
+	 * @author tuxming
+	 * @date 2021年5月30日
+	 */
+	public static String notInNo(String column, Collection<? extends Number> values) {
+		
+		if(values==null || values.size()==0) return "";
+		if(values.size() == 1) {
+			return " and "+column+"!="+values.iterator().next()+" ";
+		}
+		
+		String idsStr = values.stream()
+				.filter(v -> v!=null)
+				.map(v -> v+"")
+				.collect(Collectors.joining(","));
+		return " and "+column+" not in ("+idsStr+") ";
 	}
 	
 	/**

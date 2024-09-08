@@ -1,6 +1,6 @@
-import { App, Button, Divider, Form, Input, Space, Typography } from "antd";
+import { Button, Divider, Form, Input, Space, Typography } from "antd";
 import { AdminLang, DefaultNS } from "../../../common/I18NNamespace";
-import { Modal, useRequest, useTranslation } from "../../../components";
+import { Modal, useLayer, useRequest, useTranslation } from "../../../components";
 import { useEffect, useState } from "react";
 import { useSelector } from "../../../redux/hooks";
 import { api } from "../../../common/api";
@@ -31,7 +31,7 @@ export const LangEdit: React.FC<LangEditType> = ({
 }) => {
     const {t} = useTranslation(AdminLang);
     const request = useRequest();
-    const {message} = App.useApp();
+    const {message} = useLayer();
     const [visible, setVisible] = useState(true);
     const size = useSelector(state => state.themeConfig.componentSize);
 

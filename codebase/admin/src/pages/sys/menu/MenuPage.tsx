@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { DoubleColumnLayout, IconFont, useRequest, AuthButton, useTranslation } from "../../../components";
-import { DeleteIcon, AddIcon, MenuAddIcon, MenuDeleteIcon} from '../../../components/icon/svg/Icons';
+import { DoubleColumnLayout, IconFont, useRequest, AuthButton, useTranslation, useLayer } from "../../../components";
+import { MenuAddIcon, MenuDeleteIcon} from '../../../components/icon/svg/Icons';
 import { useSelector } from "../../../redux/hooks";
-import { Tree, App, Space, Form, Typography, Input, TreeSelect, 
+import { Tree, Space, Form, Typography, Input, TreeSelect, 
     Radio, Select,theme,Divider, Button, InputNumber
 } from 'antd';
 import {SendOutlined} from '@ant-design/icons'
@@ -39,7 +39,7 @@ export const MenuPage : React.FC = () => {
     const {t} = useTranslation(AdminMenu);
 
     const request = useRequest();
-    const {message, modal} = App.useApp();
+    const {message, confirm} = useLayer();
 
     const [containerWidth, setContainerWidth] = useState<number>();
     const [treeData, setTreeData] = useState<TreeDataNode[]>([]);
@@ -60,8 +60,10 @@ export const MenuPage : React.FC = () => {
             try{
                 let result = await request.get(api.menu.list+"?id="+key);
                 if(result.data && result.data.length > 0){
+                    let menus = result.data;
+                    menus.sort((m1, m2) => m1.sort - m2.sort);
                     setTreeData((origin) =>
-                        updateTreeData(origin, key, convertToTreeNode(result.data)),
+                        updateTreeData(origin, key, convertToTreeNode(menus)),
                     );
                     // result.data.forEach(i => menus.current.add(i));
                 }else{
@@ -105,13 +107,13 @@ export const MenuPage : React.FC = () => {
         return menus.map(menu => {
 
             return {
-                title: menu.name,
+                title: menu.name+" ("+menu.sort+")",
                 label: menu.name,
                 key: menu.id,
                 value: menu.id,
                 isLeaf: menu.type === 1,
                 icon: <IconFont fontClass={menu.icon} />,
-                data:  menu
+                data:  menu,
             }
         });
     }
@@ -230,6 +232,7 @@ export const MenuPage : React.FC = () => {
     let doDelete = () => {
 
         let deleteMenu = async () => {
+            console.log("doDelete");
             try{
                 let result = await request.get(api.menu.delete+"?id="+menu.id);
                 if(result.status){
@@ -250,19 +253,22 @@ export const MenuPage : React.FC = () => {
             return;
         }
 
-        modal.confirm({
-            title: t("确定要删除菜单：")+menu.name+"？",
-            onOk: () => {
+        confirm({
+            content: t("确定要删除菜单：")+menu.name+"？",
+            onOk: (onClose) => {
                 if(menu.type === 0){
-                    modal.confirm({
-                        title: t("该菜单为目录菜单, 确定要删除该菜单及其子菜单吗？"),
-                        onOk: ()=>{
+                    confirm({
+                        content: t("该菜单为目录菜单, 确定要删除该菜单及其子菜单吗？"),
+                        onOk: (close)=>{
                             deleteMenu();
+                            close();
                         }
                     });
                 }else{
                     deleteMenu();
                 }
+                console.log(333);
+                onClose();
             }
         });
 

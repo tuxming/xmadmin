@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { useSelector } from "../../../redux/hooks";
-import { Divider, Space, Tooltip, Button, App  } from "antd";
+import { Divider, Space } from "antd";
 import { DeleteIcon, ViewIcon } from "../../../components/icon/svg/Icons";
 import { HistoryQuery, HistoryList, HistoryDetail } from "./index";
 import { HistoryDelete } from "./HistoryDelete";
-import { useTranslation } from "../../../components";
+import { AuthButton, useLayer, useTranslation } from "../../../components";
 import { AdminHistory } from "../../../common/I18NNamespace";
+import { permission } from "../../../common/permission";
 
 export const HistoryPage : React.FC = () => {
 
@@ -13,7 +14,7 @@ export const HistoryPage : React.FC = () => {
     const onlyIcon = useSelector(state => state.themeConfig.onlyIcon);
     const [query, setQuery] = useState({});
     const size = useSelector(state => state.themeConfig.componentSize);
-    const { message } = App.useApp();
+    const { message } = useLayer();
     
     const [refresh, setRefresh] = useState({
         reset: false,
@@ -54,7 +55,8 @@ export const HistoryPage : React.FC = () => {
      */
     const onViewClose = (item) => {
         let newView = views.filter(v => v.id !== item.id);
-        setViews(newView);
+        console.log(newView);
+        setViews([...newView]);
     } 
 
     /**
@@ -84,20 +86,28 @@ export const HistoryPage : React.FC = () => {
         <Divider />
 
         <Space wrap>
-            <Tooltip title={t("查看日志")}>
-                <Button type='primary' size={size} onClick={onViewDetail} icon={<ViewIcon type='primary'/>}>{!onlyIcon && t('查看')}</Button>
-            </Tooltip>
-            <Tooltip title={t("删除日志")}>
-                <Button type='primary' size={size} onClick={onDelete} icon={<DeleteIcon type='primary' danger ghost/>} ghost danger>{!onlyIcon && t('删除')}</Button>
-            </Tooltip>
+            <AuthButton type='primary' size={size} tip='查看日志' 
+                icon={<ViewIcon type='primary'/>}
+                onClick={onViewDetail}
+                requiredPermissions={permission.history.get.expression}
+            >
+                {!onlyIcon && '查看'}
+            </AuthButton>
+            <AuthButton type='primary' size={size} tip='删除日志' 
+                icon={<DeleteIcon type='primary' danger ghost/>}
+                onClick={onDelete} ghost danger
+                requiredPermissions={permission.history.delete.expression}
+            >
+                {!onlyIcon && '删除'}
+            </AuthButton>
         </Space>
 
         <Divider />
 
         <HistoryList onSelect={onTableSelectChange} query={query} refresh={refresh}/>
-        {views.map((view, index) => {
-             return <HistoryDetail historyId={view.historyId}  close={() => onViewClose(view)} open={true} key={index}/>
-        })}
+        {views.map(view =>
+            (<HistoryDetail historyId={view.historyId}  close={() => onViewClose(view)} open={true} key={view.id}/>)
+        )}
 
         <HistoryDelete histories={deletes} successCall={onRefresh}/>
 

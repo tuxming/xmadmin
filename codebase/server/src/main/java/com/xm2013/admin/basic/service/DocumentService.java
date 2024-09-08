@@ -1,12 +1,13 @@
 package com.xm2013.admin.basic.service;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlPrepareStatement;
 import com.jfinal.kit.PropKit;
 import com.jfinal.plugin.activerecord.Db;
+import com.jfinal.plugin.activerecord.IAtom;
 import com.jfinal.plugin.redis.Redis;
 import com.xm2013.admin.common.CacheKey;
 import com.xm2013.admin.common.Kit;
@@ -108,7 +109,15 @@ public class DocumentService {
 	}
 
 	public int save(Document doc) {
-		boolean result = doc.save();
+		
+		boolean result = Db.tx(new IAtom() {
+			
+			@Override
+			public boolean run() throws SQLException {
+				boolean result = doc.save();
+				return result;
+			}
+		});
 		
 		return result?doc.getId():0;
 	}
@@ -132,7 +141,7 @@ public class DocumentService {
 			String filename = document.getFileName();
 			try {
 				Integer userId = document.getUserId();
-				if(!user.isAdmin() && !user.isOwnerData(userId)) {
+				if(!user.isAdmin() && !user.isOwnerData(null, userId)) {
 					result.put(filename, "没有权限");
 					continue;
 				}

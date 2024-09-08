@@ -11,9 +11,21 @@ import com.xm2013.admin.jfinal.generator.Col;
 public abstract class BaseRole<M extends BaseRole<M>> extends Model<M> implements IBean {
 
 	public static String COL_ID = "id";
+	/**
+	 * 角色名
+	 */
 	public static String COL_ROLE_NAME = "role_name";
+	/**
+	 * 角色标识，代码一般用它作为判断
+	 */
 	public static String COL_CODE = "code";
+	/**
+	 * 角色类型： 用它来判断角色级别的高低：0-sys, 1-super，2-admin普通管理员，3-普通角色，一般建议使用普通角色
+	 */
 	public static String COL_TYPE = "type";
+	/**
+	 * 创建人
+	 */
 	public static String COL_CREATER = "creater";
 
 	public M setId(java.lang.Integer id) {

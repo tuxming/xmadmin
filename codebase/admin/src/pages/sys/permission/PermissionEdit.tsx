@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
-import { Modal, useRequest, useTranslation } from "../../../components"
-import { Button, Divider, Form, Input, Space, Typography, FormProps, App } from "antd"
+import { Modal, useLayer, useRequest, useTranslation } from "../../../components"
+import { Button, Divider, Form, Input, Space, Typography, FormProps } from "antd"
 import { CloseOutlined, SendOutlined } from "@ant-design/icons"
 import { api } from "../../../common/api"
 import { AdminPermission, DefaultNS } from "../../../common/I18NNamespace"
@@ -34,7 +34,7 @@ export const PermissionEdit : React.FC<PermissionEditType> = ({
 
     const {t} = useTranslation(AdminPermission);
     const request = useRequest();
-    const {message} = App.useApp();
+    const {message} = useLayer();
     // const [visible, setVisible] = useState(open);
     const [form] = Form.useForm();
 

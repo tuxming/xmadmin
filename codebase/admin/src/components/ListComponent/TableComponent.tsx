@@ -1,9 +1,9 @@
 
 import React, {useEffect, useRef, useState} from 'react';
-import { Table, Tooltip, App } from 'antd';
+import { Table, Tooltip} from 'antd';
 import type { TableProps } from 'antd';
 import { useSelector } from "../../redux/hooks"
-import { useRequest, useTranslation } from '../../components';
+import { useLayer, useRequest, useTranslation } from '../../components';
 import { DefaultNS } from '../../common/I18NNamespace';
 import type { ResizeCallbackData } from 'react-resizable';
 import { Resizable } from 'react-resizable';
@@ -61,7 +61,7 @@ const ResizableTitle = (
     );
   };
 
-/**
+  /**
  * 表格组件封装，这个表格可以自己传入宽高，如果自己没有传入宽高，则将自适应于页面组件的宽高
  * @returns 
  */
@@ -81,11 +81,12 @@ export const TableComponent : React.FC<TableType> = ({
     selectType = 'checkbox',
     updateChildren,
     initLoad = true,
+    onDataLoaded,
     ...props
 }) => {
     const {t} = useTranslation();
     const request = useRequest();
-    const { message } = App.useApp();
+    const { message } = useLayer();
     const tableWrapRef = useRef(null);
     const tableRef = useRef(null);
     const isSetedThumbColor = useRef(false);
@@ -102,8 +103,9 @@ export const TableComponent : React.FC<TableType> = ({
     const firstLoad = useRef(initLoad); 
 
     const [loading, setLoading] = useState(false);
+
     const [data, setData] = useState<any[]>();
-    
+
     const [pagination, setPagination] = useState({
         current: 1,
         pageSize: pageSize,
@@ -111,6 +113,8 @@ export const TableComponent : React.FC<TableType> = ({
         simple: false,
         pageSizeOptions: [10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000]
     });
+
+    const [selectedRowKeys, setSelectedRowKeys] = useState<any[]>(props.rowSelection?.selectedRowKeys || []);
     
     const [prevQuery, setPrevQuery] = useState<any>(query);
     const [prevSize, setPrevSize] = useState<number>(pagination.pageSize)
@@ -201,12 +205,16 @@ export const TableComponent : React.FC<TableType> = ({
                 setLoading(false);
                 // setData([]);
                 if(result.status){
+                    setSelectedRowKeys([]);
                     message.success(result.msg);
                     setData(result.data.list);
                     setPagination({
                         ...pagination,
                         total: result.data.total || pagination.total
                     });
+                    if(onDataLoaded){
+                        onDataLoaded(result.data.list);
+                    }
                 }else{
                     message.error(result.msg);
                 }
@@ -412,6 +420,7 @@ export const TableComponent : React.FC<TableType> = ({
         });
     }, [minScreen]);
 
+
     //分页变化事件
     const handleTableChange: TableProps['onChange'] = (page, filters, sorter) => {
         setPrevSize(pagination.pageSize);
@@ -433,6 +442,7 @@ export const TableComponent : React.FC<TableType> = ({
     const onTableSelectChange =  (selectedRowKeys: React.Key[], selectedRows: any[]) => {
         // console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
         onSelect(selectedRows);
+        setSelectedRowKeys(selectedRowKeys);
     }
 
     // const mergedColumns = tableColumns.map((col, index) => ({
@@ -461,14 +471,17 @@ export const TableComponent : React.FC<TableType> = ({
             }
             `
         }
-            </style>
+        </style>
         <Table dataSource={data} columns={tableColumns} 
+            {...props}
             rowSelection={{
                 type: selectType,
                 onChange: onTableSelectChange,
                 fixed: true,
                 columnWidth: 45,
-                checkStrictly: selectType == "radio"
+                checkStrictly: selectType == "radio",
+                selectedRowKeys: selectedRowKeys,
+                ...props.rowSelection,
             }}
             components={{
                 ...props.components, 
@@ -485,7 +498,6 @@ export const TableComponent : React.FC<TableType> = ({
             loading={loading}
             onChange={handleTableChange}
             size={size}
-            {...props}
             expandable={{...props.expandable, 
                 onExpand : (expanded, record) => onTreeExpand(expanded, record,  setData)
             }}

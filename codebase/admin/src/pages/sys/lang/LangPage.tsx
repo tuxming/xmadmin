@@ -1,9 +1,9 @@
 import { useContext, useEffect, useState } from "react";
-import { AuthButton, DoubleColumnLayout, ModalContext, QueryComponent, useRequest, useTranslation } from "../../../components"
+import { AuthButton, DoubleColumnLayout, ModalContext, QueryComponent, useLayer, useRequest, useTranslation } from "../../../components"
 import { useSelector } from "../../../redux/hooks";
 import { api } from "../../../common/api";
 import { AdminLang, DefaultNS } from "../../../common/I18NNamespace";
-import { App, Divider, Menu, Space } from "antd";
+import {  Divider, Menu, Space } from "antd";
 import { ResourceList, LangEdit, LangEditFormType, ResourceEdit } from "./index";
 import { FileAddIcon, FileDeleteIcon, FileEditIcon, LangAddIcon, LangDeleteIcon, LangEditIcon } from "../../../components/icon/svg/Icons";
 import { permission } from "../../../common/permission";
@@ -16,7 +16,7 @@ import { computePx } from "../../../common/kit";
 export const LangPage : React.FC = () => {
 
     const {t, f} = useTranslation(AdminLang);
-    const {message, modal} = App.useApp();
+    const {message, confirm} = useLayer();
     const [containerWidth, setContainerWidth] = useState<number>();
     const screenWidth = useSelector(state => state.globalVar.width);
     const screenHeight = useSelector(state => state.globalVar.height);
@@ -166,7 +166,7 @@ export const LangPage : React.FC = () => {
             message.warning(t("请选中数据语言后，删除"));
             return;
         }
-        modal.confirm({
+        confirm({
             title: f("确定要删除语言：%s?", [selectedLang.label]),
             content: t("删除语言将会删除语言对应的所有资源"),
             onOk: () => {
@@ -214,18 +214,20 @@ export const LangPage : React.FC = () => {
             message.warning(t("请选中数据语言后，再点击删除"));
             return;
         }
-        modal.confirm({
-            title: f("确定要删除语言资源：%s?", [selectedResRows[0].resKey]),
-            onOk: () => {
-                modal.confirm({
-                    title: f("是否要删除: %s， 下面所有的翻译", [selectedResRows[0].resKey]),
-                    onOk: () => {
+        confirm({
+            content: f("确定要删除语言资源：%s?", [selectedResRows[0].resKey]),
+            onOk: (onClose) => {
+                confirm({ 
+                    content: f("是否要删除: %s， 下面所有的翻译", [selectedResRows[0].resKey]),
+                    onOk: (close) => {
                         doDeleteRes(true);
+                        close();
                     },
                     onCancel: () => {
                         doDeleteRes(false);
                     }
                 });
+                onClose();
             }, 
         });
     }

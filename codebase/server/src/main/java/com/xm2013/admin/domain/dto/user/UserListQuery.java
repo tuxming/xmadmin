@@ -1,6 +1,7 @@
 package com.xm2013.admin.domain.dto.user;
 
 import java.util.List;
+import java.util.Set;
 
 import com.xm2013.admin.domain.dto.Query;
 
@@ -13,6 +14,7 @@ public class UserListQuery extends Query{
 	private Integer deptId;
 	private String email;
 	private String phone;
+	private Set<Integer> status;
 	
 	public String getUsername() {
 		return username;
@@ -55,5 +57,11 @@ public class UserListQuery extends Query{
 	}
 	public void setUserId(String userId) {
 		this.userId = userId;
+	}
+	public Set<Integer> getStatus() {
+		return status;
+	}
+	public void setStatus(Set<Integer> status) {
+		this.status = status;
 	}
 }

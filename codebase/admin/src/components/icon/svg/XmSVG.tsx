@@ -1,10 +1,11 @@
-import { useEffect, useRef, useState } from "react"
+import React, { forwardRef, useEffect, useRef, useState } from "react"
 import { theme } from 'antd'
 import "./XmSVG.css"
 import { useSelector } from "../../../redux/hooks";
 
-type SVGComponent<P = {}> = React.FunctionComponent<P> & React.FC<P>;;
-export type XmSVGType = {
+type SVGComponent<P = {}> = React.FunctionComponent<P> & React.FC<P>;
+
+export interface XmSVGType  {
     SVGElement?: SVGComponent,
     primaryColor?: string,
     primaryHoverColor?: string,
@@ -30,7 +31,12 @@ export type XmSVGType = {
      *  antd 的按钮类型
      */
     ghost?: boolean,
-    iconName?: string
+    iconName?: string,
+    onClick?: (e) => void
+    className?: string,
+    style?: {
+        [key: string]: string | number
+    },
 }
 
 const isBlackColor = (color: string) => {
@@ -64,16 +70,33 @@ export const XmSVG : React.FC<XmSVGType> = ({
     danger = false,
     offSetY = 1,
     ghost=false,
-    iconName
+    iconName,
+    className,
+    ...props
 }) => {
-    const svgRef = useRef(null);
+// export const XmSVG : React.FC<XmSVGType> = ({
+//     SVGElement,
+//     primaryColor,
+//     primaryHoverColor,
+//     secondColor,
+//     secondHoverColor,
+//     width,
+//     height,
+//     type,
+//     danger = false,
+//     offSetY = 1,
+//     ghost=false,
+//     iconName,
+//     className,
+//     ...props
+// }) => {
+    const svgRef = useRef<HTMLSpanElement>(null);
     // const [mainColor, setMainColor] = useState(primaryColor);
     let mainColor = primaryColor;
     let mainHoverColor = primaryHoverColor;
 
     const {token} = theme.useToken();
 
-    const [pos, setPos] = useState({width, height});
     const size = useSelector(state => state.themeConfig.componentSize);
 
     const buildPos = (width, height, size) => {
@@ -97,10 +120,6 @@ export const XmSVG : React.FC<XmSVGType> = ({
             }
         }
     }
-
-    useEffect(()=>{
-       setPos(buildPos(width, height, size));
-    }, [width, height, size])
 
     if(type){
         if(type == 'primary'){
@@ -160,9 +179,9 @@ export const XmSVG : React.FC<XmSVGType> = ({
 
     const style: any = {
         "--var-xmsvg-color": mainColor,
-        display: 'inline-block',
         position: 'relative',
-        top: offSetY
+        top: offSetY,
+        ...props.style
     };
 
     if(mainHoverColor){
@@ -208,12 +227,19 @@ export const XmSVG : React.FC<XmSVGType> = ({
 
         let svg = svgRef.current.querySelector("svg");
         let pos = buildPos(width, height, size);
-        svg.style=`width:${pos.width}; height:${pos.height}`
+        svg.style.width = pos.width;
+        svg.style.height = pos.height; 
 
     }, [svgRef]);
 
-    return <span ref={svgRef} style={style}>
-        <SVGElement />
-    </span>
+    let localClassName = "svg-icon-wrap";
+    if(className){
+        localClassName = className + " "+ localClassName
+    }
+
+    return <span className={localClassName} {...props} ref={svgRef} style={{...style, ...props.style}}>
+            <SVGElement />
+        </span>
 
 }
+
