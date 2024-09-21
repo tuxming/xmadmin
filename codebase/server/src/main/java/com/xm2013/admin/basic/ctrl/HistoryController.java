@@ -1,7 +1,6 @@
 package com.xm2013.admin.basic.ctrl;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import com.jfinal.aop.Inject;
@@ -14,7 +13,6 @@ import com.xm2013.admin.domain.dto.PageInfo;
 import com.xm2013.admin.domain.dto.basic.HistoryQuery;
 import com.xm2013.admin.domain.model.History;
 import com.xm2013.admin.exception.BusinessErr;
-import com.xm2013.admin.exception.BusinessException;
 import com.xm2013.admin.exception.Msg;
 import com.xm2013.admin.shiro.ShiroKit;
 
@@ -27,7 +25,8 @@ public class HistoryController extends BaseController{
 	public void get() {
 		String historyId = getPara("historyId");
 		if(historyId == null) {
-			throw new BusinessException(BusinessErr.INVALID_PARAM);
+			renderJson(JsonResult.error(BusinessErr.INVALID_PARAM));
+			return;
 		}
 		
 //		List<History> histories = historyService.get();
@@ -41,7 +40,8 @@ public class HistoryController extends BaseController{
 		HistoryQuery query = JsonKit.getObject(getRawData(), HistoryQuery.class);
 		
 		if(query == null) {
-			throw new BusinessException(BusinessErr.NULL_PARAM);
+			renderJson(JsonResult.error(BusinessErr.NULL_PARAM));
+			return;
 		}
 		
 		PageInfo<History> users = historyService.pageList(query, ShiroKit.getLoginUser());
@@ -53,18 +53,13 @@ public class HistoryController extends BaseController{
 	public void deletes() {
 		String ids = getPara("ids");
 		if(ids == null || !ids.matches("[\\d,]+")) {
-			throw new BusinessException(BusinessErr.NULL_PARAM);
+			renderJson(JsonResult.error(BusinessErr.NULL_PARAM));
+			return;
 		}
 		
-		List<Integer> idsList = Arrays.asList(ids.split(","))
-				.stream().map(id -> Integer.parseInt(id))
-				.collect(Collectors.toList());
-		
-		for (Integer id : idsList) {
-			if(id<=4) {
-				throw new BusinessException(BusinessErr.ERROR, Msg.ROLE_NOT_DELETE_SYS_ROLE);
-			}
-		}
+		ids = Arrays.asList(ids.split(","))
+				.stream().map(id -> Integer.parseInt(id)+"")
+				.collect(Collectors.joining(","));
 		
 		historyService.deletes(ids);
 		

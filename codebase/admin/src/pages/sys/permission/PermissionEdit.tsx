@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react"
-import { Modal, useLayer, useRequest, useTranslation } from "../../../components"
+import { useRequest, useTranslation } from "../../../hooks"
+import { Modal } from "../../../components"
 import { Button, Divider, Form, Input, Space, Typography, FormProps } from "antd"
 import { CloseOutlined, SendOutlined } from "@ant-design/icons"
 import { api } from "../../../common/api"
 import { AdminPermission, DefaultNS } from "../../../common/I18NNamespace"
+import { useShowResult } from "../../../hooks/useShowResult"
 
 export type PermissionFormType = {
     id?: number | string,
@@ -31,10 +33,9 @@ export const PermissionEdit : React.FC<PermissionEditType> = ({
 }) => {
     const [defaultValues, setDefaultValues] = useState<PermissionFormType>();
 
-
     const {t} = useTranslation(AdminPermission);
+    const showResult = useShowResult(AdminPermission);
     const request = useRequest();
-    const {message} = useLayer();
     // const [visible, setVisible] = useState(open);
     const [form] = Form.useForm();
 
@@ -58,11 +59,9 @@ export const PermissionEdit : React.FC<PermissionEditType> = ({
                 data.id?api.permission.update:api.permission.create,
                 data
             );
+            showResult.show(result);
             if(result.status){
-                message.success(result.msg);
                 onClose(true);
-            }else{
-                message.error(result.msg);
             }
         }
         create();

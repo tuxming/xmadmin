@@ -4,8 +4,7 @@ import  "./LoginPage.css"
 import {LoginForm, ForgetForm} from "./index";
 import {Logo} from "../../components/Logo";
 import { useSearchParams   } from 'react-router-dom';
-import { useSelector } from "../../redux/hooks";
-import { useTranslation } from "../../components/useTranslation";
+import { useTranslation, useSelector } from "../../hooks";
 import { AdminLogin } from "../../common/I18NNamespace";
 import bg from '../../assets/bg.jpg'
 

@@ -1,7 +1,7 @@
 import { Menu } from 'antd';
-import { useSelector, useDispatch } from '../../redux/hooks';
 import { ActiveTabSlice, TabItemsSlice, currMenus } from "../../redux/slice";
-import { IconFont } from '../../components';
+import { IconFont} from '../../components';
+import { useDispatch, useSelector } from '../../hooks';
 import { useEffect, useState } from 'react';
 
 

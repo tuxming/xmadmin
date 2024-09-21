@@ -1,6 +1,6 @@
 
 import { Result, Button } from 'antd';
-import { useTranslation } from '../../components/useTranslation';
+import { useTranslation } from '../../hooks/useTranslation';
 import { AdminLogin } from '../../common/I18NNamespace';
 
 export type ResetResultType = {

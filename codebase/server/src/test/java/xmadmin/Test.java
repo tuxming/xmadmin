@@ -4,6 +4,9 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.jfinal.plugin.activerecord.Db;
+import com.xm2013.admin.domain.model.Role;
+
 public class Test {
 	public static void main(String[] args) throws UnsupportedEncodingException {
 //		String en = Kit.doubleMd5WidthSalt("EFEI#F039F...F30");
@@ -15,8 +18,9 @@ public class Test {
 //			System.out.println(UUID.randomUUID().toString().replace("-", "").substring(24));
 //		}
 		
-		System.out.println(String.format("%08d", 125));
+//		System.out.println(String.format("%08d", 125));
 		
+		Role.dao.findById(1);
 		
 	}
 	

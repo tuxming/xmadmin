@@ -1,8 +1,7 @@
 import { useEffect, useState} from "react";
-import { useRequest } from "../../../components"
+import { useRequest, useSelector } from "../../../hooks"
 import { Modal, Tabs } from 'antd';
 import { api } from "../../../common/api";
-import { useSelector } from "../../../redux/hooks";
 import { WallpaperList } from "./WallpaperList";
 import "./WallpaperModal.css"
 

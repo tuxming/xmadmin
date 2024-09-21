@@ -1,6 +1,6 @@
-import { QueryComponent, useTranslation } from '../../../components';
+import { useSelector, useTranslation } from '../../../hooks';
+import { QueryComponent } from '../../../components';
 import { Input, DatePicker } from "antd"
-import { useSelector } from '../../../redux/hooks';
 import { RoleSelector } from '../role';
 import { UserSelector } from './index';
 import { AdminUser } from '../../../common/I18NNamespace';

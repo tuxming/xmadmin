@@ -10,7 +10,7 @@ public enum BusinessErr implements Error{
 	NULL_PARAM(7, "参数为空"),
 	INVALID_PARAM(8, "参数不合法"),
 	NO_DATA(9, "数据不存在"),
-	ERROR(10, "错误"), 
+	ERROR(10, "错误"), //这个错误的消息会是自定义消息
 	;
 	
 	private int code;
@@ -26,7 +26,12 @@ public enum BusinessErr implements Error{
 	public int getCode() {
 		return code;
 	}
-
+	
+	public BusinessErr setCode(int code) {
+		this.code = code;
+		return this;
+	}
+	
 	@Override
 	public String getMsg() {
 		return msg;

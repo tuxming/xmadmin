@@ -6,9 +6,8 @@ import {
     MoonOutlined,
     ReloadOutlined
 } from '@ant-design/icons';
-import { useTranslation } from "../../../components";
+import { useTranslation, useSelector, useDispatch } from "../../../hooks";
 import { AdminSkinSetting } from "../../../common/I18NNamespace";
-import { useDispatch, useSelector } from "../../../redux/hooks";
 import { themeConfigSlice } from "../../../redux/CommonSlice";
 
 

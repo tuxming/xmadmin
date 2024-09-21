@@ -1,6 +1,7 @@
 import { Col, Descriptions, Row, Typography, DescriptionsProps } from "antd"
 import { FileUploadFormItem } from "../document"
-import { EditableTagItem, EditableTextItem, useTranslation } from "../../../components"
+import { useTranslation } from "../../../hooks"
+import { EditableTagItem, EditableTextItem } from "../../../components"
 import { AdminDept, AdminUser } from "../../../common/I18NNamespace";
 import { UserProps } from "./UserType";
 import { EditableDeptItem } from "../dept/index";

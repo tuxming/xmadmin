@@ -1,8 +1,7 @@
-import { List, Button } from "antd"
-import { useSelector, useDispatch } from "../../../redux/hooks";
+import { Button, List } from "antd";
 import { useEffect, useState } from "react";
-import { useRequest, useTranslation } from "../../../components"
 import { api } from "../../../common/api";
+import { useDispatch, useRequest, useSelector, useTranslation } from "../../../hooks";
 import { themeConfigSlice } from "../../../redux/CommonSlice";
 
 export type WallpaperListType = {

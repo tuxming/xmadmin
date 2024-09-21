@@ -1,7 +1,7 @@
 
 import React, {useState} from 'react';
 import { Button, Input, Space,Form,theme } from "antd"
-import { useSelector } from "../../redux/hooks"
+import { useSelector } from "../../hooks"
 import { DoubleLeftOutlined, ReloadOutlined, SearchOutlined } from "@ant-design/icons";
 import { SearchIcon } from '../icon/svg/Icons';
 

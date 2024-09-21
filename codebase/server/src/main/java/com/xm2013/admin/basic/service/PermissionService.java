@@ -1,16 +1,25 @@
 package com.xm2013.admin.basic.service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
+import com.jfinal.aop.Inject;
 import com.jfinal.plugin.activerecord.Db;
 import com.xm2013.admin.common.Kit;
 import com.xm2013.admin.common.SqlKit;
 import com.xm2013.admin.domain.dto.PageInfo;
 import com.xm2013.admin.domain.dto.Query;
 import com.xm2013.admin.domain.model.Permission;
+import com.xm2013.admin.domain.model.Role;
+import com.xm2013.admin.exception.BusinessErr;
+import com.xm2013.admin.exception.BusinessException;
 import com.xm2013.admin.shiro.dto.ShiroUser;
 
 public class PermissionService {
+	
+	@Inject
+	public RoleService roleService;
 	
 	/**
 	 * 根据角色id查找权限
@@ -108,6 +117,42 @@ public class PermissionService {
 
 	public void deletes(String ids) {
 		Db.delete("delete from sys_permission where id in ("+ids+")");
+	}
+
+	/**
+	 * 获取所有的权限，管理员可以获取到所有的权限列表，
+	 * 普通用户只能获取到分配给他的权限
+	 */
+	public List<Permission> all(ShiroUser user) {
+		if(user.isAdmin()) {
+			return Permission.dao.findAll();
+		}
+		
+		String roleIds = user.getRoles().stream().map(s -> s.getId()+"").collect(Collectors.joining(","));
+		
+		return Permission.dao.find("select t.* from sys_permission as t left join sys_role_permission where role_id in ("+roleIds+")");
+	}
+
+	public List<Permission> findAll() {
+		
+		return Permission.dao.findAll();
+	}
+
+	/**
+	 * 指定的角色的所有权限，
+	 * 先判断这个角色是否拥有
+	 */
+	public List<Permission> byRole(int roleId, ShiroUser loginUser) {
+
+		if(!loginUser.isAdmin()) {
+			List<Role> ownerRoles = roleService.findOwnerRoles(loginUser);
+			Optional<Role> exist = ownerRoles.stream().filter(r -> r.getId() == roleId).findFirst();
+			if(!exist.isPresent()) {
+				throw new BusinessException(BusinessErr.ERR_NO_AUTH);
+			}
+		}
+		
+		return findByRole(roleId+"");
 	}
 	
 }

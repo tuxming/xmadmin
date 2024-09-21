@@ -1,8 +1,8 @@
 import { App, Button, Col, Divider, Form, Input, Radio, Row, Space, Typography } from "antd";
 import { AdminUser, DefaultNS } from "../../../common/I18NNamespace";
-import { Modal, useLayer, useRequest, useTranslation } from "../../../components";
-import { useEffect, useState } from "react";
-import { useSelector } from "../../../redux/hooks";
+import { Modal } from "../../../components";
+import { useSelector, useTranslation } from "../../../hooks";
+import { useState } from "react";
 import { CloseOutlined, SendOutlined } from "@ant-design/icons";
 import { computePx } from "../../../common/kit";
 import { FileUploadFormItem } from "../document";
@@ -22,8 +22,6 @@ export const UserAdd: React.FC<UserAddType> = ({
 }) => {
     
     const {t} = useTranslation(AdminUser);
-    const request = useRequest();
-    const {message} = useLayer();
     const [visible, setVisible] = useState(true);
     const size = useSelector(state => state.themeConfig.componentSize);
     const [modalPos, setModalPos] = useState<any>({width: null, height: null});

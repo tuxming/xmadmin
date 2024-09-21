@@ -1,16 +1,18 @@
 import { useContext, useEffect, useState } from "react";
 import { 
-    AuthButton, DoubleColumnLayout, ModalContext, QueryComponent, 
-    useRequest, useTranslation, useLayer
+    useRequest, useTranslation, useSelector
+} from "../../../hooks"
+import { 
+    AuthButton, DoubleColumnLayout, ModalContext, QueryComponent, useLayer
 } from "../../../components"
-import { useSelector } from "../../../redux/hooks";
 import { api } from "../../../common/api";
-import { AdminDict, DefaultNS } from "../../../common/I18NNamespace";
+import { AdminDict } from "../../../common/I18NNamespace";
 import { Divider, Menu, Space } from "antd";
 import { DictEdit, DictGroupEdit, DictList } from "./index";
 import { FileAddIcon, FileDeleteIcon, FileEditIcon, DictAddIcon, DictDeleteIcon, DictEditIcon } from "../../../components/icon/svg/Icons";
 import { permission } from "../../../common/permission";
 import { computePx } from "../../../common/kit";
+import { useShowResult } from "../../../hooks/useShowResult";
 
 
 /**
@@ -48,6 +50,7 @@ export const DictPage : React.FC = () => {
 
     const [isDictEditOpen, setIsDictEditOpen] = useState(false);
     const [selectedDict, setSelectedDict] = useState<any>();
+    const showResult = useShowResult(AdminDict);
 
     //构建语言分组菜单
     const buildItmes = (langs) => {
@@ -137,11 +140,9 @@ export const DictPage : React.FC = () => {
             onOk: () => {
                 let doDelete = async () => {
                     let result = await request.get(api.dict.deleteGroup+"?code="+selectedGroup.code);
+                    showResult.show(result);
                     if(result.status){
-                        message.success(t(result.msg, DefaultNS));
                         getGroups();
-                    }else{
-                        message.warning(t(result.msg));
                     }
                 }
                 doDelete();
@@ -181,15 +182,13 @@ export const DictPage : React.FC = () => {
                     let result = await request.get(api.dict.deleteDict
                             +"?id="+selectedDictRows[0].id
                         );
+                    showResult.show(result);
                     if(result.status){
-                        message.success(t(result.msg, DefaultNS));
                         setRefresh({
                             reset: true,
                             tag: refresh.tag+1
                         });
                         onClose();
-                    }else{
-                        message.warning(t(result.msg));
                     }
                 }
                 doDelete();

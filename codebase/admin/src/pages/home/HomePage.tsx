@@ -4,10 +4,10 @@ import { Layout,  Typography,  theme, } from 'antd';
 import KeepAlive from 'keepalive-for-react';
 import { useOutlet,useLocation, useNavigate } from "react-router-dom";
 import { Footer } from 'antd/es/layout/layout';
-import { Logo, Modal, useTranslation } from '../../components';
+import { useTranslation, useSelector,useDispatch } from '../../hooks';
+import { Logo, Modal} from '../../components';
 import "./HomePage.css";
 import { SideMenuComponent, HomeHeader } from "./index";
-import { useDispatch, useSelector } from "../../redux/hooks";
 import { ActiveTabSlice, TabItemsSlice, openItemSlice, themeConfigSlice } from "../../redux/slice";
 import { AdminHome } from "../../common/I18NNamespace";
 

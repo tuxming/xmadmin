@@ -1,12 +1,11 @@
 
 import React, {useState} from 'react';
 import {Tooltip, Space, Divider, UploadProps, Upload } from "antd"
-import { useSelector } from "../../../redux/hooks"
 import { DeleteIcon, UploadIcon } from '../../../components/icon/svg/Icons';
 import { DocumentQuery, DocumentList, DocumentDelete } from './index'
-import { useTranslation, useLayer } from '../../../components';
+import { useLayer, AuthButton } from '../../../components';
+import { useTranslation, useSelector } from '../../../hooks';
 import { AdminDocument } from '../../../common/I18NNamespace';
-import { AuthButton } from '../../../components/wrap/AuthButton';
 import { permission } from '../../../common/permission';
 import { api } from '../../../common/api';
 

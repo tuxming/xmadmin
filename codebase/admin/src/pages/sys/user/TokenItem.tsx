@@ -2,7 +2,7 @@ import { Tooltip, Typography } from "antd";
 import { CopyIcon, RefreshIcon, ViewIcon, ViewOffIcon } from "../../../components/icon/svg/Icons";
 import { useRef, useState } from "react";
 import { CheckOutlined } from "@ant-design/icons";
-import { useTranslation } from "../../../components";
+import { useTranslation } from "../../../hooks";
 import { AdminUser } from "../../../common/I18NNamespace";
 
 export const TokenItem : React.FC<{

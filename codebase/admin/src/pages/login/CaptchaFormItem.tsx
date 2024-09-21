@@ -2,7 +2,7 @@ import { Form, Input } from 'antd';
 import { FieldStringOutlined} from '@ant-design/icons';
 import { useState } from 'react';
 import { api } from '../../common/api'
-import { useTranslation } from '../../components/useTranslation';
+import { useTranslation } from '../../hooks/useTranslation';
 import { AdminLogin } from '../../common/I18NNamespace';
 
 type captchaStatusType =  "" | "success" | "warning" | "error" | "validating";

@@ -1,5 +1,6 @@
 
-import { TableComponent, TableColumnType, ModalContext, useTranslation } from '../../../components';
+import { useTranslation } from '../../../hooks';
+import { TableComponent, TableColumnType, ModalContext } from '../../../components';
 import { api } from '../../../common/api';
 import { RoleTypeTag } from './RoleType';
 import { useContext, useEffect, useState } from 'react';

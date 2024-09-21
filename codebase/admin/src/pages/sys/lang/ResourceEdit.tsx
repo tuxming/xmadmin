@@ -1,10 +1,11 @@
 import { AutoComplete, Button, Divider, Form, FormProps, Input, Space, Typography } from "antd";
 import { AdminLang, DefaultNS } from "../../../common/I18NNamespace";
-import { Modal, useLayer, useRequest, useTranslation } from "../../../components";
+import { useRequest, useSelector, useTranslation } from "../../../hooks";
+import { Modal } from "../../../components";
 import { useEffect, useState } from "react";
-import { useSelector } from "../../../redux/hooks";
 import { api } from "../../../common/api";
 import { CloseOutlined, SendOutlined } from "@ant-design/icons";
+import { useShowResult } from "../../../hooks/useShowResult";
 
 /**
  * 编辑语言资源的表单类型
@@ -52,10 +53,10 @@ export const ResourceEdit: React.FC<ResourceEditType> = ({
 }) => {
     const {t} = useTranslation(AdminLang);
     const request = useRequest();
-    const {message} = useLayer();
     const [visible, setVisible] = useState(true);
     const size = useSelector(state => state.themeConfig.componentSize);
     const [groupOptions, setGroupOptions] = useState<any[]>();
+    const showResult = useShowResult(AdminLang);
 
     const [form] = Form.useForm();
 
@@ -89,24 +90,9 @@ export const ResourceEdit: React.FC<ResourceEditType> = ({
                 api.lang.updateRes,
                 data
             );
+            showResult.show(result);
             if(result.status){
-                let txt = Object.keys(result.data).map(id => {
-                    let msg = result.data[id];
-                    if(msg.indexOf(":")>-1){
-                        let msgs = msg.split(":");
-                        msg = t(msgs[0])+" : "+msgs[1];
-                    } else{
-                        msg = t(msg);
-                    }
-                    return id+" : "+msg
-                }).join("<br/>");
-
-                message.open({
-                    content: <div style={{textAlign: "left"}} dangerouslySetInnerHTML={ {__html : txt}}></div>
-                });
                 onModalClose(true);
-            }else{
-                message.error(result.msg);
             }
         }
         create();

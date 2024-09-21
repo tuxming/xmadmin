@@ -2,11 +2,10 @@ import './App.css';
 import { ConfigProvider, theme} from 'antd';
 import zhCN from 'antd/locale/zh_CN';
 import {AdminRouter} from "./AdminRouter";
-import { useSelector, useDispatch } from './redux/hooks';
+import { useSelector, useDispatch, useTranslation } from './hooks';
 import { useEffect } from 'react';
 import { globalVarSlice } from './redux/CommonSlice';
 import { getOpacityColor } from './common/kit';
-import { useTranslation } from './components/useTranslation';
 
 import 'dayjs/locale/zh-cn';
 import { LayerProvider } from './components';

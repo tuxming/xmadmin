@@ -25,6 +25,10 @@ import { ReactComponent as DictEditSVG } from './dict-edit.svg';
 import { ReactComponent as UploadSVG } from './upload.svg';
 import { ReactComponent as CopySVG } from './copy.svg';
 import { ReactComponent as RefreshSVG } from './refresh.svg';
+import { ReactComponent as DataLockSVG } from './data-lock.svg';
+import { ReactComponent as GrantUserSVG } from './grant-user.svg';
+import { ReactComponent as GrantMenuSVG } from './grant-menu.svg';
+import { ReactComponent as GrantPermissionSVG } from './grant-permission.svg';
 import { XmSVG, XmSVGType} from './XmSVG'
 
 /**
@@ -265,4 +269,42 @@ export const CopyIcon : React.FC<XmSVGType> = (props) => {
 export const RefreshIcon : React.FC<XmSVGType> = (props) => {
     return <XmSVG SVGElement={RefreshSVG } {...props}/>
 }
+
+/**
+ * 锁定数据图标
+ * @param props XmSVGType
+ * @returns 
+ */
+export const DataLockIcon : React.FC<XmSVGType> = (props) => {
+    return <XmSVG SVGElement={DataLockSVG } {...props}/>
+}
+
+/**
+ * 分配角色图标
+ * @param props XmSVGType
+ * @returns 
+ */
+export const GrantUserIcon : React.FC<XmSVGType> = (props) => {
+    return <XmSVG SVGElement={GrantUserSVG } {...props}/>
+}
+
+/**
+ * 分配菜单图标
+ * @param props XmSVGType
+ * @returns 
+ */
+export const GrantMenuIcon : React.FC<XmSVGType> = (props) => {
+    return <XmSVG SVGElement={GrantMenuSVG } {...props}/>
+}
+
+/**
+ * 分配权限图标
+ * @param props XmSVGType
+ * @returns 
+ */
+export const GrantPermissionIcon : React.FC<XmSVGType> = (props) => {
+    return <XmSVG SVGElement={GrantPermissionSVG } {...props}/>
+}
+
+
 

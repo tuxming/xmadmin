@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef, ReactNode } from 'react';
 import './Modal.css';
 import {ModalContext} from './ModalContext';
 import {computePx} from '../../common/kit'
-import { useDispatch, useSelector } from '../../redux/hooks';
+import { useDispatch, useSelector } from '../../hooks';
 import { globalVarSlice } from '../../redux/CommonSlice';
 import store from '../../redux/store';
 

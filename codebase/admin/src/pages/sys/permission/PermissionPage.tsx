@@ -1,10 +1,10 @@
 
 import React, {useState} from 'react';
 import { Button, Tooltip, Space, Divider } from "antd"
-import { useSelector } from "../../../redux/hooks"
 import { DeleteIcon, EditIcon, ScanIcon, AddIcon, } from '../../../components/icon/svg/Icons';
 import { PermissionList, PermissionEdit, PermissionDelete } from './index'
-import { QueryComponent, useLayer, useTranslation } from '../../../components';
+import { useSelector, useTranslation } from '../../../hooks';
+import { QueryComponent, useLayer} from '../../../components';
 import { AdminPermission } from '../../../common/I18NNamespace';
 import { PermissionScan } from './PermissionScan';
 
@@ -21,11 +21,15 @@ export const PermissionPage : React.FC = () => {
     const [isOpenEdit, setIsOpenEdit] = useState(false);
     const [isOpenScan, setIsOpenScan] = useState(false);
     const [permission, setPermission] = useState();
+    
     const [deletes, setDeletes] = useState<any>([]);
+    const [isOpenDelete, setIsOpenDelete] = useState<boolean>(false);
+
     const [refresh, setRefresh] = useState({
         reset: false,
         tag: 1
     });
+
     const [title, setTitle] = useState("");
 
     let onQuery = (values) => {
@@ -38,6 +42,7 @@ export const PermissionPage : React.FC = () => {
         setSelectedRows(rows);
     };
 
+    //打开编辑弹窗
     const onEdit = () => {
         if(!selectedRows || selectedRows.length == 0){
             message.error(t("请选择要编辑的权限"));
@@ -49,12 +54,14 @@ export const PermissionPage : React.FC = () => {
         setTitle(t("编辑权限"));
     }
 
+    //打开创建弹窗
     const onCreate = () => {
         setIsOpenEdit(true);
         setPermission(null);
         setTitle(t("添加权限"));
     }
 
+    //编辑，新建的弹窗回调函数
     const onAddClose = (needRefresh) => {
         if(needRefresh){
             setRefresh({reset: false, tag: refresh.tag+1});
@@ -63,13 +70,6 @@ export const PermissionPage : React.FC = () => {
     }
     
      /**
-     * 刷新列表
-     */
-     const onRefresh = () => {
-        setRefresh({reset: false, tag: refresh.tag+1});
-    }
-
-     /**
      * 执行删除
      */
      const onDelete = () => {
@@ -77,12 +77,19 @@ export const PermissionPage : React.FC = () => {
             message.error(t("请选择要删除的权限"));
             return;
         }
-        setDeletes([]);
-        setTimeout(() => {
-            setDeletes(selectedRows);
-        }, 60);
+        setDeletes(selectedRows);
+        setIsOpenDelete(true);
     }
     
+    //删除回调
+    const onDeleteClose = (needRefresh) => {
+        if(needRefresh){
+            setRefresh({reset: false, tag: refresh.tag+1});
+        }
+        setDeletes([]);
+        setIsOpenDelete(false);
+    }
+
     const onScan = () => {
         setIsOpenScan(true);
     }
@@ -118,7 +125,7 @@ export const PermissionPage : React.FC = () => {
         <Divider />
         <PermissionList onSelect={onTableSelectChange} query={query} refresh={refresh}/>
         {isOpenEdit && <PermissionEdit open={isOpenEdit} onClose={onAddClose} permission={permission} title={title}/>}
-        <PermissionDelete permissions={deletes} successCall={onRefresh}/>
-        {isOpenScan && <PermissionScan open={isOpenScan} onClose={onScanClose}></PermissionScan>}
+        {isOpenDelete && <PermissionDelete permissions={deletes} successCall={onDeleteClose}/>}
+        {isOpenScan && <PermissionScan onClose={onScanClose}></PermissionScan>}
     </>
 }

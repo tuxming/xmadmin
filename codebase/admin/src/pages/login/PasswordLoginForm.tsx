@@ -3,7 +3,7 @@ import { Form, Input  } from 'antd';
 import { UserOutlined, KeyOutlined } from '@ant-design/icons';
 import { PasswordLoginType } from '../../redux/slice'
 import { CaptchaFormItem, CaptchaFormItemType } from "./CaptchaFormItem";
-import { useTranslation } from "../../components/useTranslation";
+import { useTranslation } from "../../hooks/useTranslation";
 import { AdminLogin } from "../../common/I18NNamespace";
 
 //账号密码登录

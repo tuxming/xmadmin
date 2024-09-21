@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { DebounceSelector,RemoteAutoComplete, useTranslation } from '../../../components';
+import { DebounceSelector,RemoteAutoComplete } from '../../../components';
+import { useTranslation } from '../../../hooks';
 import { api } from '../../../common/api';
 
 /**
@@ -7,8 +8,12 @@ import { api } from '../../../common/api';
  * @param props onChange(value), mode= multiple | single
  * @returns 
  */
-export const RoleSelector : React.FC<any> = ({
-    mode,
+export const RoleSelector : React.FC<{
+    mode?: 'multiple' | 'single'
+    onChange?: (value: [{label: string, value: any}]) => void
+    [key: string]: any
+}> = ({
+    mode = 'multiple',
     onChange,
     ...props
 }) => {

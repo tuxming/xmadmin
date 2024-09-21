@@ -12,7 +12,6 @@ import com.xm2013.admin.common.kits.JsonKit;
 import com.xm2013.admin.domain.dto.JsonResult;
 import com.xm2013.admin.domain.model.Menu;
 import com.xm2013.admin.exception.BusinessErr;
-import com.xm2013.admin.exception.BusinessException;
 import com.xm2013.admin.exception.Msg;
 import com.xm2013.admin.shiro.ShiroKit;
 import com.xm2013.admin.shiro.dto.ShiroUser;
@@ -27,7 +26,7 @@ public class MenuController extends BaseController{
 	private MenuService menuService;
 	
 	/**
-	 * 获取当前用户的菜单
+	 * 获取当前登录用户的菜单
 	 */
 	public void curr() {
 		renderJson(JsonResult.ok(Msg.OK_GET, menuService.curr(ShiroKit.getLoginUser())));
@@ -62,7 +61,8 @@ public class MenuController extends BaseController{
 		Validator validator = new Validator();
 		validator.exec(menu, "create", false);
 		if(validator.hasError()) {
-			throw new BusinessException(BusinessErr.ERROR, validator.getError());
+			JsonResult.error(BusinessErr.ERROR.setMsg(validator.getError()));
+			return;
 		}
 		
 		ShiroUser user = ShiroKit.getLoginUser();
@@ -83,21 +83,35 @@ public class MenuController extends BaseController{
 	/**
 	 * 删除菜单
 	 */
-	@RequirePermission(val="sys:menu:list", name="获取菜单列表", group="system")
+	@RequirePermission(val="sys:menu:delete", name="删除菜单", group="system")
 	@Op("获取菜单列表")
 	public void delete() {
 		int id = getParaToInt("id");
 		if(id == 0) {
-			throw new BusinessException(BusinessErr.INVALID_PARAM);
+			renderJson(JsonResult.error(BusinessErr.INVALID_PARAM));
+			return;
 		}
 		
 		if(id == 1) {
-			throw new BusinessException(BusinessErr.ERROR, "根菜单禁止删除");
+			renderJson(JsonResult.error(BusinessErr.ERROR.setMsg("根菜单禁止删除")));
+			return;
 		}
 		
 		menuService.delete(id);
 		renderJson(JsonResult.ok(Msg.OK_DELETE));
-		
+	}
+	
+
+	/**
+	 * 获取指定角色的所有菜单
+	 */
+	public void byRole() {
+		int roleId = getParaToInt("id", 0);
+		if(roleId == 0) {
+			renderJson(JsonResult.error(BusinessErr.INVALID_PARAM));
+		}
+
+		renderJson(JsonResult.ok(Msg.OK_GET, menuService.findByRole(roleId, ShiroKit.getLoginUser())));
 	}
 	
 }

@@ -1,9 +1,9 @@
 
 
-import React, { useContext, useRef, useState } from 'react';
+import React, { ReactNode, useContext, useRef, useState } from 'react';
 import { Confirm, ConfirmType } from './Confirm';
 import { Modal, ModalType } from './Modal';
-import { useTranslation } from '../useTranslation';
+import { useTranslation } from '../../hooks/useTranslation';
 import { DefaultNS } from '../../common/I18NNamespace';
 import { Spin, message as AntdMessage, App } from 'antd';
 import { MessageInstance } from 'antd/es/message/interface';
@@ -17,11 +17,22 @@ import { MessageInstance } from 'antd/es/message/interface';
  */
 export const ModalContext = React.createContext(null);
 
+
 /**
  * 定义一个layer对象，用来定义所有的弹出成层
  */
 export type LayerType = {
+    /**
+     * antd的消息提醒： 使用方法：
+     * const {message} = useLayer();
+     * msessage.success("");
+     */
     message: MessageInstance,
+    /**
+     * 一个带有确定和取消的按钮的弹窗
+     * @param confirmConfig 
+     * @returns 
+     */
     confirm: (confirmConfig : ConfirmType) => string,
     modal: (modalConfig : ModalType) => string,
     loading: () => string,

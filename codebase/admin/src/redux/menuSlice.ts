@@ -1,6 +1,6 @@
 import {api, basePath} from '../common/api';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { useRequest } from '../components/index';
+import { useRequest } from '../hooks';
 
 export interface MenuType {
     id? : number | string,

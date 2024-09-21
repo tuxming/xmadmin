@@ -1,6 +1,6 @@
 import { Col, Row } from "antd"
 import { ReactNode, useEffect, useState } from "react";
-import { useSelector } from "../../redux/hooks";
+import { useSelector } from "../../hooks";
 import { computePx } from '../../common/kit'
 
 // const widths = [576, 768, 992, 1200, 1600];

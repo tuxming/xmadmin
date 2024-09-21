@@ -2,7 +2,8 @@
 import { useEffect, useState } from "react";
 import { Form, Input } from 'antd';
 import { SendOutlined, NumberOutlined} from '@ant-design/icons';
-import { useRequest, useLayer } from '../../components/index';
+import { useRequest, useShowResult } from '../../hooks';
+import { DefaultNS } from "../../common/I18NNamespace";
 
 export type CodeFormItemType = {
     label: string, 
@@ -18,7 +19,7 @@ export const CodeFormItem : React.FC<CodeFormItemType> = ({label,name='code', ru
     const request = useRequest();
     const [resend, setResend] = useState(true);
     const [balanceSeconds, setBalanceSeconds] = useState(60);
-    const { message } = useLayer();
+    const showResult = useShowResult(DefaultNS);
 
     const sendCode = () => {
         let url = validate();
@@ -26,12 +27,10 @@ export const CodeFormItem : React.FC<CodeFormItemType> = ({label,name='code', ru
 
         const get = async () => {
             let result = await request.get(url);
+            showResult.show(result);
             if(result.status){
-                message.success(result.msg);
                 setResend(false);
                 setBalanceSeconds(60);
-            }else{
-                message.warning(result.msg);
             }
         }
         get();

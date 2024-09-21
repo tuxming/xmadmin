@@ -4,9 +4,8 @@ import {
     SkinOutlined,
 } from '@ant-design/icons';
 import type { TabsProps } from 'antd';
-import { useSelector } from '../../../redux/hooks';
 import { ThemeSettingComponent, BackgroundSettingComponent, SidebarSettingComponent } from './index';
-import { useTranslation } from '../../../components/index';
+import { useTranslation, useSelector } from '../../../hooks';
 import { AdminSkinSetting } from '../../../common/I18NNamespace';
 
 /**

@@ -3,8 +3,7 @@ import React, { useMemo, useRef, useState } from 'react';
 import { Select, Spin } from 'antd';
 import type { SelectProps } from 'antd';
 import debounce from 'lodash/debounce';
-import { useSelector } from '../../redux/hooks';
-import { useRequest } from '../useRequest';
+import { useSelector, useRequest } from '../../hooks';
 
 /**
  * 远程防抖加载数据, 下拉选择框, 可以多选

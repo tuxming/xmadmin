@@ -5,7 +5,7 @@ import { CheckOutlined } from "@ant-design/icons";
 import { TypeTag } from "./TypeTag";
 import { CopyIcon, EditIcon } from "../icon/svg/Icons";
 import { DefaultNS } from "../../common/I18NNamespace";
-import { useTranslation } from "../useTranslation";
+import { useTranslation } from "../../hooks/useTranslation";
 
 /**
  * 可编辑的tag

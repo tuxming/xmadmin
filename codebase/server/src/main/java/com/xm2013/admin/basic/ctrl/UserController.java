@@ -10,6 +10,7 @@ import com.jfinal.aop.Inject;
 import com.xm2013.admin.annotation.Op;
 import com.xm2013.admin.annotation.RequirePermission;
 import com.xm2013.admin.basic.service.DeptService;
+import com.xm2013.admin.basic.service.RoleService;
 import com.xm2013.admin.basic.service.UserService;
 import com.xm2013.admin.common.kits.JsonKit;
 import com.xm2013.admin.domain.dto.JsonResult;
@@ -19,11 +20,15 @@ import com.xm2013.admin.domain.dto.user.UserListQuery;
 import com.xm2013.admin.domain.dto.user.UserProfile;
 import com.xm2013.admin.domain.model.Dept;
 import com.xm2013.admin.domain.model.User;
+import com.xm2013.admin.domain.model.UserData;
 import com.xm2013.admin.exception.BusinessErr;
 import com.xm2013.admin.exception.Msg;
 import com.xm2013.admin.shiro.ShiroKit;
 import com.xm2013.admin.validator.Validator;
 
+/**
+ * 用户管理的controller，
+ */
 public class UserController extends BaseController{
 	
 	private static Logger log = Logger.getLogger(UserController.class);
@@ -32,6 +37,8 @@ public class UserController extends BaseController{
 	private UserService userService;
 	@Inject
 	private DeptService deptService;
+	@Inject
+	private RoleService roleService;
 	
 	/**
 	 * 获取指定的用户信息，只能获取到有权限的用户信息
@@ -49,20 +56,19 @@ public class UserController extends BaseController{
 		User user = userService.findById(id);
 		Dept dept = deptService.findById(user.getDeptId());
 		UserProfile profile = new UserProfile()
-				.setId(user.getId())
-				.setCode(user.getCode())
-				.setCreated(user.getCreated())
-				.setGender(user.getGender())
-				.setUsername(user.getUsername())
-				.setFullname(user.getFullname())
-				.setStatus(user.getStatus())
-				.setEmail(user.getEmail())
-				.setPhone(user.getPhone())
-				.setToken(user.getToken())
-				.setPhoto(user.getPhoto())
-				
-				.setDeptId(user.getDeptId())
-			;
+			.setId(user.getId())
+			.setCode(user.getCode())
+			.setCreated(user.getCreated())
+			.setGender(user.getGender())
+			.setUsername(user.getUsername())
+			.setFullname(user.getFullname())
+			.setStatus(user.getStatus())
+			.setEmail(user.getEmail())
+			.setPhone(user.getPhone())
+			.setToken(user.getToken())
+			.setPhoto(user.getPhoto())
+			.setDeptId(user.getDeptId())
+		;
 		
 		if(dept!= null) {
 			profile.setDeptName(dept.getName())
@@ -177,7 +183,142 @@ public class UserController extends BaseController{
 		}else {
 			renderJson(JsonResult.error(Msg.ERR_DELETE));
 		}
+	}
+	
+	/**
+	 * 获取用户的数据权限
+	 * @param type: 0-全部，1-用户， 2-组织
+	 * @param id: 要查询的用户id
+	 */
+	@RequirePermission(val="sys:user:grant:data", name="分配数据权限", group="system")
+	public void dataPermissions() {
+		int type = getParaToInt("type", 0);
+		int userId = getParaToInt("id", 0);
 		
+		if(userId == 0) {
+			renderJson(JsonResult.error(BusinessErr.INVALID_PARAM));
+			return;
+		}
+		
+		if(type == 1) {
+			List<User> datas = userService.dataPermissions(userId, type, ShiroKit.getLoginUser());
+			PageInfo<User> pageInfo = new PageInfo<User>(datas.size(), datas);
+			renderJson(JsonResult.ok(Msg.OK_GET, pageInfo));
+		}else if(type == 2) {
+			List<Dept> datas = deptService.dataPermissions(userId, type, ShiroKit.getLoginUser());
+			PageInfo<Dept> pageInfo = new PageInfo<Dept>(datas.size(), datas);
+			renderJson(JsonResult.ok(Msg.OK_GET, pageInfo));
+		}else {
+			List<UserData> datas = userService.userDatas(userId, ShiroKit.getLoginUser());
+			PageInfo<UserData> pageInfo = new PageInfo<UserData>(datas.size(), datas);
+			renderJson(JsonResult.ok(Msg.OK_GET, pageInfo));
+		}
+	}
+	
+	
+	/**
+	 * 添加用户的数据权限
+	 */
+	@RequirePermission(val="sys:user:grant:data", name="分配数据权限", group="system")
+	@Op("添加用户数据权限")
+	public void userDataAdd() {
+		UserData userData = JsonKit.getObject(getRawData(), UserData.class);
+		
+		Validator v = new Validator();
+		v.exec(userData, "create", false);
+		
+		if(v.hasError()) {
+			renderJson(JsonResult.error(BusinessErr.ERROR.setMsg(v.getError())));
+			return;
+		}
+				
+		boolean result = userService.userDataAdd(userData, ShiroKit.getLoginUser());
+		if(result) {
+			renderJson(JsonResult.ok(Msg.OK_CREATED, userData.getId()));
+		}else {
+			renderJson(JsonResult.error(Msg.ERR_CREATE));
+		}
+	}
+	
+	/**
+	 * 删除用户的数据权限
+	 * @param id userDataId
+	 */
+	@RequirePermission(val="sys:user:grant:data", name="分配数据权限", group="system")
+	@Op("删除用户数据权限")
+	public void userDataDelete() {
+		
+		int id = getParaToInt("id", 0);
+		if(id == 0) {
+			renderJson(JsonResult.error(BusinessErr.INVALID_PARAM));
+			return;
+		}
+		
+		boolean result = userService.userDataDelete(id, ShiroKit.getLoginUser());
+		if(result) {
+			renderJson(JsonResult.ok(Msg.OK_DELETE));
+		}else {
+			renderJson(JsonResult.error(Msg.ERR_DELETE));
+		}
+	}
+	
+	/**
+	 * 查看分配的角色
+	 */
+	@RequirePermission(val="sys:user:grant:role", name="分配角色", group="system")
+	@Op("查看分配的角色")
+	public void userRoles() {
+		int userId = getParaToInt("id", 0);
+		if(userId == 0) {
+			renderJson(JsonResult.error(BusinessErr.INVALID_PARAM));
+			return;
+		}
+		
+		renderJson(JsonResult.ok(Msg.OK_GET, roleService.userRoles(userId, ShiroKit.getLoginUser())));
+	}
+	
+	/**
+	 * 分配角色
+	 */
+	@RequirePermission(val="sys:user:grant:role", name="分配角色", group="system")
+	@Op("分配角色")
+	public void userRoleAdd() {
+		int userId = getParaToInt("id", 0);
+		int roleId = getParaToInt("rid", 0);
+		if(userId == 0 || roleId == 0) {
+			renderJson(JsonResult.error(BusinessErr.INVALID_PARAM));
+			return;
+		}
+		
+		boolean result = userService.userRoleAdd(userId,roleId, ShiroKit.getLoginUser());
+		if(result) {
+			renderJson(JsonResult.ok(Msg.OK_CREATED));
+		}else {
+			renderJson(JsonResult.error(Msg.ERR_CREATE));
+		}
+	}
+	
+	
+	/**
+	 * 删除用户分配的角色
+	 * @param id userDataId
+	 */
+	@RequirePermission(val="sys:user:grant:role", name="分配角色", group="system")
+	@Op("删除用户分配的角色")
+	public void userRoleDelete() {
+		
+		int id = getParaToInt("id", 0);
+		if(id == 0) {
+			renderJson(JsonResult.error(BusinessErr.INVALID_PARAM));
+			return;
+		}
+		
+		boolean result = userService.userRoleDelete(id, ShiroKit.getLoginUser());
+		if(result) {
+			renderJson(JsonResult.ok(Msg.OK_DELETE));
+		}else {
+			renderJson(JsonResult.error(Msg.ERR_DELETE));
+		}
 	}
 	
 }

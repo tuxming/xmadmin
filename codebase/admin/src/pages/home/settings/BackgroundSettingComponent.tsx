@@ -2,11 +2,9 @@
 import {useState} from 'react'
 import {Typography, Image, Button, Row, Col, Slider } from "antd";
 import { WallpaperModal} from './index';
-import { useSelector } from '../../../redux/hooks';
 import { themeConfigSlice } from '../../../redux/CommonSlice';
-import { useDispatch } from 'react-redux';
-import { useTranslation } from '../../../components/useTranslation';
 import { AdminSkinSetting } from '../../../common/I18NNamespace';
+import { useTranslation, useSelector, useDispatch } from '../../../hooks';
 
 //壁纸设置
 export const BackgroundSettingComponent : React.FC = () => {

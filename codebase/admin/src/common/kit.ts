@@ -80,7 +80,7 @@ export const computePx = (size, isHeight = false) => {
  * @param permissions 
  * @returns 
  */
-export function hasPermission(requiredPermission, permissions) {
+export function hasPermission(requiredPermission: string, permissions: string[]) {
     // 首先检查是否存在全局权限
     if (permissions.includes('*')) {
         return true;

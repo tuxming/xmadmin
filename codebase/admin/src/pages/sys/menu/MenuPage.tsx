@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { DoubleColumnLayout, IconFont, useRequest, AuthButton, useTranslation, useLayer } from "../../../components";
+import { useRequest, useTranslation, useSelector } from "../../../hooks";
+import { DoubleColumnLayout, IconFont, AuthButton, useLayer } from "../../../components";
 import { MenuAddIcon, MenuDeleteIcon} from '../../../components/icon/svg/Icons';
-import { useSelector } from "../../../redux/hooks";
 import { Tree, Space, Form, Typography, Input, TreeSelect, 
     Radio, Select,theme,Divider, Button, InputNumber
 } from 'antd';
@@ -12,6 +12,7 @@ import { permission } from '../../../common/permission';
 import { AdminMenu, DefaultNS } from "../../../common/I18NNamespace";
 import iconfonts from "../../../components/icon/iconfont/iconfont.json"
 import { useDict } from "../../../common/dict";
+import { useShowResult } from "../../../hooks/useShowResult";
 
 type MenuType = {
     id: number,
@@ -37,6 +38,7 @@ export const MenuPage : React.FC = () => {
     const sideWidth = useSelector(state => state.themeConfig.sideWidth);
     const size = useSelector(state => state.themeConfig.componentSize);
     const {t} = useTranslation(AdminMenu);
+    const showResult = useShowResult(AdminMenu);
 
     const request = useRequest();
     const {message, confirm} = useLayer();
@@ -57,23 +59,17 @@ export const MenuPage : React.FC = () => {
     //获取菜单数据
     const getMenus = (key, setTreeData) => {
         let get = async () => {
-            try{
-                let result = await request.get(api.menu.list+"?id="+key);
-                if(result.data && result.data.length > 0){
-                    let menus = result.data;
-                    menus.sort((m1, m2) => m1.sort - m2.sort);
-                    setTreeData((origin) =>
-                        updateTreeData(origin, key, convertToTreeNode(menus)),
-                    );
-                    // result.data.forEach(i => menus.current.add(i));
-                }else{
-                    message.warning(t("无数据", DefaultNS));
-                }
-            }catch(e){
-                let err = e as any;
-                message.error(err.message);
-           }
-
+            let result = await request.get(api.menu.list+"?id="+key);
+            if(result.data && result.data.length > 0){
+                let menus = result.data;
+                menus.sort((m1, m2) => m1.sort - m2.sort);
+                setTreeData((origin) =>
+                    updateTreeData(origin, key, convertToTreeNode(menus)),
+                );
+                // result.data.forEach(i => menus.current.add(i));
+            }else{
+                message.warning(t("无数据", DefaultNS));
+            }
         }
         get();
     }
@@ -187,7 +183,7 @@ export const MenuPage : React.FC = () => {
     }
 
     const onLeftTreeExpand = (expandedKeysValue) => {
-        console.log(expandedKeysValue);
+        // console.log(expandedKeysValue);
         setTreeExpandedKeys(expandedKeysValue as number[])
     }
 
@@ -212,19 +208,11 @@ export const MenuPage : React.FC = () => {
         values.id = menu?.id;
 
         let update = async () => {
-            try{
-                let result = await request.post(api.menu.saveOrUpdate, values, null, false);
-                if(result.status){
-                    message.success(t(result.msg));
-                    doRefreshTree();
-                }else{
-                    message.warning(t(result.msg));
-                }
-            }catch(e){
-                let err = e as any;
-                message.error(err.message);
-           }
-
+            let result = await request.post(api.menu.saveOrUpdate, values, null, false);
+            showResult.show(result);
+            if(result.status){
+                doRefreshTree();
+            }
         }
         update();
     };
@@ -235,11 +223,9 @@ export const MenuPage : React.FC = () => {
             console.log("doDelete");
             try{
                 let result = await request.get(api.menu.delete+"?id="+menu.id);
+                showResult.show(result);
                 if(result.status){
-                    message.success(t(result.msg));
                     doRefreshTree();
-                }else{
-                    message.warning(t(result.msg));
                 }
             }catch(e){
                 let err = e as any;
@@ -267,7 +253,6 @@ export const MenuPage : React.FC = () => {
                 }else{
                     deleteMenu();
                 }
-                console.log(333);
                 onClose();
             }
         });

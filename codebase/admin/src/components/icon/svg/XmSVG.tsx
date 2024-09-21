@@ -1,7 +1,7 @@
 import React, { forwardRef, useEffect, useRef, useState } from "react"
 import { theme } from 'antd'
 import "./XmSVG.css"
-import { useSelector } from "../../../redux/hooks";
+import { useSelector } from "../../../hooks";
 
 type SVGComponent<P = {}> = React.FunctionComponent<P> & React.FC<P>;
 

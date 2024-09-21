@@ -25,7 +25,6 @@ import com.xm2013.admin.domain.dto.user.ForgetPasswordDto;
 import com.xm2013.admin.domain.dto.user.LoginDto;
 import com.xm2013.admin.domain.model.User;
 import com.xm2013.admin.exception.BusinessErr;
-import com.xm2013.admin.exception.BusinessException;
 import com.xm2013.admin.exception.Msg;
 import com.xm2013.admin.shiro.CustomToken;
 import com.xm2013.admin.shiro.ShiroConst;
@@ -67,11 +66,13 @@ public class AuthController extends BaseController{
 		}
 		
 		if(validator.hasError()) {
-			throw new BusinessException(BusinessErr.ERROR, validator.getError());
+			renderJson(JsonResult.error(BusinessErr.ERROR.setMsg(validator.getError())));
+			return;
 		}
 		
 		if(loginInfo.getCode().equalsIgnoreCase(getSession().getAttribute(codeCacheKey)+"") == false){
-			throw new BusinessException(BusinessErr.ERROR, Msg.AUTH_NULL_CODE);
+			renderJson(JsonResult.error(BusinessErr.ERROR.setMsg(Msg.AUTH_NULL_CODE)));
+			return;
 		}
 		
 		
@@ -126,13 +127,18 @@ public class AuthController extends BaseController{
 			renderJson(userData);
 		} catch (UnknownAccountException uae) {
 			log.info(uae.getMessage(), uae);
-			throw new BusinessException(BusinessErr.ERROR, uae.getMessage());
+//			throw new BusinessException(BusinessErr.ERROR, uae.getMessage());
+			renderJson(JsonResult.error(BusinessErr.ERROR.setMsg(uae.getMessage())));
+			return;
 		} catch (IncorrectCredentialsException ice) {
-			log.info(ice.getMessage(), ice);
-			throw new BusinessException(BusinessErr.ERROR, Msg.SHIRO_REALM_PASSWORD_ERR);
-		} catch (DisabledAccountException lae) {
-			log.info(lae.getMessage(), lae);
-			throw new BusinessException(BusinessErr.ERROR, lae.getMessage());
+//			log.info(ice.getMessage(), ice);
+//			throw new BusinessException(BusinessErr.ERROR, Msg.SHIRO_REALM_PASSWORD_ERR);
+			renderJson(JsonResult.error(BusinessErr.ERROR.setMsg(ice.getMessage())));
+			return;
+		} catch (DisabledAccountException dae) {
+//			log.info(dae.getMessage(), dae);
+//			throw new BusinessException(BusinessErr.ERROR, dae.getMessage());
+			renderJson(JsonResult.error(BusinessErr.ERROR.setMsg(dae.getMessage())));
 		}
 	}
 	
@@ -157,22 +163,30 @@ public class AuthController extends BaseController{
 	public void sendPhoneCode() {
 		String phoneNo = getPara("phone");
 		if(Kit.isNull(phoneNo)) {
-			throw new BusinessException(BusinessErr.ERROR, Msg.AUTH_NULL_PHONE);
+//			throw new BusinessException(BusinessErr.ERROR, Msg.AUTH_NULL_PHONE);
+			renderJson(JsonResult.error(BusinessErr.ERROR.setMsg(Msg.AUTH_NULL_PHONE)));
+			return;
 		}
 		
 		//检测是否存在
 		User user = userService.findByPhone(phoneNo);
 		if(user == null) {
-			throw new BusinessException(BusinessErr.ERROR, Msg.AUTH_UNREG_PHONE);
+//			throw new BusinessException(BusinessErr.ERROR, Msg.AUTH_UNREG_PHONE);
+			renderJson(JsonResult.error(BusinessErr.ERROR.setMsg(Msg.AUTH_UNREG_PHONE)));
+			return;
 		}
 		
 		String code = getPara("code");
 		if(Kit.isNull(code)) {
-			throw new BusinessException(BusinessErr.ERROR, Msg.AUTH_NULL_CODE);
+//			throw new BusinessException(BusinessErr.ERROR, Msg.AUTH_NULL_CODE);
+			renderJson(JsonResult.error(BusinessErr.ERROR.setMsg(Msg.AUTH_NULL_CODE)));
+			return;
 		}
 		
 		if(code.equalsIgnoreCase(getSession().getAttribute(CacheKey.SESSION_KEY_CAPTCHA)+"") == false){
-			throw new BusinessException(BusinessErr.ERROR, Msg.AUTH_NULL_CODE);
+//			throw new BusinessException(BusinessErr.ERROR, Msg.AUTH_NULL_CODE);
+			renderJson(JsonResult.error(BusinessErr.ERROR.setMsg(Msg.AUTH_NULL_CODE)));
+			return;
 		}
 		
 		HttpSession session = getRequest().getSession();
@@ -181,7 +195,8 @@ public class AuthController extends BaseController{
 		Long prevDate = (Long) session.getAttribute(ip);
 		long curr = System.currentTimeMillis();
 		if(prevDate!= null && curr - prevDate < 60000 ) {
-			renderJson(JsonResult.error(Msg.AUTH_SEND_CODE_ERR));
+//			renderJson(JsonResult.error(Msg.AUTH_SEND_CODE_ERR));
+			renderJson(JsonResult.error(BusinessErr.ERROR.setMsg(Msg.AUTH_SEND_CODE_ERR)));
 			return;
 		}
 		
@@ -200,21 +215,29 @@ public class AuthController extends BaseController{
 	public void sendMailCode() {
 		String email = getPara("email");
 		if(Kit.isNull(email)) {
-			throw new BusinessException(BusinessErr.ERROR, Msg.AUTH_NULL_EMAIL);
+//			throw new BusinessException(BusinessErr.ERROR, Msg.AUTH_NULL_EMAIL);
+			renderJson(JsonResult.error(BusinessErr.ERROR.setMsg(Msg.AUTH_NULL_EMAIL)));
+			return;
 		}
 		//检测是否存在
 		User user = userService.findByEmail(email);
 		if(user == null) {
-			throw new BusinessException(BusinessErr.ERROR, Msg.AUTH_UNREG_EMAIL);
+//			throw new BusinessException(BusinessErr.ERROR, Msg.AUTH_UNREG_EMAIL);
+			renderJson(JsonResult.error(BusinessErr.ERROR.setMsg(Msg.AUTH_UNREG_EMAIL)));
+			return;
 		}
 		
 		String code = getPara("code");
 		if(Kit.isNull(code)) {
-			throw new BusinessException(BusinessErr.ERROR, Msg.AUTH_NULL_CODE);
+//			throw new BusinessException(BusinessErr.ERROR, Msg.AUTH_NULL_CODE);
+			renderJson(JsonResult.error(BusinessErr.ERROR.setMsg(Msg.AUTH_NULL_CODE)));
+			return;
 		}
 		
 		if(code.equalsIgnoreCase(getSession().getAttribute(CacheKey.SESSION_KEY_CAPTCHA)+"") == false){
-			throw new BusinessException(BusinessErr.ERROR, Msg.AUTH_NULL_CODE);
+//			throw new BusinessException(BusinessErr.ERROR, Msg.AUTH_NULL_CODE);
+			renderJson(JsonResult.error(BusinessErr.ERROR.setMsg(Msg.AUTH_NULL_CODE)));
+			return;
 		}
 		
 		HttpSession session = getRequest().getSession();
@@ -223,7 +246,8 @@ public class AuthController extends BaseController{
 		Long prevDate = (Long) session.getAttribute(ip);
 		long curr = System.currentTimeMillis();
 		if(prevDate!= null && curr - prevDate < 60000 ) {
-			renderJson(JsonResult.error(Msg.AUTH_SEND_CODE_ERR));
+//			renderJson(JsonResult.error(Msg.AUTH_SEND_CODE_ERR));
+			renderJson(JsonResult.error(BusinessErr.ERROR.setMsg(Msg.AUTH_SEND_CODE_ERR)));
 			return;
 		}
 		
@@ -255,11 +279,15 @@ public class AuthController extends BaseController{
 		}
 		
 		if(validator.hasError()) {
-			throw new BusinessException(BusinessErr.ERROR, validator.getError());
+//			throw new BusinessException(BusinessErr.ERROR, validator.getError());
+			renderJson(JsonResult.error(BusinessErr.ERROR.setMsg(validator.getError())));
+			return;
 		}
 		
 		if(dto.getCode().equalsIgnoreCase(getSession().getAttribute(codeCacheKey)+"") == false){
-			throw new BusinessException(BusinessErr.ERROR, Msg.AUTH_NULL_CODE);
+//			throw new BusinessException(BusinessErr.ERROR, Msg.AUTH_NULL_CODE);
+			renderJson(JsonResult.error(BusinessErr.ERROR.setMsg(Msg.AUTH_NULL_CODE)));
+			return;
 		}
 		
 		//验证验证码是否正确

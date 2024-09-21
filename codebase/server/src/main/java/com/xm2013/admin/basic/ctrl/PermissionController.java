@@ -9,6 +9,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.jfinal.aop.Inject;
 import com.xm2013.admin.annotation.Op;
@@ -25,6 +26,7 @@ import com.xm2013.admin.exception.BusinessErr;
 import com.xm2013.admin.exception.BusinessException;
 import com.xm2013.admin.exception.Msg;
 import com.xm2013.admin.shiro.ShiroKit;
+import com.xm2013.admin.shiro.dto.ShiroUser;
 import com.xm2013.admin.validator.Validator;
 
 public class PermissionController extends BaseController{
@@ -37,7 +39,8 @@ public class PermissionController extends BaseController{
 	public void get() {
 		Integer id = getParaToInt("id", 0);
 		if(id == 0) {
-			throw new BusinessException(BusinessErr.INVALID_PARAM);
+			renderJson(JsonResult.error(BusinessErr.INVALID_PARAM));
+			return;
 		}
 		
 		Permission permission = permissionService.findById(id);
@@ -62,7 +65,9 @@ public class PermissionController extends BaseController{
 		Validator validator = new Validator();
 		validator.exec(permission, "create", false);
 		if(validator.hasError()) {
-			throw new BusinessException(BusinessErr.INVALID_PARAM, validator.getError());
+//			throw new BusinessException(BusinessErr.INVALID_PARAM, validator.getError());
+			renderJson(JsonResult.error(BusinessErr.ERROR.setMsg(validator.getError())));
+			return;
 		}
 		
 		permissionService.create(permission);
@@ -79,7 +84,9 @@ public class PermissionController extends BaseController{
 		Validator validator = new Validator();
 		validator.exec(permission, "create", false);
 		if(validator.hasError()) {
-			throw new BusinessException(BusinessErr.INVALID_PARAM, validator.getError());
+//			throw new BusinessException(BusinessErr.INVALID_PARAM, validator.getError());
+			renderJson(JsonResult.error(BusinessErr.ERROR.setMsg(validator.getError())));
+			return;
 		} 
 		
 		permissionService.update(permission);
@@ -92,7 +99,9 @@ public class PermissionController extends BaseController{
 	public void deletes() {
 		String ids = getPara("ids");
 		if(ids == null || !ids.matches("[\\d,]+")) {
-			throw new BusinessException(BusinessErr.NULL_PARAM);
+//			throw new BusinessException(BusinessErr.NULL_PARAM);
+			renderJson(JsonResult.error(BusinessErr.NULL_PARAM));
+			return;
 		}
 		
 		permissionService.deletes(ids);
@@ -121,10 +130,11 @@ public class PermissionController extends BaseController{
 				}
 			}
 		} catch (Exception e) {
-			throw new BusinessException(BusinessErr.ERROR, e.getMessage());
+			renderJson(JsonResult.error(BusinessErr.ERROR.setMsg(e.getMessage()).setCode(500)));
+//			throw new BusinessException(BusinessErr.ERROR, e.getMessage());
 		}
 		
-		renderJson(JsonResult.ok(Msg.OK_CREATED, results));
+		renderJson(JsonResult.ok(Msg.OK_CREATED, "600", results));
 		
 	}
 	
@@ -175,7 +185,6 @@ public class PermissionController extends BaseController{
 	    				);
     				}
     			}
-        		
 			}
         	
 		}
@@ -210,7 +219,44 @@ public class PermissionController extends BaseController{
         return classes;
     }
 	
-	public static void main(String[] args) {
-		new PermissionController().scan();
+//	public static void main(String[] args) {
+//		new PermissionController().scan();
+//	}
+	
+	/**
+	 * 管理员可以获取所有角色的权限
+	 * 普通用户只能获取自己的权限
+	 */
+	@Op("当前登录用户的权限列表")
+	public void curr() {
+		ShiroUser user = ShiroKit.getLoginUser();
+		if(user.isAdmin()) {
+			renderJson(JsonResult.ok(Msg.OK_GET, 
+					permissionService.findAll()
+				));
+			
+		}else {
+			renderJson(JsonResult.ok(Msg.OK_GET, 
+				permissionService.findByRole(
+					user.getRoles().stream()
+						.map(s -> s.getId()+"")
+						.collect(Collectors.joining(","))
+				)
+			));
+		}
+	}
+	
+	/**
+	 * 获取指定的角色的所有权限，
+	 * 先判断这个角色是否拥有
+	 */
+	public void byRole() {
+		int roleId = getParaToInt("id", 0);
+		if(roleId == 0) {
+			renderJson(JsonResult.error(BusinessErr.INVALID_PARAM));
+		}
+		
+		renderJson(JsonResult.ok(Msg.OK_GET, permissionService.byRole(roleId, ShiroKit.getLoginUser())));
+		
 	}
 }

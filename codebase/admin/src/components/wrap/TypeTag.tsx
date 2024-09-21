@@ -1,8 +1,7 @@
 import type { TagProps } from "antd";
 import { Tag } from "antd";
 import React, { useRef } from "react";
-import { useTranslation } from "../../components";
-import { AdminDept } from "../../common/I18NNamespace";
+import { useTranslation } from "../../hooks";
 
 export type TypeTagOptionProps = {
     label: string, 

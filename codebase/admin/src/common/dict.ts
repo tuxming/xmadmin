@@ -7,9 +7,8 @@
 
 import {api} from '../common/api'
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { useDispatch, useSelector } from '../redux/hooks';
+import { useDispatch, useSelector, useRequest } from '../hooks';
 import { useEffect } from 'react';
-import { useRequest } from '../components';
 
 
 

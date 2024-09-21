@@ -1,6 +1,8 @@
-import { Confirm, useRequest, useTranslation, useLayer } from "../../../components";
+import { Confirm } from "../../../components";
+import { useRequest, useTranslation } from "../../../hooks";
 import { api } from "../../../common/api";
 import { AdminDocument } from "../../../common/I18NNamespace";
+import { useShowResult } from "../../../hooks/useShowResult";
 
 export type DocumentDeleteType = {
     docs: any[],
@@ -17,8 +19,8 @@ export const DocumentDelete : React.FC<DocumentDeleteType> = ({
 }) => {
     
     const {t} = useTranslation(AdminDocument);
-    const { message } = useLayer();
     const request = useRequest();
+    const showResult = useShowResult(AdminDocument);
 
     const msg = t("确定要删除以下文件：") 
                 + docs.map(item => item.fileName+"").join(", ") 
@@ -27,27 +29,10 @@ export const DocumentDelete : React.FC<DocumentDeleteType> = ({
     const onOk = (close) => {
         const doDelete = async () => {
             let result = await request.get(api.document.deletes+"?ids="+docs.map(hist => hist.id+"").join(","));
+            showResult.show(result);
             if(result.status){
-                
-                let txt = Object.keys(result.data).map(filename => {
-                    let msg = result.data[filename];
-                    if(msg.indexOf(":")>-1){
-                        let msgs = msg.split(" : ");
-                        msg = t(msgs[0])+" : "+msgs[1];
-                    } else{
-                        msg = t(msg);
-                    }
-                    return filename+" : "+msg
-                }).join("<br/>");
-
-                message.open({
-                    content: <div style={{textAlign: "left"}} dangerouslySetInnerHTML={ {__html : txt}}></div>
-                });
-
                 successCall();
                 close();
-            }else{
-                message.error(result.msg);
             }
         }
         doDelete();

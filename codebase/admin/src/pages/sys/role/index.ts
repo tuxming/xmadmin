@@ -5,3 +5,4 @@ export * from './RoleQuery';
 export * from "./RoleEdit"
 export * from "./RoleDelete";
 export * from "./RoleType"
+export * from './RoleGrantPermission'

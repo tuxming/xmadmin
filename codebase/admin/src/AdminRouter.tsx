@@ -17,7 +17,7 @@ import {
 import { basePath, api } from "./common/api";
 import { useEffect } from "react";
 import { ActiveTabSlice } from "./redux/slice";
-import { useDispatch } from "./redux/hooks";
+import { useDispatch } from "./hooks";
 
 export const AdminRouter : React.FC = () => {
     const dispatch = useDispatch();

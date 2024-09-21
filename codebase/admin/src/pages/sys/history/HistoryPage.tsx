@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { useSelector } from "../../../redux/hooks";
 import { Divider, Space } from "antd";
 import { DeleteIcon, ViewIcon } from "../../../components/icon/svg/Icons";
 import { HistoryQuery, HistoryList, HistoryDetail } from "./index";
 import { HistoryDelete } from "./HistoryDelete";
-import { AuthButton, useLayer, useTranslation } from "../../../components";
+import { useTranslation,useSelector } from "../../../hooks";
+import { AuthButton, useLayer } from "../../../components";
 import { AdminHistory } from "../../../common/I18NNamespace";
 import { permission } from "../../../common/permission";
 

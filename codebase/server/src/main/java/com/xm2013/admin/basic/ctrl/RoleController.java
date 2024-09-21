@@ -7,23 +7,33 @@ import java.util.stream.Collectors;
 import com.jfinal.aop.Inject;
 import com.xm2013.admin.annotation.Op;
 import com.xm2013.admin.annotation.RequirePermission;
+import com.xm2013.admin.basic.service.PermissionService;
 import com.xm2013.admin.basic.service.RoleService;
 import com.xm2013.admin.common.kits.JsonKit;
 import com.xm2013.admin.domain.dto.JsonResult;
 import com.xm2013.admin.domain.dto.PageInfo;
 import com.xm2013.admin.domain.dto.basic.RoleListQuery;
 import com.xm2013.admin.domain.model.Role;
+import com.xm2013.admin.domain.model.RoleMenu;
 import com.xm2013.admin.exception.BusinessErr;
-import com.xm2013.admin.exception.BusinessException;
 import com.xm2013.admin.exception.Msg;
 import com.xm2013.admin.shiro.ShiroKit;
 import com.xm2013.admin.shiro.dto.ShiroUser;
 import com.xm2013.admin.validator.Validator;
 
+/**
+ * 角色管理，
+ * 原则： 
+ * 查看： 非管理员只能看到自己创建的和自己数据权限之内的角色，管理员能看到所有的角色，
+ * 编辑：非管理官员只能编辑自己创建的和自己数据权限之内的角色，管理员能编辑除了前4个之外的所有角色
+ * 删除：只能删除自己创建的和自己数据权限只能的角色，管理员能删除除了前4之外的所有角色
+ */
 public class RoleController extends BaseController{
 	
 	@Inject
 	private RoleService roleService;
+	@Inject
+	private PermissionService permissionService;
 		
 	/**
 	 * 关键字搜索
@@ -61,7 +71,9 @@ public class RoleController extends BaseController{
 		Validator validator = new Validator();
 		validator.exec(role, "create", false);
 		if(validator.hasError()) {
-			throw new BusinessException(BusinessErr.INVALID_PARAM, validator.getError());
+//			throw new BusinessException(BusinessErr.INVALID_PARAM, validator.getError());
+			renderJson(JsonResult.error(BusinessErr.ERROR.setMsg(validator.getError())));
+			return;
 		}
 		
 		ShiroUser user = ShiroKit.getLoginUser();
@@ -79,11 +91,12 @@ public class RoleController extends BaseController{
 		Validator validator = new Validator();
 		validator.exec(role, "create", false);
 		if(validator.hasError()) {
-			throw new BusinessException(BusinessErr.INVALID_PARAM, validator.getError());
+//			throw new BusinessException(BusinessErr.INVALID_PARAM, validator.getError());
+			renderJson(JsonResult.error(BusinessErr.ERROR.setMsg(validator.getError())));
+			return;
 		} 
 		
 		ShiroUser user = ShiroKit.getLoginUser();
-		role.setCreater(user.getId());
 		roleService.update(role, user);
 		
 		renderJson(JsonResult.ok(Msg.OK_UPDATE));
@@ -94,12 +107,66 @@ public class RoleController extends BaseController{
 	public void deletes() {
 		String ids = getPara("ids");
 		if(ids == null || !ids.matches("[\\d,]+")) {
-			throw new BusinessException(BusinessErr.NULL_PARAM);
+//			throw new BusinessException(BusinessErr.NULL_PARAM);
+			renderJson(JsonResult.error(BusinessErr.NULL_PARAM));
+			return;
 		}
 		
-		roleService.deletes(ids);
+		roleService.deletes(ids, ShiroKit.getLoginUser());
 		
 		renderJson(JsonResult.ok(Msg.OK_DELETE));
+	}
+	
+	/**
+	 * 更新角色权限
+	 * @QueryParam id: roleId
+	 * @Body: [permissionId]
+	 */
+	@RequirePermission(val="sys:role:grant:permission", name="分配权限", group="system")
+	@Op("分配权限")
+	public void grantPermissions() {
+		List<Integer> permissionIds = JsonKit.getList(getRawData(), Integer.class);
+		if(permissionIds == null) {
+			renderJson(JsonResult.error(BusinessErr.INVALID_PARAM));
+		}
+		
+		int roleId = getInt("id", 0);
+		if(roleId == 0) {
+			renderJson(JsonResult.error(BusinessErr.INVALID_PARAM.setMsg(Msg.ID_NULL)));
+		}
+		
+		String result = roleService.grantPermissions(roleId, permissionIds, ShiroKit.getLoginUser());
+		if(result == null) {
+			renderJson(JsonResult.ok(Msg.OK_UPDATE));
+		}else {
+			renderJson(JsonResult.error(result));
+		}
+	}
+	
+	/**
+	 * 更新角色菜单
+	 * @QueryParam id: roleId
+	 * @Body: [permissionId]
+	 */
+	@RequirePermission(val="sys:role:grant:menu", name="分菜单", group="system")
+	@Op("分配权限")
+	public void grantMenus() {
+		List<RoleMenu> roleMenus = JsonKit.getList(getRawData(), RoleMenu.class);
+		if(roleMenus == null) {
+			renderJson(JsonResult.error(BusinessErr.INVALID_PARAM));
+		}
+		
+		int roleId = getInt("id", 0);
+		if(roleId == 0) {
+			renderJson(JsonResult.error(BusinessErr.INVALID_PARAM.setMsg(Msg.ID_NULL)));
+		}
+		
+		String result = roleService.grantMenus(roleId, roleMenus, ShiroKit.getLoginUser());
+		if(result == null) {
+			renderJson(JsonResult.ok(Msg.OK_UPDATE));
+		}else {
+			renderJson(JsonResult.error(result));
+		}
 	}
 	
 }

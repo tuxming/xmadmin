@@ -1,10 +1,11 @@
 import { Button, Divider, Form, Input, Space, Typography } from "antd";
 import { AdminDict, DefaultNS } from "../../../common/I18NNamespace";
-import { Modal, useRequest, useTranslation, useLayer } from "../../../components";
+import { useRequest, useTranslation, useSelector } from "../../../hooks";
+import { Modal } from "../../../components";
 import { useEffect, useState } from "react";
-import { useSelector } from "../../../redux/hooks";
 import { api } from "../../../common/api";
 import { CloseOutlined, SendOutlined } from "@ant-design/icons";
+import { useShowResult } from "../../../hooks/useShowResult";
 
 
 export type DictGroupEditFormType = {
@@ -31,11 +32,11 @@ export const DictGroupEdit: React.FC<DictGroupEditType> = ({
 }) => {
     const {t} = useTranslation(AdminDict);
     const request = useRequest();
-    const {message} = useLayer();
     const [visible, setVisible] = useState(true);
     const size = useSelector(state => state.themeConfig.componentSize);
 
     const [form] = Form.useForm();
+    const showResult = useShowResult(AdminDict);
 
     const onModalClose = () => {
         setVisible(false);
@@ -63,11 +64,9 @@ export const DictGroupEdit: React.FC<DictGroupEditType> = ({
                 api.dict.saveOrUpdateGroup,
                 data
             );
+            showResult.show(result);
             if(result.status){
-                message.success(result.msg);
                 onClose(data);
-            }else{
-                message.error(result.msg);
             }
         }
         create();

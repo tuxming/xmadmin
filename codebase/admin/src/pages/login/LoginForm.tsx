@@ -4,9 +4,9 @@ import { Form, Button,Tooltip, FormProps } from 'antd';
 import { MailOutlined, PhoneFilled} from '@ant-design/icons';
 import { useNavigate } from "react-router-dom";
 import {PasswordLoginForm, PhoneLoginForm, MailLoginForm} from "./index";
-import { IconFont, useLayer, useTranslation } from '../../components';
+import { IconFont, useLayer,  } from '../../components';
 import { jwtTokenSlice, login, LoginType, persistedUserSlice } from '../../redux/slice'
-import { useSelector, useDispatch } from '../../redux/hooks';
+import { useSelector, useDispatch, useTranslation } from '../../hooks';
 import { api } from "../../common/api";
 import { useSearchParams   } from 'react-router-dom';
 import { AdminLogin } from "../../common/I18NNamespace";

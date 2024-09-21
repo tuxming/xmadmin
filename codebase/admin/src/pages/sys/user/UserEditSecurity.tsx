@@ -1,6 +1,7 @@
 import { Alert, Descriptions,DescriptionsProps, Form, Input, Space } from "antd"
 import { UserProps } from "./UserType"
-import { EditableTextItem, useLayer, useTranslation } from "../../../components"
+import { useTranslation } from "../../../hooks"
+import { EditableTextItem, useLayer } from "../../../components"
 import { AdminUser } from "../../../common/I18NNamespace"
 import { TokenItem } from "./TokenItem"
 import { EditIcon } from "../../../components/icon/svg/Icons"
@@ -172,6 +173,6 @@ export const UserEditSecurity : React.FC<{
         },
     ];
 
-    return <Descriptions style={{marginTop: 25}} className="user-basic-info" bordered items={safeItems} title={t("账户与安全")}
+    return <Descriptions style={{marginTop: 5}} className="user-basic-info" bordered items={safeItems} title={t("账户与安全")}
                 column={modalPos.width>500?2: 1} />
 }

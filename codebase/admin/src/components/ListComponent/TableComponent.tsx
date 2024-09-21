@@ -2,12 +2,12 @@
 import React, {useEffect, useRef, useState} from 'react';
 import { Table, Tooltip} from 'antd';
 import type { TableProps } from 'antd';
-import { useSelector } from "../../redux/hooks"
-import { useLayer, useRequest, useTranslation } from '../../components';
+import { useLayer, TableType } from '../../components';
+import {  useRequest, useTranslation, useSelector } from '../../hooks';
 import { DefaultNS } from '../../common/I18NNamespace';
 import type { ResizeCallbackData } from 'react-resizable';
 import { Resizable } from 'react-resizable';
-import { TableType } from '../../components';
+import { useShowResult } from '../../hooks/useShowResult';
 
 const columnSort = (a, b) => {
 
@@ -65,7 +65,7 @@ const ResizableTitle = (
  * 表格组件封装，这个表格可以自己传入宽高，如果自己没有传入宽高，则将自适应于页面组件的宽高
  * @returns 
  */
-export const TableComponent : React.FC<TableType> = ({
+const InternalTable : React.FC<TableType> = ({
     columns,
     pageSize,
     query,
@@ -99,6 +99,7 @@ export const TableComponent : React.FC<TableType> = ({
     const sidemenuCollapsed = useSelector(state => state.themeConfig.sidemenuCollapsed);
     const size = useSelector(state => state.themeConfig.componentSize);
     const themeType = useSelector(state => state.themeConfig.theme);
+    const showResult = useShowResult(DefaultNS);
 
     const firstLoad = useRef(initLoad); 
 
@@ -193,41 +194,29 @@ export const TableComponent : React.FC<TableType> = ({
         setLoading(true);
 
         let post = async () => {
-            try{
-                let result = await request.post(
-                    apiUrl,
-                    {...query, 
-                        start: (pagination.current-1) * pagination.pageSize,
-                        length: pagination.pageSize
-                    }
-                );
-    
-                setLoading(false);
-                // setData([]);
-                if(result.status){
-                    setSelectedRowKeys([]);
-                    message.success(result.msg);
-                    setData(result.data.list);
-                    setPagination({
-                        ...pagination,
-                        total: result.data.total || pagination.total
-                    });
-                    if(onDataLoaded){
-                        onDataLoaded(result.data.list);
-                    }
-                }else{
-                    message.error(result.msg);
+            let result = await request.post(
+                apiUrl,
+                {...query, 
+                    start: (pagination.current-1) * pagination.pageSize,
+                    length: pagination.pageSize
                 }
-            }catch(err){
-                setLoading(false);
-                let error = (err as any);
-                if(error.code == 'ERR_NETWORK'){
-                    message.error(t("网络错误，请检查是否正常能正常访问服务器", DefaultNS));
-                }else{
-                    message.error(error.message);
+            );
+
+            setLoading(false);
+
+            showResult.show(result);
+            // setData([]);
+            if(result.status){
+                setSelectedRowKeys([]);
+                setData(result.data.list);
+                setPagination({
+                    ...pagination,
+                    total: result.data.total || pagination.total
+                });
+                if(onDataLoaded){
+                    onDataLoaded(result.data.list);
                 }
             }
-
         }
        
         post();
@@ -504,3 +493,6 @@ export const TableComponent : React.FC<TableType> = ({
         />
     </div>
 }
+
+
+export const TableComponent = InternalTable;

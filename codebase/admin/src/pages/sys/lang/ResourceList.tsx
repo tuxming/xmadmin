@@ -1,5 +1,6 @@
 
-import { TableComponent, TableColumnType, ModalContext, useTranslation } from '../../../components';
+import { useTranslation } from '../../../hooks';
+import { TableComponent, TableColumnType } from '../../../components';
 import { AdminLang } from '../../../common/I18NNamespace';
 import { api } from '../../../common/api';
 

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.jfinal.aop.Inject;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.IAtom;
 import com.jfinal.plugin.activerecord.Record;
@@ -15,6 +16,7 @@ import com.xm2013.admin.common.kits.FileKit;
 import com.xm2013.admin.domain.dto.PageInfo;
 import com.xm2013.admin.domain.dto.basic.DeptQuery;
 import com.xm2013.admin.domain.model.Dept;
+import com.xm2013.admin.domain.model.User;
 import com.xm2013.admin.exception.BusinessErr;
 import com.xm2013.admin.exception.BusinessException;
 import com.xm2013.admin.shiro.dto.ShiroUser;
@@ -24,15 +26,18 @@ import static com.xm2013.admin.common.CacheKey.SESSION_KEY_DEPT_PATH;
 import static com.xm2013.admin.common.CacheKey.SESSION_KEY_DEPT_CHILD_PATH;
 
 public class DeptService {
-	
+		
 	private static String sql = "select t.*, "
-			+ " t1.name as parentName, t1.path as parentPath, t1.pathName as parentPathName "
+			+ " t1.name as parentName, t1.path as parentPath, t1.path_name as parentPathName "
 			+ " from sys_dept as t left "
 			+ " join sys_dept as t1 on t1.id = t.id "
 			+ " where ";
 	
+	@Inject
+	private UserService userService;
+	
 	public Dept findById(int deptId) {
-		return Dept.dao.findFirstByCache(SESSION_KEY_DEPT_ID, deptId, sql += " t.id = ?", deptId);
+		return Dept.dao.findFirstByCache(SESSION_KEY_DEPT_ID, deptId, sql + " t.id = ?", deptId);
 	}
 
 	public List<Dept> findByParent(int id) {
@@ -40,11 +45,11 @@ public class DeptService {
 	}
 	
 	public Dept findByPath(String path){
-		return Dept.dao.findFirstByCache(SESSION_KEY_DEPT_PATH, path, sql += " t.path = ?", path); 
+		return Dept.dao.findFirstByCache(SESSION_KEY_DEPT_PATH, path, sql + " t.path = ?", path); 
 	}
 	
 	public List<Dept> findByChildPath(String path){
-		return Dept.dao.find(SESSION_KEY_DEPT_CHILD_PATH, path, sql += " t.like = '"+path+"%'"); 
+		return Dept.dao.find(SESSION_KEY_DEPT_CHILD_PATH, path, sql + " t.like = '"+path+"%'"); 
 	}
 	
 	private void removeCache(Dept dept) {
@@ -249,23 +254,23 @@ public class DeptService {
 				if(parentId!=null && parentId.intValue()!=db.getParentId()) {
 					//不能把上级节点设置为自己
 					if(dept.getParentId() == dept.getId()) {
-						throw new BusinessException(BusinessErr.INVALID_PARAM, "上级节点不能是自己");
+						throw new BusinessException(BusinessErr.ERROR, "上级节点不能是自己");
 					}
 					
 					//判断修改后的节点是否具有权限
 					Dept targetParent = Dept.dao.findById(parentId);
 					
 					if(targetParent == null) {
-						throw new BusinessException(BusinessErr.NO_DATA, "目标节点不存在");
+						throw new BusinessException(BusinessErr.ERROR, "目标节点不存在");
 					}
 					
 					//不能把上级节点设置为自己的下级
 					if(targetParent.getPath().startsWith(db.getPath())) {
-						throw new BusinessException(BusinessErr.INVALID_PARAM, "上级节点不能是自己的子节点");
+						throw new BusinessException(BusinessErr.ERROR, "上级节点不能是自己的子节点");
 					}
 					
 					if(!user.isOwnerData(targetParent.getPath())) {
-						throw new BusinessException(BusinessErr.ERR_NO_DATA_AUTH, "没有目标节点的权限");
+						throw new BusinessException(BusinessErr.ERROR, "没有目标节点的权限");
 					}
 					
 					updateDept.setParentId(parentId);
@@ -343,6 +348,21 @@ public class DeptService {
 		removeCache(dept);
 		
 		return null;
+	}
+
+	public List<Dept> dataPermissions(int userId, int type, ShiroUser loginUser) {
+		User user = userService.findById(userId);
+		if(user==null || !loginUser.isOwnerData(user.getStr("deptPath"), user.getId())) {
+			return new ArrayList<Dept>();
+		}
+		
+		String sql = "select t.id as deptId, t.path, t.name, t.path_name, t1.id as id from sys_dept as t "
+				+ " left join sys_user_data as t1 on t1.ref_id = t.id "
+				+ " where ";
+		sql += " t1.user_id="+userId;
+		sql += " and t1.type="+type;
+		
+		return Dept.dao.find(sql);
 	}
 
 	

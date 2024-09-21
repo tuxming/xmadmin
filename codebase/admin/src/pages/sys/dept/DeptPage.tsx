@@ -1,12 +1,13 @@
 import { App, Divider, Space } from "antd";
-import { AdminDept, DefaultNS } from "../../../common/I18NNamespace";
-import { AuthButton, useRequest, useTranslation,useLayer } from "../../../components";
-import { useSelector } from "../../../redux/hooks";
+import { AdminDept} from "../../../common/I18NNamespace";
+import { AuthButton, useLayer } from "../../../components";
+import { useRequest, useTranslation, useSelector } from "../../../hooks";
 import { useRef, useState } from "react";
 import { DeptList, DeptEdit, DeptEditFormType } from "./index";
 import { AddIcon, DeleteIcon, EditIcon } from "../../../components/icon/svg/Icons";
 import { permission } from "../../../common/permission";
 import { api } from "../../../common/api";
+import { useShowResult } from "../../../hooks/useShowResult";
 
 export const DeptPage : React.FC = () => {
 
@@ -21,6 +22,7 @@ export const DeptPage : React.FC = () => {
     const [title, setTitle] = useState("");
     const [dept, setDept] = useState<DeptEditFormType>();
     const request = useRequest();
+    const showResult = useShowResult(AdminDept);
 
     const updateQueue = useRef<number[]>([]);
 
@@ -92,12 +94,10 @@ export const DeptPage : React.FC = () => {
             onOk: (onClose) => {
                 let doDelete = async () => {
                     let result = await request.get(api.dept.delete+"?id="+row.id);
+                    showResult.show(result);
                     if(result.status){
-                        message.success(t(result.msg, DefaultNS));
                         setUpdate(row.parentId);
                         onClose();
-                    }else{
-                        message.warning(t(result.msg));
                     }
                 }
                 doDelete();

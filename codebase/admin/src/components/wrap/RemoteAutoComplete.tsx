@@ -1,6 +1,6 @@
 import { AutoComplete, Spin, AutoCompleteProps } from "antd";
 import { useState, useMemo, useRef } from "react";
-import { useRequest } from "../useRequest";
+import { useRequest } from "../../hooks/useRequest";
 import debounce from 'lodash/debounce';
 
 export interface RemoteCompleteProps extends AutoCompleteProps {

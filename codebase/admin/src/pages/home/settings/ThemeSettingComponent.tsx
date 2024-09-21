@@ -9,9 +9,8 @@ import {
     CheckOutlined,
     ReloadOutlined
 } from '@ant-design/icons';
-import { useDispatch, useSelector } from '../../../redux/hooks';
 import { themeConfigSlice } from '../../../redux/CommonSlice';
-import { useTranslation } from "../../../components";
+import { useTranslation, useSelector, useDispatch } from "../../../hooks";
 import { AdminSkinSetting } from "../../../common/I18NNamespace";
 
 /**

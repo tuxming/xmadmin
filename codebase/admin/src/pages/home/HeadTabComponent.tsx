@@ -13,7 +13,7 @@ import {
   useSortable,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { useSelector, useDispatch } from '../../redux/hooks';
+import { useSelector, useDispatch } from '../../hooks';
 import { TabItemsSlice, ActiveTabSlice, openItemSlice } from "../../redux/slice";
 import { TabIcon } from './TabIcon';
 

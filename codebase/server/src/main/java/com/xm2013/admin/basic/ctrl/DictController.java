@@ -71,7 +71,7 @@ public class DictController extends BaseController{
 		v.exec(dictGroup, "create", false);
 		
 		if(v.hasError()) {
-			renderJson(JsonResult.error(v.getError()));
+			renderJson(JsonResult.error(BusinessErr.ERROR.setMsg(v.getError())));
 			return;
 		}
 		
@@ -108,7 +108,7 @@ public class DictController extends BaseController{
 		v.exec(dict, "create", false);
 		
 		if(v.hasError()) {
-			renderJson(JsonResult.error(v.getError()));
+			renderJson(JsonResult.error(BusinessErr.ERROR.setMsg(v.getError())));
 			return;
 		}
 		
@@ -128,7 +128,7 @@ public class DictController extends BaseController{
 		v.execUnion(dict, "update", false);
 		
 		if(v.hasError()) {
-			renderJson(JsonResult.error(v.getError()));
+			renderJson(JsonResult.error(BusinessErr.ERROR.setMsg(v.getError())));
 			return;
 		}
 		
@@ -141,7 +141,7 @@ public class DictController extends BaseController{
 	public void deleteDict() {
 		int id = getParaToInt("id", 0);
 		if(id == 0) {
-			renderJson(JsonResult.ok(Msg.ID_NULL));
+			renderJson(JsonResult.error(Msg.ID_NULL));
 			return ;
 		}
 		

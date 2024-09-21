@@ -1,10 +1,11 @@
 import { Button, Divider, Form, Input, Space, Typography } from "antd";
 import { AdminLang, DefaultNS } from "../../../common/I18NNamespace";
-import { Modal, useLayer, useRequest, useTranslation } from "../../../components";
+import { useRequest, useSelector, useTranslation } from "../../../hooks";
+import { Modal } from "../../../components";
 import { useEffect, useState } from "react";
-import { useSelector } from "../../../redux/hooks";
 import { api } from "../../../common/api";
 import { CloseOutlined, SendOutlined } from "@ant-design/icons";
+import { useShowResult } from "../../../hooks/useShowResult";
 
 
 export type LangEditFormType = {
@@ -31,9 +32,9 @@ export const LangEdit: React.FC<LangEditType> = ({
 }) => {
     const {t} = useTranslation(AdminLang);
     const request = useRequest();
-    const {message} = useLayer();
     const [visible, setVisible] = useState(true);
     const size = useSelector(state => state.themeConfig.componentSize);
+    const showResult = useShowResult(AdminLang);
 
     const [form] = Form.useForm();
 
@@ -61,11 +62,9 @@ export const LangEdit: React.FC<LangEditType> = ({
                 data.id?api.lang.updateLang:api.lang.addLang,
                 data
             );
+            showResult.show(result);
             if(result.status){
-                message.success(result.msg);
                 onClose({...data, id:data.id || result.data});
-            }else{
-                message.error(result.msg);
             }
         }
         create();

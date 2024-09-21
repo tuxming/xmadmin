@@ -1,12 +1,15 @@
 import { UserProps } from "./UserType"
 import {Typography, TabsProps, Tabs} from 'antd'
 import {  AdminUser } from "../../../common/I18NNamespace"
-import { Modal, useLayer, useRequest, useTranslation } from "../../../components"
+import { Modal } from "../../../components"
+import { useRequest, useTranslation } from "../../../hooks"
 import { computePx } from "../../../common/kit"
 import { useState } from "react"
 import { api } from "../../../common/api"
-import { UserEditBasicInfo, UserEditSecurity } from "./index"
+import { UserEditBasicInfo, UserEditSecurity, UserGrantDataPermission } from "./index"
 import { CustomScroll } from "react-custom-scroll"
+import { UserGrantRole } from "./UserGrantRole"
+import { useShowResult } from "../../../hooks/useShowResult"
 
 export type UserEditType = {
     user: UserProps,
@@ -25,8 +28,8 @@ export const UserEdit : React.FC<UserEditType> = ({
     const {t} = useTranslation(AdminUser);
     const [title] = useState(t('编辑用户')+":"+user.fullname);
     const [visible, setVisible] = useState(open);
-    const {message} = useLayer();
     const request = useRequest();
+    const showResult = useShowResult(AdminUser);
 
     const onModalClose = (refresh) => {
         setVisible(false);
@@ -39,13 +42,11 @@ export const UserEdit : React.FC<UserEditType> = ({
     const doUpdate = async (updateUser, key) => {
 
         let result = await request.post(api.user.update, updateUser);
+        showResult.show(result);
         if(result.status){
-            message.success(t(result.msg));
             if(key == 'token'){
                 setEditUser({...editUser, [key]: result.data});
             }
-        }else{
-            message.warning(result.msg);
         }
 
     }
@@ -97,7 +98,7 @@ export const UserEdit : React.FC<UserEditType> = ({
           children:  <UserEditBasicInfo user={editUser} modalPos={modalPos} 
                             onUpdateUser={doUpdate} onHandleChange={onHandleChange} 
                         ></UserEditBasicInfo>,
-                            },
+        },
         {
           key: '2',
           label: t('账户与安全'),
@@ -105,8 +106,25 @@ export const UserEdit : React.FC<UserEditType> = ({
                         onHandleChange={onHandleChange} 
                     ></UserEditSecurity>,
         },
-       
-      ];
+        {
+          key: '3',
+          label: t('数据权限'),
+          children: <UserGrantDataPermission userId={user.id} titleLevel={5} 
+                        titleStyle={{marginTop: 5, marginBottom: 20}}
+                        wrapperStyle={{paddingRight: 20}}
+                    />,
+        },
+        {
+          key: '4',
+          label: t('角色'),
+          children: <UserGrantRole userId={user.id} titleLevel={5} 
+                        titleStyle={{marginTop: 5, marginBottom: 20}}
+                        wrapperStyle={{paddingRight: 20}}
+                    />,
+        },
+    ];
+
+
 
     return (
         <Modal open={visible} onClose={()=>onModalClose(false)} title={title} onSizeChange={onModalChangeSize}

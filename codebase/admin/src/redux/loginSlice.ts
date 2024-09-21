@@ -1,7 +1,7 @@
 
 import {api} from '../common/api';
 import { createSlice, createAsyncThunk} from '@reduxjs/toolkit';
-import { useRequest } from '../components/index';
+import { useRequest } from '../hooks';
 
 interface RoleType {
     id?: number, 

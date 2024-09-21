@@ -3,7 +3,7 @@ import { useRef, useState } from 'react';
 import { ArrowLeftOutlined} from '@ant-design/icons';
 import './LoginPage.css';
 import './ForgetForm.css';
-import { useRequest } from '../../components/index';
+import { useRequest } from '../../hooks';
 import { api } from '../../common/api'
 
 import {
@@ -13,7 +13,7 @@ import {
     ResetResultType,
     ResetFormType,
 } from './index'
-import { useTranslation } from '../../components/useTranslation';
+import { useTranslation } from '../../hooks/useTranslation';
 import { AdminLogin } from '../../common/I18NNamespace';
 
 interface ForgetFormProp {

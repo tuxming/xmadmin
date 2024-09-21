@@ -2,7 +2,7 @@ import { CheckOutlined } from "@ant-design/icons";
 import { Button, Space, Tooltip, Typography } from "antd";
 import { useState } from "react";
 import { AdminDept } from "../../../common/I18NNamespace";
-import { useTranslation } from "../../../components";
+import { useTranslation } from "../../../hooks";
 import { CopyIcon, EditIcon } from "../../../components/icon/svg/Icons";
 import { DeptSelectorWraper } from ".";
 

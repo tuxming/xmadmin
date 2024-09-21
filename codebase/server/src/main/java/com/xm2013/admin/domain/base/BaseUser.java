@@ -60,10 +60,6 @@ public abstract class BaseUser<M extends BaseUser<M>> extends Model<M> implement
 	 */
 	public static String COL_DEPT_ID = "dept_id";
 	/**
-	 * 所在组织的path
-	 */
-	public static String COL_DEPT_PATH = "dept_path";
-	/**
 	 * 状态：0-待审核,1-正常,2-禁用，3-删除
 	 */
 	public static String COL_STATUS = "status";

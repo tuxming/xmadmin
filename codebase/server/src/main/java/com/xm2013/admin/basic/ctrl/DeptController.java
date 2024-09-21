@@ -9,7 +9,6 @@ import com.xm2013.admin.domain.dto.JsonResult;
 import com.xm2013.admin.domain.dto.basic.DeptQuery;
 import com.xm2013.admin.domain.model.Dept;
 import com.xm2013.admin.exception.BusinessErr;
-import com.xm2013.admin.exception.BusinessException;
 import com.xm2013.admin.exception.Msg;
 import com.xm2013.admin.shiro.ShiroKit;
 import com.xm2013.admin.validator.Validator;
@@ -29,7 +28,9 @@ public class DeptController extends BaseController{
 		DeptQuery query = JsonKit.getObject(getRawData(), DeptQuery.class);
 	
 		if(query == null) {
-			throw new BusinessException(BusinessErr.NULL_PARAM);
+//			throw new BusinessException(BusinessErr.NULL_PARAM);
+			renderJson(JsonResult.error(BusinessErr.NULL_PARAM));
+			return;
 		}
 		
 		renderJson(JsonResult.ok(Msg.OK_GET, deptService.pageList(query, ShiroKit.getLoginUser())));
@@ -43,13 +44,16 @@ public class DeptController extends BaseController{
 		Dept dept = JsonKit.getObject(getRawData(), Dept.class);
 		
 		if(dept == null) {
-			throw new BusinessException(BusinessErr.NULL_PARAM);
+			renderJson(JsonResult.error(BusinessErr.NULL_PARAM));
+			return;
 		}
 
 		Validator validator = new Validator();
 		validator.exec(dept, "create", false);
 		if(validator.hasError()) {
-			throw new BusinessException(BusinessErr.INVALID_PARAM, validator.getError());
+//			throw new BusinessException(BusinessErr.INVALID_PARAM, validator.getError());
+			renderJson(JsonResult.error(BusinessErr.ERROR.setMsg(validator.getError())));
+			return;
 		}
 		
 		int deptId = deptService.create(dept, ShiroKit.getLoginUser());
@@ -61,13 +65,16 @@ public class DeptController extends BaseController{
 	public void update() {
 		Dept dept = JsonKit.getObject(getRawData(), Dept.class);
 		if(dept == null || dept.getId() == null || dept.getId()==0) {
-			throw new BusinessException(BusinessErr.NULL_PARAM);
+			renderJson(JsonResult.error(BusinessErr.NULL_PARAM));
+			return;
 		}
 		
 		Validator validator = new Validator();
 		validator.exec(dept, "create", false);
 		if(validator.hasError()) {
-			throw new BusinessException(BusinessErr.INVALID_PARAM, validator.getError());
+//			throw new BusinessException(BusinessErr.INVALID_PARAM, validator.getError());
+			renderJson(JsonResult.error(BusinessErr.ERROR.setMsg(validator.getError())));
+			return;
 		}
 		
 		deptService.update(dept, ShiroKit.getLoginUser());
@@ -80,7 +87,9 @@ public class DeptController extends BaseController{
 	public void delete() {
 		int id = getParaToInt("id", 0);
 		if(id == 0) {
-			throw new BusinessException(BusinessErr.INVALID_PARAM);
+//			throw new BusinessException(BusinessErr.INVALID_PARAM);
+			renderJson(JsonResult.error(BusinessErr.INVALID_PARAM));
+			return;
 		}
 		
 		String result = deptService.delete(id, ShiroKit.getLoginUser());

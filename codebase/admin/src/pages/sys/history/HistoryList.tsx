@@ -1,5 +1,6 @@
 
-import { TableComponent, TableColumnType, useTranslation, ModalContext } from '../../../components';
+import { TableComponent, TableColumnType,ModalContext } from '../../../components';
+import { useTranslation } from '../../../hooks';
 import { api } from '../../../common/api';
 import { AdminHistory } from '../../../common/I18NNamespace';
 import { useContext, useEffect, useState } from 'react';

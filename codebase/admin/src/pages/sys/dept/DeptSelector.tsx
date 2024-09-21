@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import type { GetProp, TreeSelectProps } from 'antd';
 import { Button, TreeSelect, Typography } from 'antd';
-import { useRequest } from '../../../components';
+import { useRequest } from '../../../hooks';
 import { api } from '../../../common/api';
 import { ArrowsAltOutlined } from '@ant-design/icons';
 

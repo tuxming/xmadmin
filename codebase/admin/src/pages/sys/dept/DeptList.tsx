@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { AdminDept, DefaultNS } from "../../../common/I18NNamespace";
-import { useTranslation, TableColumnType, ModalContext, TableComponent, useRequest, useLayer } from "../../../components";
+import { TableColumnType, ModalContext, TableComponent, useLayer } from "../../../components";
+import { useTranslation, useRequest } from "../../../hooks";
 import { computePx } from "../../../common/kit";
 import { api } from "../../../common/api";
 import { LoadingOutlined, MinusSquareTwoTone, PlusSquareTwoTone } from "@ant-design/icons";

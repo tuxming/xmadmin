@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.jfinal.aop.Aop;
 import com.jfinal.kit.JsonKit;
-import com.jfinal.plugin.activerecord.Db;
 import com.xm2013.admin.basic.service.UserService;
 import com.xm2013.admin.common.Kit;
 import com.xm2013.admin.domain.model.Role;
@@ -36,8 +35,9 @@ public class ShiroUser implements java.io.Serializable{
 	
 	//以下都是数据权限的设置
 	private List<ShiroUserData> userDatas;
-	
+	//能查看的用户
 	private List<Integer> userIds;
+	//能查看的组织
 	private List<Integer> deptIds;
 	
 	private List<String> datapaths;

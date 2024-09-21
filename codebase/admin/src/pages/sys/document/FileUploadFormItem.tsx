@@ -3,8 +3,9 @@ import { PlusOutlined } from '@ant-design/icons';
 import type { GetProp, UploadFile, UploadProps } from 'antd';
 import { useEffect, useState } from "react";
 import { api } from "../../../common/api";
-import { useLayer, useRequest, useTranslation } from "../../../components";
+import { useRequest } from "../../../hooks";
 import { DefaultNS } from "../../../common/I18NNamespace";
+import { useShowResult } from "../../../hooks/useShowResult";
 
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 type ListType = GetProp<UploadProps, 'listType'>;
@@ -44,12 +45,11 @@ export const FileUploadFormItem : React.FC<{
     onRemove
 }) => {
 
-    const {t} = useTranslation(DefaultNS);
-    const {message} = useLayer();
     const request = useRequest();
     const [previewOpen, setPreviewOpen] = useState(false);
     const [previewImage, setPreviewImage] = useState('');
     const [fileList, setFileList] = useState<UploadFile[]>([]);
+    const showResult = useShowResult(DefaultNS);
 
     useEffect(()=>{
         if(value && value.length>0){
@@ -102,26 +102,8 @@ export const FileUploadFormItem : React.FC<{
     const handleRemove = (file)=>{
         const doDelete = async () => {
             let id = file.response?.data || file.uid; 
-            
             let result = await request.get(api.document.deletes+"?ids="+id)
-            if(result.status){
-                let txt = Object.keys(result.data).map(filename => {
-                    let msg = result.data[filename];
-                    if(msg.indexOf(":")>-1){
-                        let msgs = msg.split(" : ");
-                        msg = t(msgs[0])+" : "+msgs[1];
-                    } else{
-                        msg = t(msg);
-                    }
-                    return filename+" : "+msg
-                }).join("<br/>");
-
-                message.open({
-                    content: <div style={{textAlign: "left"}} dangerouslySetInnerHTML={ {__html : txt}}></div>
-                });
-            }else{
-                message.error(result.msg);
-            }
+            showResult.show(result);
         }
         doDelete();
         if(onRemove){

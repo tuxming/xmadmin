@@ -1,6 +1,7 @@
 
 import { useContext, useEffect, useState } from 'react';
-import { TableComponent, TableColumnType, ModalContext, useTranslation } from '../../../components';
+import { useTranslation } from '../../../hooks';
+import { TableComponent, TableColumnType, ModalContext } from '../../../components';
 import { computePx } from '../../../common/kit';
 import { AdminDict } from '../../../common/I18NNamespace';
 import { api } from '../../../common/api';

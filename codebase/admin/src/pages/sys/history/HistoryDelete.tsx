@@ -1,8 +1,8 @@
 
 
-import { Confirm, useRequest, useTranslation, useLayer } from "../../../components";
 import { api } from "../../../common/api";
-import { App } from 'antd'
+import { useRequest, useTranslation} from "../../../hooks";
+import { Confirm,useLayer } from "../../../components";
 import { AdminHistory, DefaultNS } from "../../../common/I18NNamespace";
 
 export type HistoryDeleteType = {

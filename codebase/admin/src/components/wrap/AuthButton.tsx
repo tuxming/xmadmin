@@ -1,7 +1,6 @@
 import React, {useRef} from 'react'
 import { Button, ButtonProps,Tooltip } from "antd"
-import { hasPermission } from "../../common/kit";
-import { useSelector } from "../../redux/hooks";
+import { useAuth } from "../../hooks";
 
 
 export type AuthButtonProps = ButtonProps & {
@@ -17,17 +16,9 @@ export const AuthButton = React.forwardRef<HTMLButtonElement, AuthButtonProps>((
     tip,
     ...props
 }, ref) => {
-    const permissions = useSelector(state => state.persistedUser.permissions);
-
-    let isPermitted = false;
-    if(typeof requiredPermissions == 'string'){
-        isPermitted = hasPermission(requiredPermissions, permissions);
-    }else if(Array.isArray(requiredPermissions)){
-        for(let rp of requiredPermissions){
-            isPermitted = hasPermission(rp, permissions);
-            if(isPermitted) break;
-        }
-    }
+    
+    const auth = useAuth();
+    let isPermitted = auth.has(requiredPermissions);
 
     //解决报错
     const tagRef = ref || useRef<HTMLButtonElement>(null);

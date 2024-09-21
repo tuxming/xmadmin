@@ -1,5 +1,6 @@
 
-import { TableComponent, TableColumnType, ModalContext, useTranslation } from '../../../components';
+import { useTranslation } from '../../../hooks';
+import { TableComponent, TableColumnType, ModalContext } from '../../../components';
 import { api } from '../../../common/api';
 import { useContext, useEffect, useState } from 'react';
 import { computePx } from '../../../common/kit';
@@ -28,7 +29,7 @@ export type DocumentListType = {
 export const DocumentList : React.FC<DocumentListType> = ({
     query,
     onSelect,
-    refresh
+    refresh,
 }) => {
 
     const {t} = useTranslation(AdminDocument);

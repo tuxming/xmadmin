@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import { IconFont } from "../../components"
-import { useSelector } from "../../redux/hooks"
+import { useSelector } from "../../hooks"
 
 
 export type TabIconType = {

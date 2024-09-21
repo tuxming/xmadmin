@@ -14,6 +14,14 @@ import com.xm2013.admin.common.Kit;
 import com.xm2013.admin.exception.BusinessErr;
 import com.xm2013.admin.exception.BusinessException;
 
+/**
+ * 返回消息的建议： 
+ * 返回业务自定义错误消息： JsonResult.error(BusinessErr.ERROR.setMsg("自定义消息内容"));  //这个会设置code=10
+ * 返回系统规定的自定义业务消息： JsonResult.error(BusinesseErr.NO_LOGIN);  //BusinesseErr里面除了ERROR的类型
+ * 返回format业务消息： JsonResult.create(null, false, msg).setArgs();  //msg要替换的参数使用%s占位
+ * 如果是批量业务，要返回每一条数据的处理结果，code设置为600，data=map(key, msg)
+ * JsonResult.create(map, true, msg).setCode(6000);
+ */
 public class JsonResult {
 	private Boolean status;
 	private String msg;
@@ -24,6 +32,14 @@ public class JsonResult {
 	@JsonIgnore
 	private Object tmpData;
 	
+	/**
+	 * BusinessErr：和这个错误消息： 
+	 * 10:消息是自定义的消息，其他的错误消息是固定的
+	 * 以下是拓展的code
+	 * 200: 成功
+	 * 500: 系统错误，这个错误，可以不用调用国际化
+	 * 600: 这个不分对错，具体消息会方在data中，Map<String, String> 错误的key, 具体的错误消息
+	 */
 	private String code = "200";  //code默认是200：成功
 	
 	public static JsonResult create(Object data) {
@@ -72,7 +88,7 @@ public class JsonResult {
 			return error((BusinessException)e);
 		}else {
 			JsonResult dto = create(null, false, e.getMessage());
-			dto.setCode("-20");
+			dto.setCode("500");
 			return dto.toString();
 		}
 	}

@@ -39,9 +39,9 @@ public class Msg {
 	public static final String ID_NULL = "id为空";
 	public static final String DISABLE_EDIT = "禁止编辑";
 	
-	public static final String ROLE_NOT_CREATE_SYS_ROLE = "禁止创建系统级别的管理员";
-	public static final String ROLE_NOT_CREATE_SUPER_ROLE = "超级管理员只能是系统级管理员或者同为超级管理员的角色创建";
-	public static final String ROLE_NOT_CREATE_ADMIN_ROLE = "管理员只能是管理员或者更高级的管理员创建";
+	public static final String ROLE_NOT_CREATE_SYS_ROLE = "禁止创建/修改为系统级别的管理员";
+	public static final String ROLE_NOT_CREATE_SUPER_ROLE = "超级管理员只能是系统级管理员或者同为超级管理员的角色创建/修改";
+	public static final String ROLE_NOT_CREATE_ADMIN_ROLE = "管理员只能是管理员或者更高级的管理员创建/修改";
 	
 	public static final String ROLE_NOT_EDIT_SYS_ROLE = "禁止修改系统级别的角色";
 	public static final String ROLE_NOT_DELETE_SYS_ROLE = "禁止删除系统级别的角色";

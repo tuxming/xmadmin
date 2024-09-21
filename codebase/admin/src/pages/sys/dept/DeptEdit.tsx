@@ -1,11 +1,12 @@
 import { Form, Input, Typography, Divider, Space, Button } from "antd"
-import { Modal, useRequest, useTranslation, useLayer } from "../../../components"
+import { Modal } from "../../../components"
+import { useRequest, useTranslation, useSelector } from "../../../hooks"
 import { AdminDept, DefaultNS } from "../../../common/I18NNamespace"
 import { api } from "../../../common/api"
 import { CloseOutlined, SendOutlined } from "@ant-design/icons"
 import { DeptTypeSelector, DeptSelectorWraper } from "./index"
 import { useEffect, useState } from "react"
-import { useSelector } from "../../../redux/hooks"
+import { useShowResult } from "../../../hooks/useShowResult"
 
 export type DeptEditFormType = {
     id?: number,
@@ -32,9 +33,9 @@ export const DeptEdit: React.FC<DeptEditType> = ({
 }) => {
     const {t} = useTranslation(AdminDept);
     const request = useRequest();
-    const {message} = useLayer();
     const [visible, setVisible] = useState(true);
     const size = useSelector(state => state.themeConfig.componentSize);
+    const showResult = useShowResult(AdminDept);
 
     const [form] = Form.useForm();
 
@@ -64,8 +65,9 @@ export const DeptEdit: React.FC<DeptEditType> = ({
                 data.id?api.dept.update:api.dept.create,
                 data
             );
+
+            showResult.show(result);
             if(result.status){
-                message.success(result.msg);
                 setVisible(false);
                 setTimeout(() => {
                     if(isUpdate){
@@ -78,8 +80,6 @@ export const DeptEdit: React.FC<DeptEditType> = ({
                         onClose([data.parentId]);
                     }
                 }, 500);
-            }else{
-                message.error(result.msg);
             }
         }
         create();

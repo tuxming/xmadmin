@@ -1,8 +1,6 @@
 
 export * from './Logo'
 export * from './icon/IconFont'
-export * from './useRequest'
-export * from './useTranslation'
 export * from './ListComponent/QueryComponent'
 export * from './ListComponent/TableComponent'
 export * from './ListComponent/TableType'

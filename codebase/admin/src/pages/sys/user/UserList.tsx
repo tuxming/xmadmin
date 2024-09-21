@@ -1,5 +1,6 @@
 
-import { TableComponent, TableColumnType, ModalContext, useTranslation } from '../../../components';
+import { TableComponent, TableColumnType, ModalContext } from '../../../components';
+import { useTranslation } from '../../../hooks';
 import { api } from '../../../common/api';
 import { computePx } from '../../../common/kit';
 import { useContext, useEffect, useState } from 'react';

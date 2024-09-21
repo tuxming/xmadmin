@@ -1,6 +1,6 @@
 import { Form, Input, Button } from 'antd';
 import { KeyOutlined } from '@ant-design/icons';
-import { useTranslation } from '../../components/useTranslation';
+import { useTranslation } from '../../hooks/useTranslation';
 import { AdminLogin } from '../../common/I18NNamespace';
 
 export type ResetFormType = {

@@ -14,7 +14,8 @@ export const api = {
         curr: server + "/am/menu/curr",
         list: server + "/am/menu/list",
         saveOrUpdate: server + "/am/menu/saveOrUpdate",
-        delete: server + "/am/menu/delete"
+        delete: server + "/am/menu/delete",
+        byRole: server + "/am/menu/byRole",
     },
     auth: {
         login: server + "/auth/login",
@@ -33,6 +34,12 @@ export const api = {
         search: server + "/am/user/search",
         delete: server + "/am/user/delete",
         update: server + "/am/user/update",
+        dataPermissions: server + "/am/user/dataPermissions",
+        userDataAdd: server + "/am/user/userDataAdd",
+        userDataDelete: server + "/am/user/userDataDelete",
+        userRoles: server + "/am/user/userRoles",
+        userRoleAdd: server + "/am/user/userRoleAdd",
+        userRoleDelete: server + "/am/user/userRoleDelete",
     },
     role: {
         search: server + "/am/role/search",
@@ -40,6 +47,8 @@ export const api = {
         create: server + "/am/role/create",
         update: server + "/am/role/update",
         deletes: server + "/am/role/deletes",
+        grantPermissions: server + "/am/role/grantPermissions", //分配角色权限
+        grantMenus: server + "/am/role/grantMenus", //分配角色权限
     },
     permission: {
         search: server + "/am/permission/search",
@@ -48,6 +57,8 @@ export const api = {
         update: server + "/am/permission/update",
         deletes: server + "/am/permission/deletes",
         scan: server + "/am/permission/scan",
+        curr: server + "/am/permission/curr",  //获取当前登录用户的权限
+        byRole: server + "/am/permission/byRole",  //获取指定角色的权限
     },
     history: {
         get: server + "/am/history/get",
@@ -86,6 +97,5 @@ export const api = {
         updateDict: server + "/am/dict/updateDict",
         deleteDict: server + "/am/dict/deleteDict",
         byKey: server + "/am/dict/byKey",
-        
     }
 }

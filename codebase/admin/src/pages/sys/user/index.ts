@@ -7,4 +7,8 @@ export * from './UserType'
 export * from './UserEdit'
 export * from './UserEditBasicInfo'
 export * from './UserEditSecurity'
+export * from './UserGrantDataPermission'
+export * from './UserGrantDataPermissionModal'
+export * from './UserGrantRole'
+export * from './UserGrantRoleModal'
 export * from "./TokenItem" 

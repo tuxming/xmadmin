@@ -4,7 +4,7 @@ import { UserOutlined} from '@ant-design/icons';
 import { api } from '../../common/api';
 import { PhoneLoginType } from '../../redux/slice';
 import { CaptchaFormItem, CaptchaFormItemType, CodeFormItem, CodeFormItemType } from "./index";
-import { useTranslation } from "../../components/useTranslation";
+import { useTranslation } from "../../hooks/useTranslation";
 import { AdminLogin } from "../../common/I18NNamespace";
 
 

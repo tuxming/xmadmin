@@ -1,7 +1,7 @@
 import Axios, { AxiosInstance, AxiosRequestConfig} from 'axios';
 import { message, Modal } from 'antd';
 import {api} from '../common/api'
-import { layerRef, useLayer } from './Modal';
+import { layerRef, useLayer } from '../components/Modal';
 
 export const jsonHeaders = {
     "Content-Type" : "application/json; charset=utf-8",
@@ -93,7 +93,7 @@ export const useRequest = () => {
     const getIntance = (headers: RequestHeader, backend:boolean) => {
         const instance: RequestInstance = Axios.create({
             ...headers,
-            timeout: 180 * 1000,
+            timeout: 600 * 1000,
              // `withCredentials` 表示跨域请求时是否需要使用凭证
             withCredentials: true, // default
         });
@@ -105,8 +105,26 @@ export const useRequest = () => {
             if(backend){
                 loadingKey = loading();
             }
-            handlerError(error);
-            return Promise.reject(error);
+            // handlerError(error);
+
+            const { response } = error;
+                if (response) {
+                    // 服务器返回了错误响应
+                    return {
+                        code: '500',
+                        status: false,
+                        msg: response.data.message || response.statusText,
+                        data: null
+                    };
+            } else {
+                // 服务器未响应（例如网络错误）
+                return {
+                    code: '500',
+                    status: false,
+                    msg: error.message,
+                    data: null
+                };
+            }
         } 
 
         //请求拦截器
@@ -144,7 +162,7 @@ export const useRequest = () => {
     }
 
     const post = (url: string, data: any, headers: RequestHeader = jsonHeaders, backend=false) => {
-            return getIntance(headers, backend).post(url, data);
+        return getIntance(headers, backend).post(url, data);
     }
 
     return {

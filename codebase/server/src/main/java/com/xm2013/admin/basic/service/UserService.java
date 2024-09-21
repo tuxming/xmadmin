@@ -21,6 +21,9 @@ import com.xm2013.admin.domain.dto.user.UserListQuery;
 import com.xm2013.admin.domain.model.Dept;
 import com.xm2013.admin.domain.model.User;
 import com.xm2013.admin.domain.model.UserData;
+import com.xm2013.admin.domain.model.UserRole;
+import com.xm2013.admin.exception.BusinessErr;
+import com.xm2013.admin.exception.BusinessException;
 import com.xm2013.admin.exception.Msg;
 import com.xm2013.admin.shiro.dto.ShiroUser;
 import com.xm2013.admin.shiro.dto.ShiroUserData;
@@ -360,22 +363,29 @@ public class UserService {
 		
 		user.setDeptId(dept.getId());
 		
+		//生成token
 		String token = UUID.randomUUID().toString();
 		token = new String(Base64.getEncoder().encode(token.getBytes()));
 		user.setToken(token);
 		
 		user.setCreated(new Date());
-		user.setCode("");
+		
 		if(user.getPhoto() == null) {
 			user.setPhoto(0);
 		}
 		
 		user.setStatus(1);
+		
 		user.save();
 		
-		new User().setId(user.getId())
+		int userId = user.getId();
+		new User().setId(userId)
 			.setCode(String.format("%08d", user.getId()))
 			.update();
+		
+		//设置数据权限
+		//默认可以查看自己的数据权限
+		new UserData().setUserId(userId).setRefId(userId).setType(1).save();
 		
 		return null;
 	}
@@ -507,6 +517,115 @@ public class UserService {
 		removeUserCache(db);
 		u.update();
 		
+	}
+
+	/**
+	 * 获取用户的数据权限
+	 * @param type: 0-全部，1-用户， 2-组织
+	 * @param id: 要查询的用户id
+	 */
+	public List<User> dataPermissions(int userId, int type, ShiroUser loginUser) {
+		
+		User user = findById(userId);
+		if(user==null || !loginUser.isOwnerData(user.getStr("deptPath"), user.getId())) {
+			return new ArrayList<User>();
+		}
+		
+		String sql = "select t.id as userId, t.photo, t.username, t.fullname, t1.id as id from sys_user as t "
+				+ " left join sys_user_data as t1 on t1.ref_id = t.id "
+				+ " where ";
+		sql += " t1.user_id="+userId;
+		sql += " and t1.type="+type;
+		
+		return User.dao.find(sql);
+	}
+	
+	/**
+	 * 获取用户的数据权限的关联信息
+	 * @param userId
+	 * @param loginUser
+	 * @return
+	 */
+	public List<UserData> userDatas(int userId, ShiroUser loginUser) {
+		User user = findById(userId);
+		if(user==null || !loginUser.isOwnerData(user.getStr("deptPath"), user.getId())) {
+			return new ArrayList<UserData>();
+		}
+		
+		String sql = "select * from sys_user_data where user_id="+userId ;
+		
+		return UserData.dao.find(sql);
+	}
+
+	/**
+	 * 添加用户数据权限
+	 * @param userData
+	 * @param loginUser
+	 * @return
+	 */
+	public boolean userDataAdd(UserData userData, ShiroUser loginUser) {
+		User user = findById(userData.getUserId());
+		if(user==null || !loginUser.isOwnerData(user.getStr("deptPath"), user.getId())) {
+			throw new BusinessException(BusinessErr.ERR_NO_DATA_AUTH);
+		}
+		
+		return userData.save();
+	}
+
+	/**
+	 * 删除用户数据权限
+	 * @param id
+	 * @param loginUser
+	 * @return
+	 */
+	public boolean userDataDelete(int id, ShiroUser loginUser) {
+		
+		UserData userData = UserData.dao.findById(id);
+		
+		User user = findById(userData.getUserId());
+		if(user==null || !loginUser.isOwnerData(user.getStr("deptPath"), user.getId())) {
+			throw new BusinessException(BusinessErr.ERR_NO_DATA_AUTH);
+		}
+		
+		//不能删除查看自己的那条数据权限
+		if(userData.getRefId() == id && userData.getUserId() == id && userData.getType() == 1) {
+			throw new BusinessException(BusinessErr.ERROR, "不能删除本身的数据权限");
+		}
+		
+		return userData.delete();
+	}
+
+	/**
+	 * 给指定用户添加角色
+	 * @param userId
+	 * @param roleId
+	 * @param loginUser
+	 * @return
+	 */
+	public boolean userRoleAdd(int userId, int roleId, ShiroUser loginUser) {
+		User user = findById(userId);
+		if(user==null || !loginUser.isOwnerData(user.getStr("deptPath"), user.getId())) {
+			throw new BusinessException(BusinessErr.ERR_NO_DATA_AUTH);
+		}
+		
+		return new UserRole().setUserId(userId).setRoleId(roleId).save();
+	}
+
+	/**
+	 * 删除用户分配的角色
+	 * @param id
+	 * @param loginUser
+	 * @return
+	 */
+	public boolean userRoleDelete(int id, ShiroUser loginUser) {
+		UserRole userRole = UserRole.dao.findById(id);
+		
+		User user = findById(userRole.getUserId());
+		if(user==null || !loginUser.isOwnerData(user.getStr("deptPath"), user.getId())) {
+			throw new BusinessException(BusinessErr.ERR_NO_DATA_AUTH);
+		}
+		
+		return userRole.delete();
 	}
 	
 }

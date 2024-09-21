@@ -2,13 +2,14 @@
 
 import { AutoComplete, Button, Divider, Form, FormProps, Input, Space, Typography } from "antd";
 import { AdminDict, DefaultNS } from "../../../common/I18NNamespace";
-import { Modal, useRequest, useTranslation, useLayer } from "../../../components";
+import { Modal } from "../../../components";
+import { useRequest, useTranslation, useSelector } from "../../../hooks";
 import { useEffect, useState } from "react";
-import { useSelector } from "../../../redux/hooks";
 import { api } from "../../../common/api";
 import { CloseOutlined, SendOutlined } from "@ant-design/icons";
 import { DictTypeSelector } from "./DictType";
 import { FileUploadFormItem } from "../../index";
+import { useShowResult } from "../../../hooks/useShowResult";
 
 /**
  * 编辑语言资源的表单类型
@@ -46,13 +47,13 @@ export const DictEdit: React.FC<DictEditType> = ({
 }) => {
     const {t} = useTranslation(AdminDict);
     const request = useRequest();
-    const {message} = useLayer();
     const [visible, setVisible] = useState(true);
     const size = useSelector(state => state.themeConfig.componentSize);
     const [groupOptions, setGroupOptions] = useState(groups);
 
     const [form] = Form.useForm();
     const [dictType, setDictType] = useState<number>(0);
+    const showResult = useShowResult(AdminDict);
 
     const onModalClose = (refresh) => {
         setVisible(false);
@@ -100,11 +101,9 @@ export const DictEdit: React.FC<DictEditType> = ({
                 data.id?api.dict.updateDict: api.dict.addDict,
                 data
             );
+            showResult.show(result);
             if(result.status){
-                message.success(result.msg);
                 onModalClose(true);
-            }else{
-                message.error(result.msg);
             }
         }
         create();

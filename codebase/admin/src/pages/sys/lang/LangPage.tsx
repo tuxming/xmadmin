@@ -1,13 +1,14 @@
 import { useContext, useEffect, useState } from "react";
-import { AuthButton, DoubleColumnLayout, ModalContext, QueryComponent, useLayer, useRequest, useTranslation } from "../../../components"
-import { useSelector } from "../../../redux/hooks";
+import { useRequest, useTranslation, useSelector } from "../../../hooks"
+import { AuthButton, DoubleColumnLayout, ModalContext, QueryComponent, useLayer } from "../../../components"
 import { api } from "../../../common/api";
-import { AdminLang, DefaultNS } from "../../../common/I18NNamespace";
+import { AdminLang } from "../../../common/I18NNamespace";
 import {  Divider, Menu, Space } from "antd";
 import { ResourceList, LangEdit, LangEditFormType, ResourceEdit } from "./index";
 import { FileAddIcon, FileDeleteIcon, FileEditIcon, LangAddIcon, LangDeleteIcon, LangEditIcon } from "../../../components/icon/svg/Icons";
 import { permission } from "../../../common/permission";
 import { computePx } from "../../../common/kit";
+import { useShowResult } from "../../../hooks/useShowResult";
 
 
 /**
@@ -25,6 +26,7 @@ export const LangPage : React.FC = () => {
     const size = useSelector(state => state.themeConfig.componentSize);
     const onlyIcon = useSelector(state => state.themeConfig.onlyIcon);
     const request = useRequest();
+    const showResult = useShowResult(AdminLang);
 
     const [groups, setGroups] = useState<any[]>([]);
     const [langs, setLangs] = useState<any[]>([]);
@@ -172,11 +174,9 @@ export const LangPage : React.FC = () => {
             onOk: () => {
                 let doDelete = async () => {
                     let result = await request.get(api.lang.deleteLang+"?id="+selectedLang.id);
+                    showResult.show(result);
                     if(result.status){
-                        message.success(t(result.msg, DefaultNS));
                         getLangs();
-                    }else{
-                        message.warning(t(result.msg));
                     }
                 }
                 doDelete();
@@ -238,14 +238,12 @@ export const LangPage : React.FC = () => {
                     +"?id="+selectedResRows[0].id
                     +"&a="+(deleteAll?"1":"0")
                 );
+            showResult.show(result);
             if(result.status){
-                message.success(t(result.msg, DefaultNS));
                 setRefresh({
                     reset: true,
                     tag: refresh.tag+1
                 });
-            }else{
-                message.warning(t(result.msg));
             }
         }
         doDelete();

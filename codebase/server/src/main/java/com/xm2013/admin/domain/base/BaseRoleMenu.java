@@ -13,6 +13,10 @@ public abstract class BaseRoleMenu<M extends BaseRoleMenu<M>> extends Model<M> i
 	public static String COL_ID = "id";
 	public static String COL_MENU_ID = "menu_id";
 	public static String COL_ROLE_ID = "role_id";
+	/**
+	 * 1-半选中， 2-选中，0-未选中
+	 */
+	public static String COL_CHECKED = "checked";
 
 	public M setId(java.lang.Integer id) {
 		set("id", id);
@@ -48,6 +52,24 @@ public abstract class BaseRoleMenu<M extends BaseRoleMenu<M>> extends Model<M> i
 		label = "")
 	public java.lang.Integer getRoleId() {
 		return getInt("role_id");
+	}
+
+	/**
+	 * 1-半选中， 2-选中，0-未选中
+	 */
+	public M setChecked(java.lang.Integer checked) {
+		set("checked", checked);
+		return (M)this;
+	}
+	
+	/**
+	 * 1-半选中， 2-选中，0-未选中
+	 */
+	@Col(tableName = "sys_role_menu", tableLabel="角色菜单表", 
+		fieldName = "checked", colName = "checked", 
+		label = "1-半选中， 2-选中，0-未选中")
+	public java.lang.Integer getChecked() {
+		return getInt("checked");
 	}
 
 }

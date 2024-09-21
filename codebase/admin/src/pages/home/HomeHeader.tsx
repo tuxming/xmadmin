@@ -1,5 +1,5 @@
 
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useMemo} from 'react';
 import { 
     UserOutlined,
     TranslationOutlined, 
@@ -10,7 +10,7 @@ import i18next from 'i18next';
 import { Avatar, Space, Dropdown, Button, theme } from 'antd';
 import type { MenuProps } from 'antd';
 import { api } from '../../common/api'
-import { useDispatch, useSelector } from '../../redux/hooks';
+import { useDispatch, useSelector } from '../../hooks';
 import { themeConfigSlice } from '../../redux/slice';
 import {HeadTabComponent, SkinSettingComponent} from './index';
 
@@ -34,21 +34,24 @@ export const HomeHeader : React.FC = () => {
         dispatch(themeConfigSlice.actions.changeSidemenuCollapsed(collapsed));
     }
 
-    const items: MenuProps['items'] = [
-        {
-          key: "zh_CN",
-          label: "简体中文",
-        },
-        {
-          key: "zh_TW",
-          label: "繁体中文",
-        },
-        {
-          key: "en",
-          label: "English",
-          
-        }
-    ];
+    const items: MenuProps['items'] = useMemo(()=>{
+        
+        return [
+            {
+              key: "zh_CN",
+              label: "简体中文",
+            },
+            {
+              key: "zh_TW",
+              label: "繁体中文",
+            },
+            {
+              key: "en",
+              label: "English",
+              
+            }
+        ];
+    }, []);
 
     useEffect(()=>{
 

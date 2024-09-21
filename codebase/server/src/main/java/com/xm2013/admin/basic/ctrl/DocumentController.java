@@ -40,7 +40,9 @@ public class DocumentController extends BaseController{
 		DocumentListQuery query = JsonKit.getObject(getRawData(), DocumentListQuery.class);
 		
 		if(query == null) {
-			throw new BusinessException(BusinessErr.NULL_PARAM);
+//			throw new BusinessException(BusinessErr.NULL_PARAM);
+			renderJson(JsonResult.error(BusinessErr.NULL_PARAM));
+			return;
 		}
 		
 		PageInfo<Document> users = documentService.pageList(query, ShiroKit.getLoginUser());
@@ -151,13 +153,14 @@ public class DocumentController extends BaseController{
 	public void deletes() {
 		String ids = getPara("ids");
 		if(ids == null || !ids.matches("[\\d,]+")) {
-			throw new BusinessException(BusinessErr.NULL_PARAM);
+			renderJson(JsonResult.error(BusinessErr.NULL_PARAM));
+			return;
 		}
 		
 		Map<String, String> results = documentService.deletes(ids, ShiroKit.getLoginUser());
 		
-		System.out.println(results);
-		renderJson(JsonResult.ok(Msg.OK_DELETE, results));
+//		System.out.println(results);
+		renderJson(JsonResult.ok(Msg.OK_DELETE, "600", results));
 	}
 	
 }

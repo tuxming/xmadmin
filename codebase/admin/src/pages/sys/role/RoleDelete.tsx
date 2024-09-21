@@ -1,13 +1,13 @@
 
 
-import { Confirm, useLayer, useRequest, useTranslation } from "../../../components";
+import { Confirm } from "../../../components";
+import { useRequest, useShowResult, useTranslation } from "../../../hooks";
 import { api } from "../../../common/api";
-import { App } from 'antd'
-import { AdminRole, DefaultNS } from "../../../common/I18NNamespace";
+import { AdminRole } from "../../../common/I18NNamespace";
 
 export type RoleDeleteType = {
     roles: any[],
-    successCall: () => void
+    successCall: (refresh: boolean) => void
 }
 
 /**
@@ -20,7 +20,7 @@ export const RoleDelete : React.FC<RoleDeleteType> = ({
 }) => {
     
     const {t} = useTranslation(AdminRole);
-    const { message } = useLayer();
+    const showResult = useShowResult(AdminRole);
     const request = useRequest();
 
     const msg = t("确定要删除以下角色：") 
@@ -30,18 +30,14 @@ export const RoleDelete : React.FC<RoleDeleteType> = ({
     const onOk = (close) => {
         const doDelete = async () => {
             let result = await request.get(api.role.deletes+"?ids="+roles.map(hist => hist.id+"").join(","));
-            if(result.status){
-                message.success(t("删除成功", DefaultNS));
-                successCall();
-                close();
-            }else{
-                message.error(t("删除失败", DefaultNS));
-            }
+            showResult.show(result);
+            close();
+            setTimeout(() => {
+                successCall(result.status);
+            }, 500);
         }
         doDelete();
     }
 
-
-    return (roles && roles.length>0) ? (<Confirm content={msg} onOk={onOk}></Confirm>)
-            : (<></> )
+    return <Confirm content={msg} onOk={onOk}></Confirm>
 }
