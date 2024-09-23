@@ -1,3 +1,28 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2024 tuxming@sina.com / wechat: angft1
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *
+ */
+
 package com.xm2013.admin.basic.service;
 
 import java.sql.SQLException;
@@ -7,6 +32,8 @@ import java.util.Map;
 
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.IAtom;
+import com.jfinal.plugin.redis.Redis;
+import com.xm2013.admin.common.CacheKey;
 import com.xm2013.admin.common.Kit;
 import com.xm2013.admin.common.SqlKit;
 import com.xm2013.admin.domain.dto.PageInfo;
@@ -16,7 +43,17 @@ import com.xm2013.admin.domain.model.LanguageResource;
 import com.xm2013.admin.domain.model.LanguageResourceGroup;
 
 public class LanguageService {
-
+	
+	public static void removeResCache(LanguageResource res) {
+		
+		if(res==null) return;
+		
+		Language lang = Language.dao.findById(res.getLanguageId());
+		
+		Redis.use().hdel(CacheKey.LANG_RES, lang.getCode()+"#"+res.getCategory());
+		
+	}
+	
 	/**
 	 * 根据语言代码，和分类查询语言资源
 	 * @param lng: 语言代码： zh_CN, en, zh_TW
@@ -24,7 +61,7 @@ public class LanguageService {
 	 * @return
 	 */
 	public List<LanguageResource> findResources(String lng, String ns) {
-		return LanguageResource.dao.find("select t.* from sys_language_resource as t "
+		return LanguageResource.dao.findByCache(CacheKey.LANG_RES, lng+"#"+ns,"select t.* from sys_language_resource as t "
 				+ " left join sys_language as t1 on t1.id = t.language_id "
 				+ " where t1.code=? and t.category=? ", lng, ns);
 	}
@@ -44,6 +81,7 @@ public class LanguageService {
 	 */
 	public void saveResource(LanguageResource res) {
 		res.save();
+		removeResCache(res);
 	}
 	
 	/**
@@ -59,7 +97,7 @@ public class LanguageService {
 	 * @return
 	 */
 	public List<Language> langs() {
-		return Language.dao.findAll();
+		return Language.dao.findByCache(CacheKey.LANGS, "all", "select * from sys_language");
 	}
 
 	/**
@@ -151,6 +189,7 @@ public class LanguageService {
 	 */
 	public Integer saveLang(Language lang) {
 		lang.save();
+		Redis.use().hdel(CacheKey.LANGS);
 		return lang.getId();
 	}
 
@@ -161,6 +200,7 @@ public class LanguageService {
 	 */
 	public Integer updateLang(Language lang) {
 		lang.update();
+		Redis.use().hdel(CacheKey.LANGS);
 		return lang.getId();
 	}
 	
@@ -175,6 +215,7 @@ public class LanguageService {
 			public boolean run() throws SQLException {
 				Db.delete("delete from sys_language where id=?", id);
 				Db.delete("delete from sys_language_resource where language_id=?", id);
+				Redis.use().hdel(CacheKey.LANGS);
 				return true;
 			}
 		});
@@ -198,6 +239,7 @@ public class LanguageService {
 					res.update();
 					msg.put(res.getId()+"", "更新成功");
 				}
+				removeResCache(res);
 			} catch (Exception e) {
 				msg.put(res.getId()+"", "更新失败:"+e.getMessage());
 			}
@@ -221,7 +263,7 @@ public class LanguageService {
 		}
 		
 		Db.delete("delete from sys_language_resource where id in ("+idStr+")");
-		
+		Redis.use().hdel(CacheKey.LANG_RES);
 	}
 	
 	

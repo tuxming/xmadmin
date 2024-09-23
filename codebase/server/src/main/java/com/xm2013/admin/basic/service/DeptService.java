@@ -1,3 +1,28 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2024 tuxming@sina.com / wechat: angft1
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *
+ */
+
 package com.xm2013.admin.basic.service;
 
 import java.sql.SQLException;
@@ -17,13 +42,14 @@ import com.xm2013.admin.domain.dto.PageInfo;
 import com.xm2013.admin.domain.dto.basic.DeptQuery;
 import com.xm2013.admin.domain.model.Dept;
 import com.xm2013.admin.domain.model.User;
+import com.xm2013.admin.domain.model.UserData;
 import com.xm2013.admin.exception.BusinessErr;
 import com.xm2013.admin.exception.BusinessException;
 import com.xm2013.admin.shiro.dto.ShiroUser;
-import static com.xm2013.admin.common.CacheKey.SESSION_KEY_DEPT_ID;
-import static com.xm2013.admin.common.CacheKey.SESSION_KEY_DEPT_PARENT_ID;
-import static com.xm2013.admin.common.CacheKey.SESSION_KEY_DEPT_PATH;
-import static com.xm2013.admin.common.CacheKey.SESSION_KEY_DEPT_CHILD_PATH;
+import static com.xm2013.admin.common.CacheKey.DEPT_ID;
+import static com.xm2013.admin.common.CacheKey.DEPT_PARENT_ID;
+import static com.xm2013.admin.common.CacheKey.DEPT_PATH;
+import static com.xm2013.admin.common.CacheKey.DEPT_CHILD_PATH;
 
 public class DeptService {
 		
@@ -37,29 +63,29 @@ public class DeptService {
 	private UserService userService;
 	
 	public Dept findById(int deptId) {
-		return Dept.dao.findFirstByCache(SESSION_KEY_DEPT_ID, deptId, sql + " t.id = ?", deptId);
+		return Dept.dao.findFirstByCache(DEPT_ID, deptId, sql + " t.id = ?", deptId);
 	}
 
 	public List<Dept> findByParent(int id) {
-		return Dept.dao.findByCache(SESSION_KEY_DEPT_PARENT_ID, id, sql + " t.parent_id=?", id);
+		return Dept.dao.findByCache(DEPT_PARENT_ID, id, sql + " t.parent_id=?", id);
 	}
 	
 	public Dept findByPath(String path){
-		return Dept.dao.findFirstByCache(SESSION_KEY_DEPT_PATH, path, sql + " t.path = ?", path); 
+		return Dept.dao.findFirstByCache(DEPT_PATH, path, sql + " t.path = ?", path); 
 	}
 	
 	public List<Dept> findByChildPath(String path){
-		return Dept.dao.find(SESSION_KEY_DEPT_CHILD_PATH, path, sql + " t.like = '"+path+"%'"); 
+		return Dept.dao.find(DEPT_CHILD_PATH, path, sql + " t.like = '"+path+"%'"); 
 	}
 	
 	private void removeCache(Dept dept) {
 		if(dept == null) {
 			return;
 		}
-		Redis.use().hdel(CacheKey.SESSION_KEY_DEPT_ID, dept.getId());
-		Redis.use().hdel(CacheKey.SESSION_KEY_DEPT_PARENT_ID, dept.getParentId());
-		Redis.use().hdel(CacheKey.SESSION_KEY_DEPT_PATH, dept.getPath());
-		Redis.use().hdel(CacheKey.SESSION_KEY_DEPT_CHILD_PATH, dept.getPath());
+		Redis.use().hdel(CacheKey.DEPT_ID, dept.getId());
+		Redis.use().hdel(CacheKey.DEPT_PARENT_ID, dept.getParentId());
+		Redis.use().hdel(CacheKey.DEPT_PATH, dept.getPath());
+		Redis.use().hdel(CacheKey.DEPT_CHILD_PATH, dept.getPath());
 	}
 	
 
@@ -170,44 +196,42 @@ public class DeptService {
 		
 		sql += buildWhere(query, user);
 		
-		return Dept.dao.find(sql);
+		List<Dept> list = Dept.dao.find(sql);
+		
+		return list;
 	}
 	
 	private String buildWhere(DeptQuery query, ShiroUser user) {
 		String where = "";
 		
-		String parentId = "";
-		
 		if(!user.isAdmin()) {
-			if(user.getDeptIds()!=null && user.getDeptIds().size()>0) {
-				where += " and dept_id in ("+user.getDeptIds().stream().map(s -> s+"").collect(Collectors.joining(","))+") ";
+			List<Integer> deptIds = user.getDeptIds();
+			
+			//确定能查询的组织范围
+			if(deptIds.isEmpty()) {
+				where += " and t.id = null";
 			}else {
-				where += " and dept_id = null";
+				where += " and t.id in ("+deptIds.stream().map(s -> s+"").collect(Collectors.joining(","))+") ";
 			}
 			
-			if(query.getParentId() == null) {
-				List<Integer> deptIds = user.getDeptIds();
-				if(deptIds==null || deptIds.isEmpty()) {
-					parentId = "-1";
-				}else {
-					parentId = deptIds.stream().map(s -> s + "").collect(Collectors.joining(","));
-				}
+			//如果存在parentId，说明是查询指定节点的子节点
+			if(query.getParentId() != null) {
+				where += " and t.parent_id in ("+query.getParentId()+") ";
 			}else {
-				parentId = query.getParentId()+"";
+				//不存在，说明查询当前登录用户所拥有的组织节点的根节点
+				String rootIds = user.getUserDatas().stream()
+						.filter(ud -> ud.getType() == UserData.TYPE_DEPT)
+						.map(ud -> ud.getRefId()+"")
+						.collect(Collectors.joining(","));
+				where += " and t.id in ("+rootIds+") ";
 			}
 			
 		}else {
 			if(query.getParentId()== null) {
-				parentId = "0";
+				where += " and t.parent_id=0";
 			}else {
-				parentId = query.getParentId()+"";
+				where += " and t.parent_id="+query.getParentId();
 			}
-		}
-		
-		if(parentId.contains(",")) {
-			where += " and t.parent_id in ("+parentId+")";
-		}else {
-			where += " and t.parent_id="+parentId;
 		}
 		
 		where = where.trim();

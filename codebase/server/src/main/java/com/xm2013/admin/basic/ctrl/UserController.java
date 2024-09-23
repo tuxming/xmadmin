@@ -1,3 +1,28 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2024 tuxming@sina.com / wechat: angft1
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *
+ */
+
 package com.xm2013.admin.basic.ctrl;
 
 import java.util.List;
@@ -12,10 +37,12 @@ import com.xm2013.admin.annotation.RequirePermission;
 import com.xm2013.admin.basic.service.DeptService;
 import com.xm2013.admin.basic.service.RoleService;
 import com.xm2013.admin.basic.service.UserService;
+import com.xm2013.admin.common.Kit;
 import com.xm2013.admin.common.kits.JsonKit;
 import com.xm2013.admin.domain.dto.JsonResult;
 import com.xm2013.admin.domain.dto.PageInfo;
 import com.xm2013.admin.domain.dto.user.UpdateUserDto;
+import com.xm2013.admin.domain.dto.user.UserAddDto;
 import com.xm2013.admin.domain.dto.user.UserListQuery;
 import com.xm2013.admin.domain.dto.user.UserProfile;
 import com.xm2013.admin.domain.model.Dept;
@@ -123,17 +150,32 @@ public class UserController extends BaseController{
 	@RequirePermission(val="sys:user:create", name="创建用户", group="system")
 	@Op("创建用户")
 	public void create() {
-		User user = JsonKit.getObject(getRawData(), User.class);
+		UserAddDto user = JsonKit.getObject(getRawData(), UserAddDto.class);
 		
 		Validator v = new Validator();
 		v.exec(user, "create", false);
 		
 		if(v.hasError()) {
-			renderJson(JsonResult.error(v.getError()));
+			renderJson(JsonResult.error(v.getError(), "10"));
 			return;
 		}
 
-		String result = userService.create(user, ShiroKit.getLoginUser());
+		if(user.getRoleIds() == null  || user.getRoleIds().isEmpty()) {
+			renderJson(JsonResult.error(Msg.NO_ROLE, "10"));
+			return;
+		}
+		
+		if(Kit.isNotNull(user.getEmail()) && !user.getEmail().matches("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}")) {
+			renderJson(JsonResult.error(Msg.ERR_EMAIL, "10"));
+			return;
+		}
+		
+		if(Kit.isNotNull(user.getPhone()) && !user.getPhone().matches("1[\\d]{10}")) {
+			renderJson(JsonResult.error(Msg.ERR_PHONE, "10"));
+			return;
+		}
+		
+		String result = userService.create(user, User.STATUS_NORMAL,ShiroKit.getLoginUser());
 		if(result==null) {
 			renderJson(JsonResult.ok(Msg.OK_CREATED));
 		}else {
@@ -142,7 +184,7 @@ public class UserController extends BaseController{
 	}
 	
 	/**
-	 * 创建用户
+	 * 更新用户
 	 */
 	@RequirePermission(val="sys:user:update", name="更新用户", group="system")
 	@Op("更新用户")
