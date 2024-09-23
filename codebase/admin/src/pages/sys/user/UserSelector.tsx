@@ -1,6 +1,34 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2024 tuxming@sina.com / wechat: angft1
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *
+ */
+
 import React, { useState } from 'react';
 import { api } from '../../../common/api';
 import { DebounceSelector, RemoteAutoComplete } from '../../../components';
+import { SearchIcon } from '../../../components/icon/svg/Icons';
+import { useTranslation } from '../../../hooks';
+import { AdminUser } from '../../../common/I18NNamespace';
 
 /**
  * 用户搜索选择下拉框
@@ -12,7 +40,7 @@ export const UserSelector : React.FC<any> = ({
     onChange,
     ...props
 }) => {
-    
+    const {t} = useTranslation(AdminUser);
     //props的onChange方法向外暴露真实的值，
     //真实的值用于存在value
     //innValue是文本框显示的值
@@ -46,21 +74,24 @@ export const UserSelector : React.FC<any> = ({
 
     let isSingle = mode  == "single"
     if(isSingle){
-        return <RemoteAutoComplete placeholder="输入关键字" 
+        return <RemoteAutoComplete
             remoteUrl={api.user.search}
             value={innValue}
             onSelect={onSelect}
             allowClear
             onClear={()=>{setInnValue("")}}
             onChange={onSingleValueChange}
+            placeholder={t("输入关键字搜索用户")}
+            suffixIcon={<SearchIcon type='default' ghost/>}
             {...props}
         />
     }else{
         return <DebounceSelector
             mode="multiple"
             value={innValue}
-            placeholder="输入关键字"
+            placeholder={t("输入关键字搜索用户")}
             remoteUrl={api.user.search}
+            suffixIcon={<SearchIcon type='default' ghost/>}
             // fetchOptions={fetchUserList}
             onChange={onValueChange}
             style={{ width: '100%' }}

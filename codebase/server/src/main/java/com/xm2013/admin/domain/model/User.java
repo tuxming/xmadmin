@@ -1,3 +1,28 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2024 tuxming@sina.com / wechat: angft1
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *
+ */
+
 package com.xm2013.admin.domain.model;
 
 import com.xm2013.admin.domain.base.BaseUser;
@@ -27,6 +52,25 @@ import com.xm2013.admin.validator.ValidateUnions;
 })
 public class User extends BaseUser<User> {
 	public static final User dao = new User().dao();
+	
+	/**
+	 * 0-待审核
+	 */
+	public static final Integer STATUS_PENDING_REVIEW = 0;
+	
+	/**
+	 *1-正常
+	 */
+	public static final Integer STATUS_NORMAL = 1;
+	
+	/**
+	 * 2-禁用
+	 */
+	public static final Integer STATUS_DISABLE = 2;
+	
+	/**
+	 * 3-删除
+	 */
 	public static final Integer STATUS_DELETE = 3;
 }
 

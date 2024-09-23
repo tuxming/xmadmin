@@ -1,3 +1,28 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2024 tuxming@sina.com / wechat: angft1
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *
+ */
+
 package com.xm2013.admin.basic.service;
 
 import java.util.ArrayList;
@@ -6,6 +31,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -17,6 +43,7 @@ import com.xm2013.admin.common.Kit;
 import com.xm2013.admin.common.SqlKit;
 import com.xm2013.admin.domain.dto.PageInfo;
 import com.xm2013.admin.domain.dto.user.UpdateUserDto;
+import com.xm2013.admin.domain.dto.user.UserAddDto;
 import com.xm2013.admin.domain.dto.user.UserListQuery;
 import com.xm2013.admin.domain.model.Dept;
 import com.xm2013.admin.domain.model.User;
@@ -171,6 +198,7 @@ public class UserService {
 		
 		String sql = "select count(t.id) as total from sys_user as t"
 				+ " left join sys_user_role as t1 on t1.user_id = t.id "
+				+ " left join sys_dept as t2 on t2.id = t.dept_id "
 				+ " where ";
 		sql += buildWhere(query, user);
 		sql += " group by t.id ";
@@ -244,7 +272,7 @@ public class UserService {
 	 */
 	public List<ShiroUserData> findUserDataByUser(Integer userId) {
 		
-		List<UserData> userDatas = UserData.dao.find("select * from sys_user_data where user_id=?");
+		List<UserData> userDatas = UserData.dao.find("select * from sys_user_data where user_id=?", userId);
 		if(!userDatas.isEmpty()) {
 			Map<Integer, List<UserData>> mapByType = userDatas.stream().collect(Collectors.groupingBy(s -> s.getType()));
 			
@@ -274,7 +302,7 @@ public class UserService {
 				Map<Integer, UserData> map1 = new HashMap<Integer, UserData>();
 				for(int i=0; i<depts.size(); i++) {
 					UserData us = depts.get(i);
-					deptIds[i] = us.getId()+"";
+					deptIds[i] = us.getRefId()+"";
 					map1.put(us.getRefId(), us);
 				}
 				
@@ -304,6 +332,7 @@ public class UserService {
 				sd.setPath(userData.getStr("path"));
 				sd.setPathName(userData.getStr("pathName"));
 			}
+			suds.add(sd);
 			
 		}
 		
@@ -337,21 +366,27 @@ public class UserService {
 
 	/**
 	 * 创建用户
-	 * @param user
+	 * @param addUser
 	 * @param loginUser
 	 * @return
 	 */
-	public String create(User user, ShiroUser loginUser) {
+	public String create(UserAddDto addUser,int userStatus, ShiroUser loginUser) {
 		
-		//密码加密
-		user.setPassword(Kit.doubleMd5WidthSalt(user.getPassword()));
-		user.setParentId(loginUser.getId());
-		//设置性别
-		if(user.getGender() == null || user.getGender()>2 || user.getGender()<0) {
-			user.setGender(2);
-		}
+		Integer gender = addUser.getGender();
 		
-		Dept dept = deptService.findById(user.getDeptId());
+		User user = new User()
+			.setPassword(Kit.doubleMd5WidthSalt(addUser.getPassword()))  //密码加密
+			.setGender(gender == null || gender>2 || gender<0?2:gender)  //设置性别
+			.setParentId(loginUser.getId())
+			.setUsername(addUser.getUsername())
+			.setFullname(addUser.getFullname())
+			.setEmail(Kit.isNotNull(addUser.getEmail())?addUser.getEmail(): "")
+			.setPhone(Kit.isNotNull(addUser.getPhone())?addUser.getPhone(): "")
+			
+		;
+		
+		
+		Dept dept = deptService.findById(addUser.getDeptId());
 		if(dept == null) {
 			return Msg.UNEXIST_DEPT;
 		}
@@ -374,14 +409,21 @@ public class UserService {
 			user.setPhoto(0);
 		}
 		
-		user.setStatus(1);
+		user.setStatus(userStatus);
 		
 		user.save();
 		
 		int userId = user.getId();
 		new User().setId(userId)
-			.setCode(String.format("%08d", user.getId()))
+			.setCode(String.format("%08d", userId))
 			.update();
+		
+		//添加角色
+		Set<UserRole> roles = addUser.getRoleIds().stream()
+				.map(s -> new UserRole().setRoleId(s).setUserId(userId))
+				.collect(Collectors.toSet());
+		
+		Db.batchSave(new ArrayList<UserRole>(roles), roles.size());
 		
 		//设置数据权限
 		//默认可以查看自己的数据权限
@@ -587,8 +629,9 @@ public class UserService {
 			throw new BusinessException(BusinessErr.ERR_NO_DATA_AUTH);
 		}
 		
+		int userId = loginUser.getId();
 		//不能删除查看自己的那条数据权限
-		if(userData.getRefId() == id && userData.getUserId() == id && userData.getType() == 1) {
+		if(userData.getRefId() == userId && userData.getUserId() == userId && userData.getType() == UserData.TYPE_USER) {
 			throw new BusinessException(BusinessErr.ERROR, "不能删除本身的数据权限");
 		}
 		

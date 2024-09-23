@@ -1,3 +1,28 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2024 tuxming@sina.com / wechat: angft1
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *
+ */
+
 import React, {useMemo, useState} from 'react';
 import { Space, Divider, MenuProps, Dropdown } from "antd"
 import { UserAddIcon, DeleteIcon, EditIcon, DataLockIcon, GrantUserIcon } from '../../../components/icon/svg/Icons';
@@ -116,27 +141,38 @@ export const UserPage : React.FC = () => {
     }
 
     /**
-     * 分配角色
+     * 分配数据权限
      */
     const grantData = () => {
-        if(!selectedRows || selectedRows.length==0){
-            message.warning(t("请选中要用户后，再操作"));
-            return;
-        }
-        setGranUser(selectedRows[0]);
-        setOpenGrantData(true);
+        setSelectedRows(prev => {
+            if(!prev || prev.length==0){
+                message.warning(t("请选中要用户后，再操作"));
+                return [];
+            }
+            setGranUser(prev[0]);
+            setOpenGrantData(true);
+
+            return prev;
+        });
+
     }
 
     /**
      * 分配角色
      */
     const grantRole = () => {
-        if(!selectedRows || selectedRows.length==0){
-            message.warning(t("请选中要用户后，再操作"));
-            return;
-        }
-        setGranRoleUser(selectedRows[0]);
-        setOpenGrantUserRole(true);
+
+        setSelectedRows(prev => {
+            if(!prev || prev.length==0){
+                message.warning(t("请选中要用户后，再操作"));
+                return [];
+            }
+            setGranRoleUser(prev[0]);
+            setOpenGrantUserRole(true);
+
+            return prev;
+        });
+
     }
 
     //更多菜单
@@ -196,7 +232,7 @@ export const UserPage : React.FC = () => {
         </Space>
         <Divider />
         <UserList onSelect={onTableSelectChange} refresh={refresh} query={query}/>
-        {openAdd && <UserAdd open={openAdd} onClose={onAddClose} />}
+        {openAdd && <UserAdd onClose={onAddClose} />}
         {openEdit && <UserEdit open={openEdit} onClose={onEditClose} user={editUser} />}
         {openGrantData && <UserGrantDataPermissionModal open={openGrantData} onClose={()=>setOpenGrantData(false)} userId={grantUser.id} />}
         {openGrantUserRole && <UserGrantRoleModal open={openGrantUserRole} onClose={()=>setOpenGrantUserRole(false)} userId={grantRoleUser.id} />}
