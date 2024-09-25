@@ -20,8 +20,6 @@ public class Test {
 		
 //		System.out.println(String.format("%08d", 125));
 		
-		Role.dao.findById(1);
-		
 	}
 	
 }

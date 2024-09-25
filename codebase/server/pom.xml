@@ -15,7 +15,6 @@
 	    <cos.version>2022.2</cos.version>
 	    <apachelog4j.version>2.11.1</apachelog4j.version>
 	    <log4j.version>1.2.17</log4j.version>
-	    <hutool.version>5.8.22</hutool.version>
 	    <jfinalundertow.version>3.5</jfinalundertow.version>
 		<druid.version>1.2.19</druid.version>
 		<mysql.version>8.0.28</mysql.version>

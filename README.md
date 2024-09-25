@@ -25,22 +25,22 @@
 # &#x1F389;效果展示
 <table>
     <tr>
-        <td><img src="./doc/images/1.png"/></td>
-        <td><img src="./doc/images/2.png"/></td>
-        <td><img src="./doc/images/3.png"/></td>
-        <td><img src="./doc/images/4.png"/></td>
+        <td><img src="./doc/images/1.jpg"/></td>
+        <td><img src="./doc/images/2.jpg"/></td>
+        <td><img src="./doc/images/3.jpg"/></td>
+        <td><img src="./doc/images/4.jpg"/></td>
     </tr>
     <tr>
-        <td><img src="./doc/images/5.png"/></td>
-        <td><img src="./doc/images/6.png"/></td>
-        <td><img src="./doc/images/7.png"/></td>
-        <td><img src="./doc/images/8.png"/></td>
+        <td><img src="./doc/images/5.jpg"/></td>
+        <td><img src="./doc/images/6.jpg"/></td>
+        <td><img src="./doc/images/7.jpg"/></td>
+        <td><img src="./doc/images/8.jpg"/></td>
     </tr>
     <tr>
-        <td><img src="./doc/images/9.png"/></td>
-        <td><img src="./doc/images/10.png"/></td>
-        <td><img src="./doc/images/11.png"/></td>
-        <td><img src="./doc/images/12.png"/></td>
+        <td><img src="./doc/images/9.jpg"/></td>
+        <td><img src="./doc/images/10.jpg"/></td>
+        <td><img src="./doc/images/11.jpg"/></td>
+        <td><img src="./doc/images/12.jpg"/></td>
     </tr>
 </table>
 
@@ -61,3 +61,5 @@
 - 建议用vscode打开前端项目，前端项目位于：codebase/admin
 - 运行npm install 
 - 运行npm start
+
+[更多文档](./doc/文档列表.md)
