@@ -1,5 +1,5 @@
 <h2 align="center">Xm.Admin 后台管理系统</h2>
-<h4 align="center">基于java8 + react18/Antd5 通用后台管理系统</h4>
+<h4 align="center">基于jfinal + react18/Antd5 通用后台管理系统</h4>
 
 
 

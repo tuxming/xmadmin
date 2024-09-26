@@ -128,7 +128,7 @@ export const UserGrantRole : React.FC<{
     return <div style={wrapperStyle}>
         <div style={{position: 'relative'}}>
             <Typography.Title level={titleLevel}  style={titleStyle} >
-                {t("数据权限")}
+                {t("分配角色")}
             </Typography.Title>
         </div>
         <Space wrap>

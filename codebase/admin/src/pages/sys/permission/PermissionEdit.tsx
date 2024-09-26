@@ -40,7 +40,6 @@ export type PermissionFormType = {
 }
 
 export type PermissionEditType = {
-    open: boolean,
     onClose: (refresh:boolean) => void,
     permission?: any,
     title?: string
@@ -51,7 +50,6 @@ export type PermissionEditType = {
  * @returns 
  */
 export const PermissionEdit : React.FC<PermissionEditType> = ({
-    open,
     onClose, 
     permission,
     title
@@ -61,12 +59,14 @@ export const PermissionEdit : React.FC<PermissionEditType> = ({
     const {t} = useTranslation(AdminPermission);
     const showResult = useShowResult(AdminPermission);
     const request = useRequest();
-    // const [visible, setVisible] = useState(open);
+    const [visible, setVisible] = useState(true);
     const [form] = Form.useForm();
 
-    const onModalClose = () => {
-        // setVisible(false);
-        onClose(false);
+    const onModalClose = (refresh) => {
+        setVisible(false);
+        setTimeout(()=> {
+            onClose(refresh || false);
+        }, 500)
     }
 
     const onSubmit = () => {
@@ -108,48 +108,44 @@ export const PermissionEdit : React.FC<PermissionEditType> = ({
         }
     }, [open]);
 
-    if(open) {
-        return <Modal open={open} onClose={onModalClose} title={title} width={400}
-            showMask={false}
-        > 
-            <>
-                <div style={{width:'100%'}}>
-                    <div style={{padding: "0px 20px 10px 20px", width: 340, margin: "0px auto"}}>
-                        <Typography.Title level={4} style={{marginTop: 20, marginBottom: 20, textAlign: "center"}}>{title}</Typography.Title>
-                        <Form<PermissionFormType> form = {form} layout='horizontal'
-                            onFinish={onFinish}
-                        >   
-                            <Form.Item name="id" hidden={true}>
-                                <Input></Input>
-                            </Form.Item>
-                            <Form.Item<PermissionFormType> label={t("分组名")} name="groupName"
-                                rules={[{ required: true, message: t('分组名不能为空') }]}
-                            >
-                                <Input></Input>
-                            </Form.Item>
-                            <Form.Item<PermissionFormType> label={t("权限名")} name="name"
-                                rules={[{ required: true, message: t('权限名不能为空') }]}
-                            >
-                                <Input></Input>
-                            </Form.Item>
-                            <Form.Item<PermissionFormType> label={t("表达式")} name="expression"
-                                rules={[{ required: true, message: t('表达式不能为空') }]}
-                            >
-                                <Input></Input>
-                            </Form.Item>
-                        </Form>
-                        <Divider />
-                        <div style={{textAlign: 'right'}}>
-                            <Space>
-                                <Button onClick={onModalClose} icon={<CloseOutlined />}>{t("取消", DefaultNS)}</Button>
-                                <Button onClick={onSubmit} type="primary" icon={<SendOutlined />}>{t("确定", DefaultNS)}</Button>
-                            </Space>
-                        </div>
+    return <Modal open={visible} onClose={()=>onModalClose(false)} title={title} width={400}
+        showMask={false}
+    > 
+        <>
+            <div style={{width:'100%'}}>
+                <div style={{padding: "0px 20px 10px 20px", width: 340, margin: "0px auto"}}>
+                    <Typography.Title level={4} style={{marginTop: 20, marginBottom: 20, textAlign: "center"}}>{title}</Typography.Title>
+                    <Form<PermissionFormType> form = {form} layout='horizontal'
+                        onFinish={onFinish}
+                    >   
+                        <Form.Item name="id" hidden={true}>
+                            <Input></Input>
+                        </Form.Item>
+                        <Form.Item<PermissionFormType> label={t("分组名")} name="groupName"
+                            rules={[{ required: true, message: t('分组名不能为空') }]}
+                        >
+                            <Input></Input>
+                        </Form.Item>
+                        <Form.Item<PermissionFormType> label={t("权限名")} name="name"
+                            rules={[{ required: true, message: t('权限名不能为空') }]}
+                        >
+                            <Input></Input>
+                        </Form.Item>
+                        <Form.Item<PermissionFormType> label={t("表达式")} name="expression"
+                            rules={[{ required: true, message: t('表达式不能为空') }]}
+                        >
+                            <Input></Input>
+                        </Form.Item>
+                    </Form>
+                    <Divider />
+                    <div style={{textAlign: 'right'}}>
+                        <Space>
+                            <Button onClick={onModalClose} icon={<CloseOutlined />}>{t("取消", DefaultNS)}</Button>
+                            <Button onClick={onSubmit} type="primary" icon={<SendOutlined />}>{t("确定", DefaultNS)}</Button>
+                        </Space>
                     </div>
                 </div>
-            </>
-        </Modal>
-    }else {
-        return <></>
-    }
+            </div>
+        </>
+    </Modal>
 }

@@ -134,10 +134,10 @@ public class JsonResult {
 		return dto.toString();
 	}
 	
-	public static String error(String msg, Object data) {
-		JsonResult dto = create(data, false, msg);
-		return dto.toString();
-	}
+//	public static String error(String msg, Object data) {
+//		JsonResult dto = create(data, false, msg);
+//		return dto.toString();
+//	}
 	
 	public static String ok(String msg) {
 		JsonResult dto = create(null, true, msg);

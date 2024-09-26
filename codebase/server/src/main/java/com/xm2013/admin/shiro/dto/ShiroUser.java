@@ -36,6 +36,7 @@ import com.jfinal.kit.JsonKit;
 import com.xm2013.admin.basic.service.UserService;
 import com.xm2013.admin.common.Kit;
 import com.xm2013.admin.domain.model.Role;
+import com.xm2013.admin.domain.model.User;
 
 public class ShiroUser implements java.io.Serializable{
 	/**
@@ -109,21 +110,22 @@ public class ShiroUser implements java.io.Serializable{
 			return true;
 		}
 		
-		if(userId!=null) {
-			if(isOwnerData(userId)) {
-				return true;
-			}else {
-				if(Kit.isNull(deptpath)) {
-					return isOwnerData(Aop.get(UserService.class).findById(userId).getStr("deptPath"));
-				}
-			}
+		if(Kit.isNotNull(deptpath) && isOwnerData(deptpath)) {
+			return true;
 		}
 		
-		if(Kit.isNotNull(deptpath)) {
-			return isOwnerData(deptpath);
-		}
+		return isOwnerData(userId);
 		
-		return false;
+//		if(userId!=null) {
+//			if(isOwnerData(userId)) {
+//				return true;
+//			}else {
+//				if(Kit.isNull(deptpath)) {
+//					return isOwnerData(Aop.get(UserService.class).findById(userId).getStr("deptPath"));
+//				}
+//			}
+//		}
+//		return false;
 	}
 	
 	/**
@@ -165,7 +167,7 @@ public class ShiroUser implements java.io.Serializable{
 		
 	}
 	
-	private boolean isOwnerData(Integer userId) {
+	public boolean isOwnerData(Integer userId) {
 		
 		if(isAdmin() || userId == id) return true;
 		
@@ -174,8 +176,10 @@ public class ShiroUser implements java.io.Serializable{
 		
 		if(userIds!=null && userIds.contains(userId.intValue())) {
 			return true;
+		}else {
+			User user = User.dao.findById(userId);
+			return deptIds.contains(user.getDeptId());
 		}
-		return false;
 //		else {
 //			String deptPath = Aop.get(UserService.class).findById(userId).getDeptPath();
 //			return isOwnerData(deptPath);

@@ -48,7 +48,6 @@ import com.xm2013.admin.domain.dto.PageInfo;
 import com.xm2013.admin.domain.dto.Query;
 import com.xm2013.admin.domain.model.Permission;
 import com.xm2013.admin.exception.BusinessErr;
-import com.xm2013.admin.exception.BusinessException;
 import com.xm2013.admin.exception.Msg;
 import com.xm2013.admin.shiro.ShiroKit;
 import com.xm2013.admin.shiro.dto.ShiroUser;

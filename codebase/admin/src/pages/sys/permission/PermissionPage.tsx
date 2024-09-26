@@ -29,9 +29,10 @@ import { Button, Tooltip, Space, Divider } from "antd"
 import { DeleteIcon, EditIcon, ScanIcon, AddIcon, } from '../../../components/icon/svg/Icons';
 import { PermissionList, PermissionEdit, PermissionDelete } from './index'
 import { useSelector, useTranslation } from '../../../hooks';
-import { QueryComponent, useLayer} from '../../../components';
+import { AuthButton, QueryComponent, useLayer} from '../../../components';
 import { AdminPermission } from '../../../common/I18NNamespace';
 import { PermissionScan } from './PermissionScan';
+import { permission } from '../../../common/permission';
 
 
 export const PermissionPage : React.FC = () => {
@@ -45,7 +46,7 @@ export const PermissionPage : React.FC = () => {
 
     const [isOpenEdit, setIsOpenEdit] = useState(false);
     const [isOpenScan, setIsOpenScan] = useState(false);
-    const [permission, setPermission] = useState();
+    const [currPermission, setCurrPermission] = useState();
     
     const [deletes, setDeletes] = useState<any>([]);
     const [isOpenDelete, setIsOpenDelete] = useState<boolean>(false);
@@ -74,7 +75,7 @@ export const PermissionPage : React.FC = () => {
             return;
         }
 
-        setPermission(selectedRows[0]);
+        setCurrPermission(selectedRows[0]);
         setIsOpenEdit(true);
         setTitle(t("编辑权限"));
     }
@@ -82,7 +83,7 @@ export const PermissionPage : React.FC = () => {
     //打开创建弹窗
     const onCreate = () => {
         setIsOpenEdit(true);
-        setPermission(null);
+        setCurrPermission(null);
         setTitle(t("添加权限"));
     }
 
@@ -130,26 +131,39 @@ export const PermissionPage : React.FC = () => {
         <QueryComponent onQuery={onQuery} />
         <Divider />
         <Space wrap>
-            <Tooltip title={t("新增权限")}>
-                <Button type='primary' size={size} icon={<AddIcon type='primary'/>} onClick={onCreate}>{!onlyIcon && t('新增')}</Button>
-            </Tooltip>
-            <Tooltip title={t("编辑权限")}>
-                <Button type='primary' size={size} icon={<EditIcon type='primary'/>} onClick={onEdit}>{!onlyIcon && t('编辑')}</Button>
-            </Tooltip>
-            <Tooltip title={t("扫描权限")}>
-                <Button type='primary' size={size} icon={<ScanIcon type='primary'/>} onClick={onScan}>{!onlyIcon && t('扫描')}</Button>
-            </Tooltip>
-            <Tooltip title={t("删除权限")}>
-                <Button type='primary' size={size} icon={<DeleteIcon type='primary' ghost danger/>} 
-                    onClick={onDelete} ghost danger
-                >
-                    {!onlyIcon && t('删除')}
-            </Button>
-            </Tooltip>
+            <AuthButton type='primary' size={size} tip={t('新增用户' )}
+                icon={<AddIcon type='primary'/>}
+                requiredPermissions={permission.permission.create.expression}
+                onClick={onCreate}
+            >
+                {!onlyIcon && t('新增')}
+            </AuthButton>
+            <AuthButton type='primary' size={size} tip={t('编辑权限' )}
+                icon={<EditIcon type='primary'/>}
+                requiredPermissions={permission.permission.update.expression}
+                onClick={onEdit}
+            >
+                {!onlyIcon && t('编辑')}
+            </AuthButton>
+            <AuthButton type='primary' size={size} tip={t('扫描权限' )}
+                icon={<ScanIcon type='primary'/>}
+                requiredPermissions={permission.permission.scan.expression}
+                onClick={onScan}
+            >
+                {!onlyIcon && t('扫描')}
+            </AuthButton>
+            <AuthButton type='primary' size={size} tip={t('删除权限' )}
+                icon={<DeleteIcon type='primary' ghost danger/>}
+                requiredPermissions={permission.permission.delete.expression}
+                ghost danger
+                onClick={onDelete}
+            >
+                {!onlyIcon && t('删除')}
+            </AuthButton>
         </Space>
         <Divider />
         <PermissionList onSelect={onTableSelectChange} query={query} refresh={refresh}/>
-        {isOpenEdit && <PermissionEdit open={isOpenEdit} onClose={onAddClose} permission={permission} title={title}/>}
+        {isOpenEdit && <PermissionEdit onClose={onAddClose} permission={currPermission} title={title}/>}
         {isOpenDelete && <PermissionDelete permissions={deletes} successCall={onDeleteClose}/>}
         {isOpenScan && <PermissionScan onClose={onScanClose}></PermissionScan>}
     </>

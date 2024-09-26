@@ -235,4 +235,39 @@ public class Kit {
 		return code;
 		
 	}
+	
+	/**
+	 * 判断是否相等
+	 * @param str1
+	 * @param str2
+	 * @return
+	 */
+	public static boolean eqString(String str1, String str2) {
+		
+		if(Kit.isNull(str1)) {
+			if(Kit.isNull(str2)) {
+				return true;
+			}
+		}
+		
+		if(Kit.isNull(str2)) {
+			return false;
+		}
+		
+		return str1.equals(str2);
+	}
+	
+	public static boolean eqInt(Integer i1, Integer i2){
+		if(i1 == null) {
+			if(i2 == null)
+				return true;
+		}
+		
+		if(i2 == null) {
+			return false;
+		}
+		
+		return i1.intValue() == i2.intValue();
+	}
+	
 }
