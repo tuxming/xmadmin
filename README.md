@@ -48,7 +48,7 @@
 ## 本地开发
 ### 数据库
 - 安装mysql5.7，由于是基础项目，sql脚本并不复杂，自己可以使用任意数据库
-- 导入doc/script.sql到数据库
+- 导入resources/script.sql到数据库
 ### 后端
 - 安装redis，并运行，具体方法自行百度
 - 导入maven项目codebase/server到eclipse/idea中
