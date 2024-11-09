@@ -34,13 +34,15 @@ import java.util.stream.Collectors;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
+import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.mgt.RealmSecurityManager;
 import org.apache.shiro.realm.Realm;
+import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.subject.Subject;
 
 import com.jfinal.aop.Aop;
-import com.jfinal.plugin.activerecord.Db;
 import com.xm2013.admin.basic.service.DeptService;
 import com.xm2013.admin.basic.service.PermissionService;
 import com.xm2013.admin.basic.service.RoleService;
@@ -80,6 +82,10 @@ public class ShiroKit {
         }
     }
 	
+	/**
+	 * 获取当前登录的用户
+	 * @return
+	 */
 	public static ShiroUser getLoginUser() {
 		
 		Object user = SecurityUtils.getSubject().getPrincipal();
@@ -95,6 +101,12 @@ public class ShiroKit {
 		}
 	}
 	
+	/**
+	 * 构建shiroUser对象
+	 * @param user
+	 * @param service
+	 * @return
+	 */
 	public static ShiroUser buildShiroUser(User user, UserService service) {
 		
 		int status = user.getStatus();
@@ -242,5 +254,5 @@ public class ShiroKit {
 	    //所在集团
 	    
 	}
-
+	
 }
