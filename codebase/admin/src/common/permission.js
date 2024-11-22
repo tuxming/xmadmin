@@ -11,6 +11,12 @@ export const permission = {
         update: { groupName: "system",  name: "编辑角色", expression: "sys:role:edit"},
         delete: { groupName: "system",  name: "删除角色", expression: "sys:role:delete"},
     },
+    permission: {
+        create: { groupName: "system",  name: "新增权限", expression: "sys:permission:create"},
+        update: { groupName: "system",  name: "编辑权限", expression: "sys:permission:edit"},
+        delete: { groupName: "system",  name: "删除权限", expression: "sys:permission:delete"},
+        scan: { groupName: "system",  name: "扫描权限", expression: "sys:permission:scan"},
+    },
     menu: {
         delete: { groupName: "system",  name: "删除菜单", expression: "sys:menu:delete"},
         create: { groupName: "system",  name: "新增菜单", expression: "sys:menu:create"},

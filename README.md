@@ -1,7 +1,7 @@
 <h2 align="center">Xm.Admin 后台管理系统</h2>
 <h4 align="center">基于jfinal + react18/Antd5 通用后台管理系统</h4>
 
-
+<h2 style="color:red;">vue3版本正在开发中，详细见codebase/admin-vue3</h2>
 
 # ✨概述
 - 面向中小企业快速开发平台框架，框架采用主流技术开发设计，前后端分离架构模式，后端采用java8(jfinal框架),前端采用react18(Antd5)，下一步计划开发vue3版本的

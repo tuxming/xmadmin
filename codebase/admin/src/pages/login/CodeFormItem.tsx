@@ -83,7 +83,7 @@ export const CodeFormItem : React.FC<CodeFormItemType> = ({label,name='code', ru
 
     return <>
          <Form.Item label={label}
-            name="code"
+            name={name}
             rules={rules?rules: []}
         >
             <Input placeholder={label}

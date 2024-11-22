@@ -115,7 +115,7 @@ export const useRequest = () => {
         destory = layerRef.current.destory;
     }
 
-    const getIntance = (headers: RequestHeader, backend:boolean) => {
+    const getInstance = (headers: RequestHeader, backend:boolean) => {
         const instance: RequestInstance = Axios.create({
             ...headers,
             timeout: 600 * 1000,
@@ -183,11 +183,11 @@ export const useRequest = () => {
     }
 
     const get = (url: string, backend = false) => {
-        return getIntance(wwwHeaders, backend).get(url);
+        return getInstance(wwwHeaders, backend).get(url);
     }
 
     const post = (url: string, data: any, headers: RequestHeader = jsonHeaders, backend=false) => {
-        return getIntance(headers, backend).post(url, data);
+        return getInstance(headers, backend).post(url, data);
     }
 
     return {
