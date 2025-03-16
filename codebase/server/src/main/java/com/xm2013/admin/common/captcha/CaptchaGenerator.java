@@ -37,6 +37,7 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
@@ -183,15 +184,8 @@ public class CaptchaGenerator {
 	 * @throws IOException
 	 */
 	private static Font loadFontFromFile() throws FontFormatException, IOException {
-		String path = CaptchaGenerator.class
-				.getResource("LTStreetwayNeue-Bold.otf").getPath();
-//		System.out.println(path);
-		String os = System.getProperty("os.name"); 
-		if(os.toLowerCase().startsWith("win")) {
-			path = path.substring(1);
-		}
-
-		Font font = Font.createFont(Font.TRUETYPE_FONT, new File(path));
+		InputStream is = CaptchaGenerator.class.getResourceAsStream("/com/xm2013/admin/common/captcha/LTStreetwayNeue-Bold.otf");
+		Font font = Font.createFont(Font.TRUETYPE_FONT, is);
 		return font;
 	} 
 	
