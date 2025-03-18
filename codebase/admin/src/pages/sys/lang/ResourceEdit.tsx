@@ -184,7 +184,7 @@ export const ResourceEdit: React.FC<ResourceEditType> = ({
         }
     }, []);
 
-    return <Modal open={visible} onClose={()=> onModalClose(false)} title={t("编辑语言资源")} width={500}
+    return <Modal open={visible} onClose={()=> onModalClose(false)} title={t("编辑语言资源")} width={500} height={500}
             showMask={false}
         > 
             <div style={{width:'100%'}}>
