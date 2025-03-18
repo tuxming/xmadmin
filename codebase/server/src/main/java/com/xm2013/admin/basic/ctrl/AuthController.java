@@ -53,6 +53,7 @@ import com.xm2013.admin.exception.BusinessErr;
 import com.xm2013.admin.exception.Msg;
 import com.xm2013.admin.shiro.CustomToken;
 import com.xm2013.admin.shiro.ShiroConst;
+import com.xm2013.admin.shiro.ShiroKit;
 import com.xm2013.admin.shiro.dto.ShiroUser;
 import com.xm2013.admin.shiro.jwt.JwtUtil;
 import com.xm2013.admin.validator.Validator;
@@ -76,15 +77,18 @@ public class AuthController extends BaseController{
 		Validator validator = new Validator(false);
 		
 		String codeCacheKey = "";
+		Integer loginType = loginInfo.getType();
+		if(loginType == null  || loginType < 1 || loginType>3)
+			loginType = 1;
 		
-		if(loginInfo.getType() == 1) {
+		if(loginType == 1) {
 			validator.exec(loginInfo, "loginByPassword");
 			codeCacheKey = CacheKey.SESSION_KEY_CAPTCHA;
-		}else if(loginInfo.getType() == 2) {
+		}else if(loginType == 2) {
 			validator.exec(loginInfo, "loginByEmail");
 			codeCacheKey = CacheKey.SESSION_KEY_EMAIL_CAPTCHA;
 			loginInfo.setUsername(loginInfo.getEmail());
-		}else if(loginInfo.getType() == 3) {
+		}else if(loginType == 3) {
 			validator.exec(loginInfo, "loginByTelephone");
 			codeCacheKey = CacheKey.SESSION_KEY_PHONE_CAPTCHA;
 			loginInfo.setUsername(loginInfo.getTelephone());
@@ -102,28 +106,41 @@ public class AuthController extends BaseController{
 		
 		
 		try {
-			Subject subject = SecurityUtils.getSubject(); 
-			CustomToken token = new CustomToken(loginInfo.getUsername(), Kit.doubleMd5WidthSalt(loginInfo.getPassword()));
-			token.setType(loginInfo.getType());
-			//7.执行登录，如果登录未成功，则捕获相应的异常
-			subject.login(token);
-			
-			//设置session返回
-//			//设置返回数据
-			ShiroUser shiroUser = (ShiroUser) subject.getPrincipal();
+//			Subject subject = SecurityUtils.getSubject(); 
+//			CustomToken token = new CustomToken(loginInfo.getUsername(), Kit.doubleMd5WidthSalt(loginInfo.getPassword()));
+//			token.setType(loginInfo.getType());
+//			//7.执行登录，如果登录未成功，则捕获相应的异常
+//			subject.login(token);
 //			
-			//设置session返回
-//			//写入cookie
-//			String sessionId = getSession().getId();
-//			Cookie cookie = new Cookie(ShiroConst.SISSION_ID, sessionId);
-//	        cookie.setMaxAge(60*60*24);
-//	        cookie.setPath("/");
-////	        cookie.setDomain(".shunyunbaoerp.com");
-//	        cookie.setHttpOnly(true);
-//	        getResponse().addCookie(cookie);
-//	        
-//	        //缓存sessionId
-//	        Redis.use().hset(ShiroConst.SISSION_ID, sessionId, token);
+//			//设置session返回
+////			//设置返回数据
+//			ShiroUser shiroUser = (ShiroUser) subject.getPrincipal();
+
+			User user = null;
+			if(loginType == 2) {
+				user = userService.findByEmail(loginInfo.getUsername());
+			}else if(loginType == 3) {
+				user = userService.findByPhone(loginInfo.getUsername());
+			}else {
+				user = userService.findByUsername(loginInfo.getUsername());
+			}
+			
+			if(user == null) {
+				renderJson(JsonResult.error(BusinessErr.ERROR.setMsg(Msg.AUTH_NO_USER_ERR)));
+				return;
+			}
+			
+			if(loginInfo.getType() == 1 
+				&& !user.getPassword().equals(Kit.doubleMd5WidthSalt(loginInfo.getPassword()))
+			) {
+				renderJson(JsonResult.error(BusinessErr.ERROR.setMsg(Msg.AUTH_NO_USER_ERR)));
+				return;
+			}
+			
+			ShiroUser shiroUser = ShiroKit.buildShiroUser(user, userService);
+	        
+	        // 生成JWT令牌
+	        String jwtToken = JwtUtil.sign(shiroUser.getUsername());
 			
 			//设置jwt返回
 			//移除原有的session cookie
@@ -136,7 +153,6 @@ public class AuthController extends BaseController{
 			session.invalidate();
 			
 			//添加jwt cookie
-			String jwtToken = JwtUtil.sign(shiroUser.getUsername());
 			Cookie jwtCookie = new Cookie(ShiroConst.JWT_TOKEN_HEADER, jwtToken);
 			jwtCookie.setMaxAge(60*60*24);
 			jwtCookie.setPath("/");

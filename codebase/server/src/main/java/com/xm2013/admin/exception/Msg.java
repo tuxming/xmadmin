@@ -50,6 +50,7 @@ public class Msg {
 	public static final String AUTH_SEND_PHONE_CODE_OK = "手机验证码发送成功";
 	public static final String AUTH_SEND_EMAIL_CODE_OK = "邮箱验证码发送成功";
 	public static final String AUTH_SEND_CODE_ERR = "发送失败";
+	public static final String AUTH_NO_USER_ERR = "用户名或者密码错误";
 	
 	public static final String OK_UPDATE = "更新成功";
 	public static final String ERR_UPDATE = "更新失败";
