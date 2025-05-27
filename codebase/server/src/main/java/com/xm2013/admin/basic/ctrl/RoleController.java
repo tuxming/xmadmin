@@ -153,15 +153,19 @@ public class RoleController extends BaseController{
 		List<Integer> permissionIds = JsonKit.getList(getRawData(), Integer.class);
 		if(permissionIds == null) {
 			renderJson(JsonResult.error(BusinessErr.INVALID_PARAM));
+			return;
 		}
 		
 		int roleId = getInt("id", 0);
 		if(roleId == 0) {
 			renderJson(JsonResult.error(BusinessErr.INVALID_PARAM.setMsg(Msg.ID_NULL)));
+			return;
 		}
 		
 		String result = roleService.grantPermissions(roleId, permissionIds, ShiroKit.getLoginUser());
 		if(result == null) {
+			// 权限分配成功后，清除相关用户的权限缓存
+			roleService.clearUserAuthorizationCache(roleId);
 			renderJson(JsonResult.ok(Msg.OK_UPDATE));
 		}else {
 			renderJson(JsonResult.error(result));

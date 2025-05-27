@@ -27,10 +27,19 @@ package com.xm2013.admin.basic.service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.realm.Realm;
+import org.apache.shiro.session.mgt.DefaultSessionManager;
+import org.apache.shiro.mgt.DefaultSecurityManager;
+import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.subject.SimplePrincipalCollection;
+
+import com.jfinal.aop.Aop;
 import com.jfinal.aop.Inject;
 import com.jfinal.plugin.activerecord.Db;
 import com.xm2013.admin.common.Kit;
@@ -44,8 +53,11 @@ import com.xm2013.admin.domain.model.User;
 import com.xm2013.admin.exception.BusinessErr;
 import com.xm2013.admin.exception.BusinessException;
 import com.xm2013.admin.exception.Msg;
+import com.xm2013.admin.shiro.ShiroKit;
+import com.xm2013.admin.shiro.ShiroRealm;
 import com.xm2013.admin.shiro.dto.ShiroRole;
 import com.xm2013.admin.shiro.dto.ShiroUser;
+import com.xm2013.admin.shiro.redis.RedisCache;
 
 public class RoleService {
 	
@@ -475,6 +487,45 @@ public class RoleService {
 		
 		
 		return null;
+	}
+	
+	/**
+	 * 清除指定角色下所有用户的权限缓存 - 同时清除认证和授权缓存
+	 * @param roleId 角色ID
+	 */
+	public void clearUserAuthorizationCache(int roleId) {
+		System.out.println("开始清除角色 " + roleId + " 的用户权限缓存");
+		
+		// 直接清除所有授权缓存，这是最可靠的方法
+		SecurityManager securityManager = SecurityUtils.getSecurityManager();
+		System.out.println("SecurityManager 类型: " + securityManager.getClass().getName());
+		
+		if(securityManager instanceof DefaultSecurityManager) {
+			DefaultSecurityManager defaultSecurityManager = (DefaultSecurityManager) securityManager;
+			Collection<Realm> realms = defaultSecurityManager.getRealms();
+			System.out.println("找到 " + realms.size() + " 个 Realm");
+			
+			for(Realm realm : realms) {
+				if(realm instanceof ShiroRealm) {
+					ShiroRealm shiroRealm = (ShiroRealm) realm;
+					
+					// 清除授权缓存
+					if(shiroRealm.getAuthorizationCache() != null) {
+						shiroRealm.clearAllCachedAuthorizationInfo();
+					}
+					
+					// 清除认证缓存 - 这是关键！
+					if(shiroRealm.getAuthenticationCache() != null) {
+						shiroRealm.clearAllCachedAuthenticationInfo();
+					}
+					
+					// 或者直接清除所有缓存
+					// shiroRealm.clearAllCache();
+					
+					break;
+				}
+			}
+		}
 	}
 	
 }

@@ -73,17 +73,28 @@ public class RedisCache<K,V> implements Cache<K, V> {
 	@Override
 	public V remove(K key) throws CacheException {
 		logger.debug("从cacheName: "+this.cacheName+"，中删除 key [" + key + "]");
-		return null;
+		if(key == null) {
+			return null;
+		}
+		
+		// 先获取要删除的值
+		V value = Redis.use().hget(this.cacheName, key);
+		// 然后删除
+		Redis.use().hdel(this.cacheName, key);
+		return value;
 	}
 
 	@Override
 	public void clear() throws CacheException {
 		logger.debug("删除cacheName："+cacheName+"中删除所有元素");
-        try {
-            Redis.use().del(this.cacheName);
-        } catch (Throwable t) {
-            throw new CacheException(t);
-        }
+		try {
+			// 确保删除整个 hash
+			Redis.use().del(this.cacheName);
+			logger.debug("成功清除缓存：" + this.cacheName);
+		} catch (Throwable t) {
+			logger.error("清除缓存失败：" + this.cacheName, t);
+			throw new CacheException(t);
+		}
 	}
 
 	@Override
@@ -105,6 +116,10 @@ public class RedisCache<K,V> implements Cache<K, V> {
 	public Collection<V> values() {
 		logger.debug("获取cacheName："+cacheName+"的所有的values");
 		return Redis.use().hvals(this.cacheName);
+	}
+
+	public String getCacheName() {
+		return this.cacheName;
 	}
 
 }

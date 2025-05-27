@@ -36,6 +36,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.apache.log4j.Logger;
+
 import com.jfinal.aop.Inject;
 import com.xm2013.admin.annotation.Op;
 import com.xm2013.admin.annotation.Per;
@@ -54,6 +56,7 @@ import com.xm2013.admin.shiro.dto.ShiroUser;
 import com.xm2013.admin.validator.Validator;
 
 public class PermissionController extends BaseController{
+	private static Logger log = Logger.getLogger(PermissionController.class);
 	
 	@Inject
 	private PermissionService permissionService;
@@ -141,10 +144,13 @@ public class PermissionController extends BaseController{
 	@Op("扫描权限")
 	public void scan() {
 		
-		String pkg = "com.xm2013.admin.basic.ctrl";
 		Map<String, String> results = new HashMap<String, String>();
 		try {
-			List<Permission> permissions = doScan(pkg);
+			List<Permission> permissions = doScan(
+					"com.xm2013.admin.basic.ctrl",
+					"com.xm2013.admin.app"
+			);
+			log.info("扫描到权限: "+permissions);
 			for (Permission permission : permissions) {
 				try {
 					permissionService.create(permission);
@@ -162,57 +168,74 @@ public class PermissionController extends BaseController{
 		
 	}
 	
-	private List<Permission> doScan(String pkgName) throws Exception {
-		
+	private List<Permission> doScan(String ...pkgNames) throws Exception {
+		List<Permission> permissions = new ArrayList<Permission>();
 		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         assert classLoader != null;
-        String path = pkgName.replace('.', '/');
-        Enumeration<URL> resources = classLoader.getResources(path);
-        List<File> dirs = new ArrayList<>();
-        while (resources.hasMoreElements()) {
-            URL resource = resources.nextElement();
-            dirs.add(new File(resource.getFile()));
-        }
-        List<Class<?>> classes = new ArrayList<>();
-        for (File directory : dirs) {
-            classes.addAll(findClasses(directory, pkgName));
-        }
-        
-        List<Permission> permissions = new ArrayList<Permission>();
-        
-        for (Class<?> clazz : classes) {
-        	Method[] methods = clazz.getMethods();
-        	
-        	for (Method method : methods) {
+        for(String pkgName : pkgNames) {
+        	String path = pkgName.replace('.', '/');
+            Enumeration<URL> resources = classLoader.getResources(path);
+            List<File> dirs = new ArrayList<>();
+            List<URL> jarUrls = new ArrayList<>();
+            
+            while (resources.hasMoreElements()) {
+                URL resource = resources.nextElement();
+                if ("file".equals(resource.getProtocol())) {
+                    dirs.add(new File(resource.getFile()));
+                } else if ("jar".equals(resource.getProtocol())) {
+                    jarUrls.add(resource);
+                }
+            }
+            
+            List<Class<?>> classes = new ArrayList<>();
+            
+            // 处理文件系统中的类
+            for (File directory : dirs) {
+                classes.addAll(findClasses(directory, pkgName));
+            }
+            
+            // 处理JAR包中的类
+            for (URL jarUrl : jarUrls) {
+                classes.addAll(findClassesInJar(jarUrl, pkgName));
+            }
+            
+            log.info("在包 " + pkgName + " 中找到 " + classes.size() + " 个类");
+            
+            for (Class<?> clazz : classes) {
+            	Method[] methods = clazz.getMethods();
+            	
+            	for (Method method : methods) {
+            			
+        			RequirePermission rp = method.getAnnotation(RequirePermission.class);
         			
-    			RequirePermission rp = method.getAnnotation(RequirePermission.class);
-    			
-    			if(rp!=null) {
-    				System.out.println(rp.group()+";"+rp.name()+";"+rp.val());
-        			permissions.add(
-    					new Permission().setGroupName(rp.group())
-    						.setName(rp.name())
-    						.setExpression(rp.val())
-    				);
+        			if(rp!=null) {
+        				System.out.println(rp.group()+";"+rp.name()+";"+rp.val());
+            			permissions.add(
+        					new Permission().setGroupName(rp.group())
+        						.setName(rp.name())
+        						.setExpression(rp.val())
+        				);
+        			}
+        			
+        			RequirePermissions rps = method.getAnnotation(RequirePermissions.class);
+        			if(rps != null) {
+        				Per[] values = rps.value();
+        				for(int i=0; i<values.length; i++) {
+        					Per p = values[i];
+        					System.out.println(p.group()+";"+p.name()+";"+p.val());
+        					permissions.add(
+    	    					new Permission().setGroupName(p.group())
+    	    						.setName(p.name())
+    	    						.setExpression(p.val())
+    	    				);
+        				}
+        			}
     			}
-    			
-    			RequirePermissions rps = method.getAnnotation(RequirePermissions.class);
-    			if(rps != null) {
-    				Per[] values = rps.value();
-    				for(int i=0; i<values.length; i++) {
-    					Per p = values[i];
-    					System.out.println(p.group()+";"+p.name()+";"+p.val());
-    					permissions.add(
-	    					new Permission().setGroupName(p.group())
-	    						.setName(p.name())
-	    						.setExpression(p.val())
-	    				);
-    				}
-    			}
-			}
-        	
-		}
+            	
+    		}
+        }
         
+        log.info("总共扫描到权限: " + permissions.size() + " 个");
         return permissions;
         
 	}
@@ -239,6 +262,47 @@ public class PermissionController extends BaseController{
                     }
                 }
             }
+        }
+        return classes;
+    }
+	
+	// 新增方法：处理JAR包中的类
+	private List<Class<?>> findClassesInJar(URL jarUrl, String packageName) {
+        List<Class<?>> classes = new ArrayList<>();
+        try {
+            String jarPath = jarUrl.getPath();
+            if (jarPath.startsWith("file:")) {
+                jarPath = jarPath.substring(5);
+            }
+            if (jarPath.contains("!")) {
+                jarPath = jarPath.substring(0, jarPath.indexOf("!"));
+            }
+            
+            java.util.jar.JarFile jarFile = new java.util.jar.JarFile(jarPath);
+            Enumeration<java.util.jar.JarEntry> entries = jarFile.entries();
+            
+            String packagePath = packageName.replace('.', '/');
+            
+            while (entries.hasMoreElements()) {
+                java.util.jar.JarEntry entry = entries.nextElement();
+                String entryName = entry.getName();
+                
+                if (entryName.startsWith(packagePath) && entryName.endsWith(".class")) {
+                    String className = entryName.replace('/', '.').substring(0, entryName.length() - 6);
+                    try {
+                        Class<?> clazz = Class.forName(className);
+                        if (!Modifier.isAbstract(clazz.getModifiers())) {
+                            classes.add(clazz);
+                        }
+                    } catch (ClassNotFoundException | NoClassDefFoundError e) {
+                        // 忽略无法加载的类
+                        log.debug("无法加载类: " + className + ", 错误: " + e.getMessage());
+                    }
+                }
+            }
+            jarFile.close();
+        } catch (Exception e) {
+            log.error("处理JAR包时出错: " + jarUrl, e);
         }
         return classes;
     }

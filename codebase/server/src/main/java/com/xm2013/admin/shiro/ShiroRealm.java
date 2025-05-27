@@ -25,6 +25,7 @@
 
 package com.xm2013.admin.shiro;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.shiro.authc.AuthenticationException;
@@ -187,7 +188,12 @@ public class ShiroRealm extends AuthorizingRealm {
 			}
 		}
 		
-		info.addStringPermissions(shiroUser.getPermissions());
+		List<String> ps = shiroUser.getPermissions();
+		if(ps ==null) {
+			ps = new ArrayList<String>();
+		}
+		
+		info.addStringPermissions(ps);
 		return info;
 	}
 	
