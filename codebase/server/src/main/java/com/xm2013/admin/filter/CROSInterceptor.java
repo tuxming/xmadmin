@@ -36,7 +36,8 @@ import com.xm2013.admin.common.Kit;
 
 /**
  * CROS跨域请求是否允许
- * Access-Control-Allow-Origin: 允许的请求源：可以设置一个请求的ip列表，相当于一个跨域请求的白名单，但是如果你希望任意跨域，不能配置*， 如果配置*,则Access-Control-Allow-Credentials是不能被携带cookie的。
+ * Access-Control-Allow-Origin: 允许的请求源：可以设置一个请求的ip列表，相当于一个跨域请求的白名单，
+ * 但是如果你希望任意跨域，不能配置*， 如果配置*,则Access-Control-Allow-Credentials是不能被携带cookie的。
  * 所以建议：获取http header中Origin的值：是什么值就返回什么值。
  * 
  * Access-Control-Allow-Methods： 允许的请求类型

@@ -118,6 +118,16 @@ public class UndertowSessionManager implements SessionManager, SessionManagerSta
 		String redisServer = PropKit.get("redis.server");
 		Integer redisPort = PropKit.getInt("redis.port");
 		JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
+		
+		// 配置连接池参数
+		jedisPoolConfig.setMaxTotal(50);
+		jedisPoolConfig.setMaxIdle(10);
+		jedisPoolConfig.setMinIdle(5);
+		jedisPoolConfig.setMaxWaitMillis(3000);
+		jedisPoolConfig.setTestOnBorrow(true);
+		jedisPoolConfig.setTestOnReturn(true);
+		jedisPoolConfig.setTestWhileIdle(true);
+		
 		int timeout = 1800;
 		
 		ISerializer serializer = null;
@@ -164,28 +174,35 @@ public class UndertowSessionManager implements SessionManager, SessionManagerSta
         	
         	//这是直接以字符串形式存在resdis中，改成存在set中
             sessionId = sessionIdGenerator.createSessionId();
-            Jedis jedis = jedisPool.getResource();
-            if (jedis.exists(sessionId)) {
-                sessionId = null;
+            
+            // 使用try-with-resources确保资源正确释放
+            try (Jedis jedis = jedisPool.getResource()) {
+                if (jedis.exists(sessionId)) {
+                    sessionId = null;
+                }
+            } catch (Exception e) {
+                // 如果Redis连接失败，记录日志但不影响Session创建
+                System.err.println("Redis连接失败，使用本地Session: " + e.getMessage());
+                break;
             }
-//            if (jedis.hexists(CACHE_KEY_SESSION_ID, sessionId)) {
-//            	sessionId = null;
-//            }
 
-        	jedis.close();
             if (count++ == 100) {
                 //this should never happen
                 //but we guard against pathological session id generators to prevent an infinite loop
                 throw UndertowMessages.MESSAGES.couldNotGenerateUniqueSessionId();
             }
         }
+        
         final long created = System.currentTimeMillis();
+        
+        // 使用try-with-resources确保资源正确释放
         try (Jedis jedis = jedisPool.getResource()) {
             jedis.set(CACHE_KEY_SESSION_ID+"#"+sessionId, String.valueOf(created));
-//        	jedis.hset(CACHE_KEY_SESSION_ID, sessionId, String.valueOf(created));
-//        	jedis.expire(CACHE_KEY_SESSION_ID, defaultSessionTimeout);
-        	jedis.close();
+        } catch (Exception e) {
+            // 如果Redis存储失败，记录日志但不影响Session创建
+            System.err.println("Redis存储Session失败: " + e.getMessage());
         }
+        
         final SessionImpl session = new SessionImpl(sessionId, created, (int) defaultSessionTimeout,
                 sessionConfig, this);
 
@@ -214,6 +231,8 @@ public class UndertowSessionManager implements SessionManager, SessionManagerSta
         if (sessionId == null) {
             return null;
         }
+        
+        // 使用try-with-resources确保资源正确释放
         try (Jedis jedis = jedisPool.getResource()) {
         	//这里的目的就是判断session是否过期，如果session过期，就返回null
             //这里返回的是session剩余时间，
@@ -223,15 +242,14 @@ public class UndertowSessionManager implements SessionManager, SessionManagerSta
                 long created = Long.valueOf(jedis.get(key));
                 int ttl = jedis.ttl(key).intValue();
                 SessionImpl session = new SessionImpl(sessionId, created, ttl, sessionConfig, this);
-//                long timeout = defaultSessionTimeout*1000;
-//                System.out.println(timeout);
-//                jedis.expire(key, timeout); 
-                jedis.close();
                 return session;
             } else {
-            	jedis.close();
                 return null;
             }
+        } catch (Exception e) {
+            // 如果Redis连接失败，记录日志并返回null
+            System.err.println("Redis获取Session失败: " + e.getMessage());
+            return null;
         }
     }
 
@@ -265,8 +283,11 @@ public class UndertowSessionManager implements SessionManager, SessionManagerSta
 //            Set<String> all = jedis.hkeys(CACHE_KEY_SESSION_ID);
             Set<String> all = jedis.keys(CACHE_KEY_SESSION_ATTR+"#");
 
-        	jedis.close();
         	return all;
+        } catch (Exception e) {
+            // 如果Redis连接失败，记录日志并返回空集合
+            System.err.println("Redis获取所有Session失败: " + e.getMessage());
+            return Collections.emptySet();
         }
     }
 
@@ -310,8 +331,11 @@ public class UndertowSessionManager implements SessionManager, SessionManagerSta
             try (Jedis jedis = sessionManager.jedisPool.getResource()) {
 //                long t = System.currentTimeMillis() - ((maxInactiveInterval * 100) - jedis.pttl(CACHE_KEY_SESSION_ATTR));
             	long t = System.currentTimeMillis() - ((maxInactiveInterval * 100) - jedis.pttl(CACHE_KEY_SESSION_ID+"#"+sessionId));
-            	jedis.close();
                 return t;
+            } catch (Exception e) {
+                // 如果Redis连接失败，返回当前时间
+                System.err.println("Redis获取最后访问时间失败: " + e.getMessage());
+                return System.currentTimeMillis();
             }
         }
 
@@ -337,8 +361,11 @@ public class UndertowSessionManager implements SessionManager, SessionManagerSta
                 }
                 bumpTimeout();
 
-            	jedis.close();
                 return deserialize(attribute);
+            } catch (Exception e) {
+                // 如果Redis连接失败，记录日志并返回null
+                System.err.println("Redis获取Session属性失败: " + e.getMessage());
+                return null;
             }
         }
 
@@ -367,8 +394,11 @@ public class UndertowSessionManager implements SessionManager, SessionManagerSta
 //            	Set<String> set = jedis.hkeys(CACHE_KEY_SESSION_ATTR);
             	Set<String> set = jedis.hkeys(CACHE_KEY_SESSION_ATTR+"#"+sessionId);
 
-            	jedis.close();
             	return set;
+            } catch (Exception e) {
+                // 如果Redis连接失败，记录日志并返回空集合
+                System.err.println("Redis获取Session属性名失败: " + e.getMessage());
+                return Collections.emptySet();
             }
         }
 
@@ -385,9 +415,12 @@ public class UndertowSessionManager implements SessionManager, SessionManagerSta
                     existing = deserialize(jedis.hget(CACHE_KEY_SESSION_ATTR+"#"+sessionId, name));
 
                     jedis.hset(CACHE_KEY_SESSION_ATTR+"#"+sessionId, name, Base64.getEncoder().encodeToString(bos.toByteArray()));
-
-                	jedis.close();
+                } catch (Exception e) {
+                    // 如果Redis连接失败，记录日志
+                    System.err.println("Redis设置Session属性失败: " + e.getMessage());
+                    existing = null;
                 }
+                
                 if (existing == null) {
                     sessionManager.sessionListeners.attributeAdded(this, name, value);
                 } else {
@@ -407,9 +440,11 @@ public class UndertowSessionManager implements SessionManager, SessionManagerSta
             final Object existing = getAttribute(name);
             try (Jedis jedis = sessionManager.jedisPool.getResource()) {
                 jedis.hdel(CACHE_KEY_SESSION_ATTR+"#"+sessionId, name);
-
-            	jedis.close();
+            } catch (Exception e) {
+                // 如果Redis连接失败，记录日志
+                System.err.println("Redis删除Session属性失败: " + e.getMessage());
             }
+            
             sessionManager.sessionListeners.attributeRemoved(this, name, existing);
             bumpTimeout();
 
@@ -433,10 +468,10 @@ public class UndertowSessionManager implements SessionManager, SessionManagerSta
                 transaction.del(CACHE_KEY_SESSION_ID+"#"+sessionId);
                 transaction.del(CACHE_KEY_SESSION_ATTR+"#"+sessionId);
                 
-                
                 transaction.exec();
-
-            	jedis.close();
+            } catch (Exception e) {
+                // 如果Redis连接失败，记录日志
+                System.err.println("Redis删除Session失败: " + e.getMessage());
             }
 
             if (exchange != null) {
@@ -461,9 +496,11 @@ public class UndertowSessionManager implements SessionManager, SessionManagerSta
 //            	String val = jedis.hget(CACHE_KEY_SESSION_ID, oldId);
 //            	jedis.hdel(CACHE_KEY_SESSION_ID, oldId);
 //            	jedis.hset(CACHE_KEY_SESSION_ID, newId, val);
-
-            	jedis.close();
+            } catch (Exception e) {
+                // 如果Redis连接失败，记录日志
+                System.err.println("Redis重命名Session失败: " + e.getMessage());
             }
+            
             config.setSessionId(exchange, this.getId());
             sessionManager.sessionListeners.sessionIdChanged(this, oldId);
             return newId;
@@ -477,7 +514,9 @@ public class UndertowSessionManager implements SessionManager, SessionManagerSta
 //                transaction.expire(CACHE_KEY_SESSION_ID+"#"+sessionId, sessionManager.defaultSessionTimeout);
                 transaction.exec();
                 jedis.expire(CACHE_KEY_SESSION_ID+"#"+sessionId, sessionManager.defaultSessionTimeout);
-            	jedis.close();
+            } catch (Exception e) {
+                // 如果Redis连接失败，记录日志
+                System.err.println("Redis更新Session超时失败: " + e.getMessage());
             }
         }
     }
@@ -488,8 +527,11 @@ public class UndertowSessionManager implements SessionManager, SessionManagerSta
 		try (Jedis jedis = jedisPool.getResource()) {
 //			long t= jedis.scard(CACHE_KEY_SESSION_ID);
 			long t = jedis.keys(CACHE_KEY_SESSION_ID+"#").size();
-        	jedis.close();
 			return t;
+        } catch (Exception e) {
+            // 如果Redis连接失败，记录日志并返回0
+            System.err.println("Redis获取Session数量失败: " + e.getMessage());
+            return 0;
         }
 	}
 

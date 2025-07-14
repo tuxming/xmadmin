@@ -129,6 +129,8 @@ public class ShiroRealm extends AuthorizingRealm {
 		}
 		
 		String username = jwtToken.getPrincipal().toString();
+		System.out.println("DEBUG: JWT 认证，用户名: " + username);
+		
 		UserService userService = Aop.get(UserService.class);
 		User user = userService.findByUsername(username);
 		
@@ -136,7 +138,13 @@ public class ShiroRealm extends AuthorizingRealm {
 	    if (null == user){  
 	         throw new UnknownAccountException(Msg.SHIRO_REALM_PASSWORD_ERR);  
 	    } 		
-	    return ShiroKit.buildAuthenticationInfo(user, userService, getName());
+	    
+	    System.out.println("DEBUG: 找到用户: " + user.getUsername() + ", ID: " + user.getId());
+	    
+	    AuthenticationInfo info = ShiroKit.buildAuthenticationInfo(user, userService, getName());
+	    System.out.println("DEBUG: 构建的认证信息 Principal: " + info.getPrincipals().getPrimaryPrincipal().getClass().getName());
+	    
+	    return info;
 	}
 	
 	/**

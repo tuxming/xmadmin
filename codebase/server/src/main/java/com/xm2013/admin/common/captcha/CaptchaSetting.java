@@ -113,7 +113,8 @@ public class CaptchaSetting {
 				.setHeight(60)
 				.setFontSize(50)
 				.setBgType(random.nextInt(2))
-				.setLineNo(random.nextInt(10)+15)
+				.setLineNo(random.nextInt(6)+8)  // 8-14条线，减少干扰
+				.setPolygonNo(random.nextInt(3)+2) // 2-5个形状，减少干扰
 			;
 		
 	}

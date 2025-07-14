@@ -89,15 +89,40 @@ public class ShiroKit {
 	public static ShiroUser getLoginUser() {
 		
 		Object user = SecurityUtils.getSubject().getPrincipal();
+		
+		// 增加调试信息
+		if(user == null) {
+			System.out.println("DEBUG: SecurityUtils.getSubject().getPrincipal() 返回 null");
+			return null;
+		}
+		
+		System.out.println("DEBUG: Principal 类型: " + user.getClass().getName() + ", 值: " + user);
+		
 		if(user!=null && user.getClass().getName().equals("java.lang.String")) {
 			String username = (String)user;
 			
-			UserService userService = Aop.get(UserService.class);
-	        User u = userService.findByUsername(username);
-			
-			return buildShiroUser(u, userService);
+			try {
+				UserService userService = Aop.get(UserService.class);
+				User u = userService.findByUsername(username);
+				
+				if(u == null) {
+					System.out.println("DEBUG: 根据用户名 '" + username + "' 未找到用户");
+					return null;
+				}
+				
+				return buildShiroUser(u, userService);
+			} catch (Exception e) {
+				System.out.println("DEBUG: 构建 ShiroUser 时发生异常: " + e.getMessage());
+				e.printStackTrace();
+				return null;
+			}
 		}else {
-			return (ShiroUser)user;
+			try {
+				return (ShiroUser)user;
+			} catch (ClassCastException e) {
+				System.out.println("DEBUG: 类型转换异常，期望 ShiroUser，实际: " + user.getClass().getName());
+				return null;
+			}
 		}
 	}
 	

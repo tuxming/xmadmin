@@ -354,7 +354,7 @@ export const Modal : React.FC<ModalType> = ({
             let winHeight = window.innerHeight;
             let npos = {
                 width: computePx(width),
-                height: wheight || aheight,
+                height: wheight || 'auto',
                 top:   aheight>winHeight?0:(winHeight - aheight) / 3,
                 left: (window.innerWidth - computePx(width)) /2,
                 visibility: 'visible',
@@ -545,7 +545,12 @@ export const Modal : React.FC<ModalType> = ({
                 className="x-modal-content"
                 onClick={(e) => e.stopPropagation()}
             >
-                <div className="x-modal-inner-content" style={{width: currPos.width, height: currPos.height, overflow:'hidden', boxSizing: 'border-box'}}>
+                <div className="x-modal-inner-content" style={{
+                    width: '100%', 
+                    height: '100%', 
+                    overflow: height && height !== 'auto' ? 'auto' : 'visible', 
+                    boxSizing: 'border-box'
+                }}>
                     <div className="x-modal-ctrl" style={{
                             right: modalState == 'full'?20:6, maxWidth: modalState=='min'? currPos.width:"auto",
                             position: modalState == 'min'?'relative':'absolute',
@@ -579,7 +584,12 @@ export const Modal : React.FC<ModalType> = ({
                             </svg>
                         </span>
                     </div>
-                    <div className="x-modal-body" style={{display: modalState == 'min'?'none': 'block', height: '100%' }}>
+                    <div className="x-modal-body" style={{
+                        display: modalState == 'min'?'none': 'block', 
+                        height: height && height !== 'auto' ? 'calc(100% - 30px)' : 'auto', 
+                        overflow: height && height !== 'auto' ? 'auto' : 'visible',
+                        paddingTop: height && height !== 'auto' ? '25px' : '0px'
+                    }}>
                         <ModalContext.Provider value={currPos}>
                             {children}
                         </ModalContext.Provider>

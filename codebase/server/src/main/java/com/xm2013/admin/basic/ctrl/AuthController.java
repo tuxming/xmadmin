@@ -40,6 +40,7 @@ import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.subject.Subject;
 
 import com.jfinal.aop.Inject;
+import com.jfinal.plugin.redis.Redis;
 import com.xm2013.admin.basic.service.UserService;
 import com.xm2013.admin.common.CacheKey;
 import com.xm2013.admin.common.Kit;
@@ -67,6 +68,42 @@ public class AuthController extends BaseController{
 	
 	@Inject
 	private UserService userService;
+	
+	/**
+	 * 获图片取验证码
+	 */
+	public void code() {
+		
+		// 获取客户端标识（IP地址或设备指纹）
+		String clientId = getClientId();
+		
+		// 生成验证码
+		String code = CaptchaGenerator.randomCode(4);
+		System.out.println("验证码："+code);
+		
+		// 将验证码存储到Redis，设置5分钟过期
+		String captchaKey = CacheKey.SESSION_KEY_CAPTCHA + ":" + clientId;
+		Redis.use().setex(captchaKey, 300, code);
+		
+		// 生成验证码图片
+		BufferedImage image= CaptchaGenerator.generate(null, code);
+		renderImage(image, "code-"+System.currentTimeMillis()+".png", "png");
+	}
+	
+	/**
+	 * 获取客户端唯一标识
+	 */
+	private String getClientId() {
+		// 优先使用设备指纹（前端生成）
+		String deviceFingerprint = getPara("deviceId");
+		if(Kit.isNotNull(deviceFingerprint)) {
+			return deviceFingerprint;
+		}
+		
+		// 使用IP地址作为备选
+		String ip = Kit.getIpAddr(getRequest());
+		return ip;
+	}
 	
 	/**
 	 * session登录
@@ -99,11 +136,20 @@ public class AuthController extends BaseController{
 			return;
 		}
 		
-		if(loginInfo.getCode().equalsIgnoreCase(getSession().getAttribute(codeCacheKey)+"") == false){
-			renderJson(JsonResult.error(BusinessErr.ERROR.setMsg(Msg.AUTH_NULL_CODE)));
-			return;
+		// 验证码验证逻辑 - 纯Redis方式
+		if(loginType == 1) {
+			// 密码登录需要验证码
+			if(!validateCaptchaForJwt(loginInfo.getCode(), codeCacheKey)) {
+				renderJson(JsonResult.error(BusinessErr.ERROR.setMsg(Msg.AUTH_NULL_CODE)));
+				return;
+			}
+		} else {
+			// 邮箱/手机登录也需要验证码
+			if(!validateCaptchaForJwt(loginInfo.getCode(), codeCacheKey)) {
+				renderJson(JsonResult.error(BusinessErr.ERROR.setMsg(Msg.AUTH_NULL_CODE)));
+				return;
+			}
 		}
-		
 		
 		try {
 //			Subject subject = SecurityUtils.getSubject(); 
@@ -142,16 +188,10 @@ public class AuthController extends BaseController{
 	        // 生成JWT令牌
 	        String jwtToken = JwtUtil.sign(shiroUser.getUsername());
 			
-			//设置jwt返回
-			//移除原有的session cookie
-			HttpSession session = getSession();
-			Cookie cookie = new Cookie(ShiroConst.SISSION_ID, session.getId());
-			cookie.setMaxAge(0);
-			cookie.setPath("/");
-//			cookie.setHttpOnly(true);
-			getResponse().addCookie(cookie);
-			session.invalidate();
+			// 清除验证码缓存
+			clearCaptchaCacheForJwt(codeCacheKey);
 			
+			//设置jwt返回
 			//添加jwt cookie
 			Cookie jwtCookie = new Cookie(ShiroConst.JWT_TOKEN_HEADER, jwtToken);
 			jwtCookie.setMaxAge(60*60*24);
@@ -184,18 +224,44 @@ public class AuthController extends BaseController{
 	}
 	
 	/**
-	 * 获图片取验证码
+	 * 验证码验证方法 - 纯Redis方式，不依赖Session
 	 */
-	public void code() {
+	private boolean validateCaptchaForJwt(String inputCode, String cacheKey) {
+		if(Kit.isNull(inputCode)) {
+			return false;
+		}
 		
-		HttpSession session = getRequest().getSession();
-		session.removeAttribute(CacheKey.SESSION_KEY_CAPTCHA);
+		// 获取客户端标识
+		String clientId = getClientId();
+		String captchaKey = cacheKey + ":" + clientId;
 		
-		String code = CaptchaGenerator.randomCode(4);
-		System.out.println("验证码："+code);
-		session.setAttribute(CacheKey.SESSION_KEY_CAPTCHA, code);
-		BufferedImage image= CaptchaGenerator.generate(null, code);
-		renderImage(image, "code-"+System.currentTimeMillis()+".png", "png");
+		// 从Redis获取验证码
+		try {
+			String redisCode = Redis.use().get(captchaKey);
+			if(Kit.isNotNull(redisCode) && inputCode.equalsIgnoreCase(redisCode)) {
+				return true;
+			}
+		} catch (Exception e) {
+			log.error("从Redis获取验证码失败", e);
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * 清除验证码缓存 - 纯Redis方式
+	 */
+	private void clearCaptchaCacheForJwt(String cacheKey) {
+		// 获取客户端标识
+		String clientId = getClientId();
+		String captchaKey = cacheKey + ":" + clientId;
+		
+		// 清除Redis中的验证码
+		try {
+			Redis.use().del(captchaKey);
+		} catch (Exception e) {
+			log.error("清除Redis验证码失败", e);
+		}
 	}
 	
 	/**
@@ -224,16 +290,19 @@ public class AuthController extends BaseController{
 			return;
 		}
 		
-		if(code.equalsIgnoreCase(getSession().getAttribute(CacheKey.SESSION_KEY_CAPTCHA)+"") == false){
+		// 验证图片验证码
+		if(!validateCaptchaForJwt(code, CacheKey.SESSION_KEY_CAPTCHA)){
 //			throw new BusinessException(BusinessErr.ERROR, Msg.AUTH_NULL_CODE);
 			renderJson(JsonResult.error(BusinessErr.ERROR.setMsg(Msg.AUTH_NULL_CODE)));
 			return;
 		}
 		
-		HttpSession session = getRequest().getSession();
+		// 获取客户端标识
+		String clientId = getClientId();
+		
 		//设置时间确保1分钟只发送一次
-		String ip = Kit.getIpAddr(getRequest());
-		Long prevDate = (Long) session.getAttribute(ip);
+		String rateLimitKey = "rate_limit:" + clientId;
+		Long prevDate = Redis.use().get(rateLimitKey);
 		long curr = System.currentTimeMillis();
 		if(prevDate!= null && curr - prevDate < 60000 ) {
 //			renderJson(JsonResult.error(Msg.AUTH_SEND_CODE_ERR));
@@ -241,11 +310,15 @@ public class AuthController extends BaseController{
 			return;
 		}
 		
-		
 		String phoneCode = CaptchaGenerator.randomNumberCode(6);
 		System.out.println("手机号："+phoneNo+"的验证码："+phoneCode);
-		session.setAttribute(CacheKey.SESSION_KEY_PHONE_CAPTCHA, phoneCode);
-		session.setAttribute(ip, curr);
+		
+		// 存储到Redis，设置5分钟过期
+		String captchaKey = CacheKey.SESSION_KEY_PHONE_CAPTCHA + ":" + clientId;
+		Redis.use().setex(captchaKey, 300, phoneCode);
+		
+		// 设置频率限制，1分钟
+		Redis.use().setex(rateLimitKey, 60, String.valueOf(curr));
 		
 		renderJson(JsonResult.ok(Msg.AUTH_SEND_PHONE_CODE_OK));
 	}
@@ -275,16 +348,19 @@ public class AuthController extends BaseController{
 			return;
 		}
 		
-		if(code.equalsIgnoreCase(getSession().getAttribute(CacheKey.SESSION_KEY_CAPTCHA)+"") == false){
+		// 验证图片验证码
+		if(!validateCaptchaForJwt(code, CacheKey.SESSION_KEY_CAPTCHA)){
 //			throw new BusinessException(BusinessErr.ERROR, Msg.AUTH_NULL_CODE);
 			renderJson(JsonResult.error(BusinessErr.ERROR.setMsg(Msg.AUTH_NULL_CODE)));
 			return;
 		}
 		
-		HttpSession session = getRequest().getSession();
+		// 获取客户端标识
+		String clientId = getClientId();
+		
 		//设置时间确保1分钟只发送一次
-		String ip = Kit.getIpAddr(getRequest());
-		Long prevDate = (Long) session.getAttribute(ip);
+		String rateLimitKey = "rate_limit:" + clientId;
+		Long prevDate = Redis.use().get(rateLimitKey);
 		long curr = System.currentTimeMillis();
 		if(prevDate!= null && curr - prevDate < 60000 ) {
 //			renderJson(JsonResult.error(Msg.AUTH_SEND_CODE_ERR));
@@ -294,8 +370,13 @@ public class AuthController extends BaseController{
 		
 		String emailCode = CaptchaGenerator.randomNumberCode(6);
 		System.out.println("邮箱地址"+email+"的证码："+emailCode);
-		session.setAttribute(CacheKey.SESSION_KEY_EMAIL_CAPTCHA, emailCode);
-		session.setAttribute(ip, curr);
+		
+		// 存储到Redis，设置5分钟过期
+		String captchaKey = CacheKey.SESSION_KEY_EMAIL_CAPTCHA + ":" + clientId;
+		Redis.use().setex(captchaKey, 300, emailCode);
+		
+		// 设置频率限制，1分钟
+		Redis.use().setex(rateLimitKey, 60, String.valueOf(curr));
 		
 		renderJson(JsonResult.ok(Msg.AUTH_SEND_EMAIL_CODE_OK));
 	}
@@ -325,7 +406,8 @@ public class AuthController extends BaseController{
 			return;
 		}
 		
-		if(dto.getCode().equalsIgnoreCase(getSession().getAttribute(codeCacheKey)+"") == false){
+		// 验证验证码 - 纯Redis方式
+		if(!validateCaptchaForJwt(dto.getCode(), codeCacheKey)){
 //			throw new BusinessException(BusinessErr.ERROR, Msg.AUTH_NULL_CODE);
 			renderJson(JsonResult.error(BusinessErr.ERROR.setMsg(Msg.AUTH_NULL_CODE)));
 			return;
@@ -334,6 +416,8 @@ public class AuthController extends BaseController{
 		//验证验证码是否正确
 		boolean result = userService.updatePassword(dto.getType(), dto.getAccount(), dto.getPassword());
 		if(result) {
+			// 清除验证码缓存
+			clearCaptchaCacheForJwt(codeCacheKey);
 			renderJson(JsonResult.ok(Msg.OK_UPDATE));
 		}else {
 			renderJson(JsonResult.error(Msg.ERR_UPDATE));
