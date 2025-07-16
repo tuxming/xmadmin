@@ -28,12 +28,14 @@ import { Space, Divider, MenuProps, Dropdown } from "antd"
 import { UserAddIcon, DeleteIcon, EditIcon, DataLockIcon, GrantUserIcon } from '../../../components/icon/svg/Icons';
 import { UserQuery, UserList } from './index'
 import { AuthButton,  useLayer,  } from '../../../components';
-import { useAuth, useRequest, useSelector, useShowResult, useTranslation } from '../../../hooks';
+import { useAuth, useRequest,useDispatch, useSelector, useShowResult, useTranslation } from '../../../hooks';
 import { permission } from '../../../common/permission';
 import { AdminUser } from '../../../common/I18NNamespace';
 import { api } from '../../../common/api';
 import { UserAdd, UserEdit, UserGrantDataPermissionModal, UserGrantRoleModal } from './index';
-import { DownOutlined } from '@ant-design/icons';
+import { DownOutlined, UserOutlined } from '@ant-design/icons';
+import { jwtTokenSlice, persistedUserSlice } from '../../../redux/loginSlice';
+
 
 export const UserPage : React.FC = () => {
 
@@ -59,6 +61,9 @@ export const UserPage : React.FC = () => {
     const [grantUser, setGranUser] = useState<any>();
     const [grantRoleUser, setGranRoleUser] = useState<any>();
     const auth = useAuth();
+    const dispatch = useDispatch();
+    const user = useSelector(state => state.persistedUser);
+    const jwtToken = useSelector(state => state.jwtToken);
 
     //执行查询
     let onQuery = (values) => {
@@ -175,6 +180,56 @@ export const UserPage : React.FC = () => {
 
     }
 
+    // 添加登录此用户的处理函数
+    const loginAsUser = () => {
+        setSelectedRows(prev => {
+            if(!prev || prev.length==0){
+                message.warning(t("请选中要登录的用户后，再操作"));
+                return [];
+            }
+            
+            confirm({
+                content: f("确定要以 %s 的身份登录吗?", [prev[0].fullname]),
+                onOk: (close) => {
+                    let doLoginAs = async () => {
+                        let result = await request.get(api.user.loginAs+"?id="+prev[0].id);
+                        showResult.show(result);
+                        if(result.status){
+                            // 更新Redux中的用户信息和JWT token
+                            const tokenHistory = JSON.parse(localStorage.getItem('userInfos') || '[]');
+                    
+                            // 将当前token添加到历史记录（最多保存5个）
+                            tokenHistory.unshift(
+                                {
+                                   user: user,
+                                   token: jwtToken
+                                }
+                            );
+                            
+                            // 只保留最近5个token
+                            if (tokenHistory.length > 5) {
+                                tokenHistory.splice(5);
+                            }
+                            
+                            localStorage.setItem('userInfos', JSON.stringify(tokenHistory));
+                            
+                            dispatch(persistedUserSlice.actions.persist(result.data.user));
+                            dispatch(jwtTokenSlice.actions.persist(result.data.jwtToken));
+                            // 刷新页面或重定向到首页
+                            setTimeout(() => {
+                                window.location.href = api.backendPage;
+                            }, 1000);
+                            close();
+                        }
+                    }
+                    doLoginAs();
+                }
+            });
+
+            return prev;
+        });
+    }
+
     //更多菜单
     const items: MenuProps['items'] = useMemo(()=> {
         let values: MenuProps['items'] = [];
@@ -195,9 +250,21 @@ export const UserPage : React.FC = () => {
                 onClick: grantData
             });
         }
+        
+        // 添加登录此用户菜单项
+        if(auth.has("sys:user:loginAs")){
+            values.push({
+                label: t('登录此用户'),
+                key: '3',
+                icon: <UserOutlined style={{color: '#1677ff'}} />,
+                onClick: loginAsUser
+            });
+        }
         return values;
     }, []);
-
+    
+    
+    
     return <>
         <UserQuery onQuery={onQuery}/>
         <Divider />

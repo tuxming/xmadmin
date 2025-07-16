@@ -31,6 +31,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
@@ -58,6 +59,7 @@ import com.xm2013.admin.shiro.dto.ShiroUser;
 import com.xm2013.admin.shiro.dto.ShiroUserData;
 
 public class ShiroKit {
+	private static Logger log  = Logger.getLogger(ShiroKit.class);
 	
 	/**
      * 重新赋值权限(在比如:给一个角色临时添加一个权限,需要调用此方法刷新权限,否则还是没有刚赋值的权限)
@@ -96,7 +98,7 @@ public class ShiroKit {
 			return null;
 		}
 		
-		System.out.println("DEBUG: Principal 类型: " + user.getClass().getName() + ", 值: " + user);
+//		System.out.println("DEBUG: Principal 类型: " + user.getClass().getName() + ", 值: " + user);
 		
 		if(user!=null && user.getClass().getName().equals("java.lang.String")) {
 			String username = (String)user;
@@ -106,21 +108,20 @@ public class ShiroKit {
 				User u = userService.findByUsername(username);
 				
 				if(u == null) {
-					System.out.println("DEBUG: 根据用户名 '" + username + "' 未找到用户");
+					log.info("根据用户名 '" + username + "' 未找到用户");
 					return null;
 				}
 				
 				return buildShiroUser(u, userService);
 			} catch (Exception e) {
-				System.out.println("DEBUG: 构建 ShiroUser 时发生异常: " + e.getMessage());
-				e.printStackTrace();
+				log.error("构建 ShiroUser 时发生异常: " + e.getMessage(), e);
 				return null;
 			}
 		}else {
 			try {
 				return (ShiroUser)user;
 			} catch (ClassCastException e) {
-				System.out.println("DEBUG: 类型转换异常，期望 ShiroUser，实际: " + user.getClass().getName());
+				log.error("类型转换异常，期望 ShiroUser，实际: " + user.getClass().getName() + e.getMessage(), e);
 				return null;
 			}
 		}

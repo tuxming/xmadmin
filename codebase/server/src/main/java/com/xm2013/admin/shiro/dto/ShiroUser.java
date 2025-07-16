@@ -148,20 +148,20 @@ public class ShiroUser implements java.io.Serializable{
 		
 		if(userIds!= null && !userIds.isEmpty()) {
 			if(deptIds!=null && !deptIds.isEmpty()) {
-				return "("+alias+" id in ("
+				return "("+alias+"id in ("
 								+userIds.stream().map(s-> s+"").collect(Collectors.joining(","))
 							+") "
 							+ "or "+alias+"dept_id in ("
 								+deptIds.stream().map(s-> s+"").collect(Collectors.joining(","))
 							+ ")) " ;
 			}else {
-				return alias+" id in ("+userIds.stream().map(s-> s+"").collect(Collectors.joining(","))+") ";
+				return alias+"id in ("+userIds.stream().map(s-> s+"").collect(Collectors.joining(","))+") ";
 			}
 		}else {
 			if(deptIds!=null && !deptIds.isEmpty()) {
 				return alias+"dept_id in ("+deptIds.stream().map(s-> s+"").collect(Collectors.joining(","))+") " ;
 			}else {
-				return alias+" id="+id;
+				return alias+"id="+id;
 			}
 		}
 		

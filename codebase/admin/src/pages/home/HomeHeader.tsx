@@ -35,12 +35,13 @@ import i18next from 'i18next';
 import { Avatar, Space, Dropdown, Button, theme } from 'antd';
 import type { MenuProps } from 'antd';
 import { api } from '../../common/api'
-import { useDispatch, useRequest, useSelector } from '../../hooks';
+import { useDispatch, useRequest, useSelector, useTranslation } from '../../hooks';
 import { jwtTokenSlice, persistedUserSlice, themeConfigSlice } from '../../redux/slice';
 import {HeadTabComponent, SkinSettingComponent} from './index';
 import { UserEdit } from '../sys/user';
 import { useNavigate } from 'react-router-dom';
-
+import { useLayer,  } from '../../components';
+import { AdminUser } from '../../common/I18NNamespace';
 
 /**
  * 
@@ -48,6 +49,8 @@ import { useNavigate } from 'react-router-dom';
  */
 export const HomeHeader : React.FC = () => {
 
+     const {t, f} = useTranslation(AdminUser);
+    const {message, confirm} = useLayer();
     const request = useRequest();
     const navigate = useNavigate();
     const user = useSelector(state => state.persistedUser);
@@ -142,15 +145,47 @@ export const HomeHeader : React.FC = () => {
         if( key == '1'){
             getUserProfile(user.id);
         }else if(key == '2'){
-            dispatch(persistedUserSlice.actions.persist({}));
-            dispatch(jwtTokenSlice.actions.persist(""));
-            //因为本客户端采用的jwttoken，所以jwttoken不可能过期，只能丢弃
-            //httpOnly=true无法删除，所以后台setCookie的时候，不需要设置httpOnly,
-            document.cookie = "jwtToken" + '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-            navigate(api.loginPage);
+            logout();
         }
     }
 
+    const logout = () => {
+        confirm({
+            content: t('确定要退出登录吗？'),
+            onOk: (close) => {
+                // 检查是否有历史token
+                const users = JSON.parse(localStorage.getItem('userInfos') || '[]');
+                
+                if (users.length > 0) {
+                    // 有历史token，恢复到上一个用户
+                    const userInfos = users.shift(); // 取出最新的历史token
+
+                    dispatch(persistedUserSlice.actions.persist(userInfos.user));
+                    dispatch(jwtTokenSlice.actions.persist(userInfos.token));
+                    
+                    // 更新token历史
+                    localStorage.setItem('userInfos', JSON.stringify(users.slice(0, users.length-1)));
+                    document.cookie = `jwtToken=${userInfos.token}; path=/; max-age=${60*60*24}`
+
+                    message.success('已切换回上一个用户');
+                    
+                    // 刷新页面
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+                } else {
+                    dispatch(persistedUserSlice.actions.persist({}));
+                    dispatch(jwtTokenSlice.actions.persist(""));
+                    //因为本客户端采用的jwttoken，所以jwttoken不可能过期，只能丢弃
+                    //httpOnly=true无法删除，所以后台setCookie的时候，不需要设置httpOnly,
+                    document.cookie = "jwtToken" + '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+                    navigate(api.loginPage);
+                }
+                
+                close();
+            }
+        });
+    };
     return <>
         <div className="xm-header-wrap">
             <div className="xm-top">

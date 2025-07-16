@@ -25,11 +25,18 @@
 
 package com.xm2013.admin.basic.ctrl;
 
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.Cookie;
+
 import org.apache.log4j.Logger;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.mgt.DefaultSecurityManager;
+import org.apache.shiro.realm.Realm;
 
 import com.jfinal.aop.Inject;
 import com.xm2013.admin.annotation.Op;
@@ -50,7 +57,11 @@ import com.xm2013.admin.domain.model.User;
 import com.xm2013.admin.domain.model.UserData;
 import com.xm2013.admin.exception.BusinessErr;
 import com.xm2013.admin.exception.Msg;
+import com.xm2013.admin.shiro.ShiroConst;
 import com.xm2013.admin.shiro.ShiroKit;
+import com.xm2013.admin.shiro.ShiroRealm;
+import com.xm2013.admin.shiro.dto.ShiroUser;
+import com.xm2013.admin.shiro.jwt.JwtUtil;
 import com.xm2013.admin.validator.Validator;
 
 /**
@@ -200,6 +211,7 @@ public class UserController extends BaseController{
 		
 		String msg = user.getResultMsg();
 		if(msg!=null) {
+			clearShiroCache();
 			renderJson(JsonResult.error(msg));
 		}else {
 			renderJson(JsonResult.ok(Msg.OK_UPDATE, user.getResultData()));
@@ -221,6 +233,7 @@ public class UserController extends BaseController{
 		}
 		
 		if(userService.delete(id, ShiroKit.getLoginUser())) {
+			clearShiroCache();
 			renderJson(JsonResult.ok(Msg.OK_DELETE));
 		}else {
 			renderJson(JsonResult.error(Msg.ERR_DELETE));
@@ -276,6 +289,7 @@ public class UserController extends BaseController{
 				
 		boolean result = userService.userDataAdd(userData, ShiroKit.getLoginUser());
 		if(result) {
+			clearShiroCache();
 			renderJson(JsonResult.ok(Msg.OK_CREATED, userData.getId()));
 		}else {
 			renderJson(JsonResult.error(Msg.ERR_CREATE));
@@ -298,6 +312,7 @@ public class UserController extends BaseController{
 		
 		boolean result = userService.userDataDelete(id, ShiroKit.getLoginUser());
 		if(result) {
+			clearShiroCache();
 			renderJson(JsonResult.ok(Msg.OK_DELETE));
 		}else {
 			renderJson(JsonResult.error(Msg.ERR_DELETE));
@@ -334,6 +349,7 @@ public class UserController extends BaseController{
 		
 		boolean result = userService.userRoleAdd(userId,roleId, ShiroKit.getLoginUser());
 		if(result) {
+			clearShiroCache();
 			renderJson(JsonResult.ok(Msg.OK_CREATED));
 		}else {
 			renderJson(JsonResult.error(Msg.ERR_CREATE));
@@ -357,10 +373,87 @@ public class UserController extends BaseController{
 		
 		boolean result = userService.userRoleDelete(id, ShiroKit.getLoginUser());
 		if(result) {
+
+			clearShiroCache();
 			renderJson(JsonResult.ok(Msg.OK_DELETE));
 		}else {
 			renderJson(JsonResult.error(Msg.ERR_DELETE));
 		}
 	}
 	
+	/**
+	 * 登录此用户 - 管理员切换用户身份
+	 */
+	@RequirePermission(val="sys:user:login:as", name="登录此用户", group="system")
+	@Op("登录此用户")
+	public void loginAs() {
+		
+		Integer userId = getParaToInt("id", 0); 
+		if(userId == 0) {
+			renderJson(JsonResult.error(BusinessErr.ERROR.setMsg("用户ID不能为空")));
+			return;
+		}
+		
+		try {
+			// 获取目标用户信息
+			User targetUser = userService.findById(userId);
+			if(targetUser == null) {
+				renderJson(JsonResult.error(BusinessErr.ERROR.setMsg("用户不存在")));
+				return;
+			}
+			
+			// 检查目标用户状态
+			if(targetUser.getStatus() != 1) {
+				renderJson(JsonResult.error(BusinessErr.ERROR.setMsg("目标用户已被禁用")));
+				return;
+			}
+			
+			// 构建目标用户的Shiro用户信息
+			ShiroUser targetShiroUser = ShiroKit.buildShiroUser(targetUser, userService);
+			
+			// 生成新的JWT token
+			String newJwtToken = JwtUtil.sign(targetShiroUser.getUsername());
+			
+			// 设置JWT cookie
+			Cookie jwtCookie = new Cookie(ShiroConst.JWT_TOKEN_HEADER, newJwtToken);
+			jwtCookie.setMaxAge(60*60*24);
+			jwtCookie.setPath("/");
+			getResponse().addCookie(jwtCookie);
+			
+			// 返回新token和用户信息
+			Map<String, Object> result = new HashMap<>();
+			result.put("jwtToken", newJwtToken);
+			result.put("user", targetShiroUser);
+			
+			renderJson(JsonResult.ok("切换用户成功", result));
+			
+		} catch (Exception e) {
+			log.error("登录此用户失败", e);
+			renderJson(JsonResult.error(BusinessErr.ERROR.setMsg("登录此用户失败：" + e.getMessage())));
+		}
+	}
+
+	/**
+	 * 清除Shiro的认证和授权缓存
+	 */
+	private void clearShiroCache() {
+		org.apache.shiro.mgt.SecurityManager securityManager = SecurityUtils.getSecurityManager();
+		
+		if(securityManager instanceof DefaultSecurityManager) {
+			DefaultSecurityManager defaultSecurityManager = (DefaultSecurityManager) securityManager;
+			Collection<Realm> realms = defaultSecurityManager.getRealms();
+			
+			for(Realm realm : realms) {
+				if(realm instanceof ShiroRealm) {
+					ShiroRealm shiroRealm = (ShiroRealm) realm;
+					shiroRealm.clearAllCache();
+					break;
+				}
+			}
+		}
+	}
 }
+
+
+
+

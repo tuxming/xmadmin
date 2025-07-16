@@ -1,10 +1,9 @@
-
-
 export const permission = {
     user: {
         create: { groupName: "system",  name: "新增用户", expression: "sys:user:create"},
         update: { groupName: "system",  name: "编辑用户", expression: "sys:user:update"},
         delete: { groupName: "system",  name: "删除用户", expression: "sys:user:delete"},
+        loginAs: { groupName: "system",  name: "登录此用户", expression: "sys:user:loginAs"},
     },
     role: {
         create: { groupName: "system",  name: "新增角色", expression: "sys:role:create"},
@@ -50,5 +49,13 @@ export const permission = {
         get: { groupName: "system",  name: "查看日志详情", expression: "sys:history:get"},
         delete: { groupName: "system",  name: "删除日志", expression: "sys:history:create"},
     },
-    
+    image: {
+        create: { groupName: "image",  name: "新增图片", expression: "sys:image:create"},
+        update: { groupName: "image",  name: "编辑图片", expression: "sys:image:update"},
+        delete: { groupName: "image",  name: "删除图片", expression: "sys:image:delete"},
+        upload: { groupName: "image",  name: "上传图片", expression: "sys:image:upload"},
+        folderCreate: { groupName: "image",  name: "新增文件夹", expression: "sys:image:folder:create"},
+        folderUpdate: { groupName: "image",  name: "编辑文件夹", expression: "sys:image:folder:update"},
+        folderDelete: { groupName: "image",  name: "删除文件夹", expression: "sys:image:folder:delete"},
+    },
 }

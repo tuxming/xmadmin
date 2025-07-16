@@ -59,6 +59,7 @@ export const LoginForm: React.FC<LoginFormProp> = ({onClickForget}) => {
 
     useEffect(() => {
         if(user){
+            // console.log(user);
             dispatch(persistedUserSlice.actions.persist(user));
             dispatch(jwtTokenSlice.actions.persist(jwtToken))
             navigate(api.backendPage);

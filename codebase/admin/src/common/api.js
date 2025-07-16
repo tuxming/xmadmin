@@ -1,4 +1,3 @@
-
 const proServer = "";
 const devServer = "http://localhost";
 
@@ -41,6 +40,7 @@ export const api = {
         userRoles: server + "/am/user/userRoles",
         userRoleAdd: server + "/am/user/userRoleAdd",
         userRoleDelete: server + "/am/user/userRoleDelete",
+        loginAs: server + "/am/user/loginAs", // 添加登录此用户的API接口
     },
     role: {
         search: server + "/am/role/search",
@@ -98,5 +98,29 @@ export const api = {
         updateDict: server + "/am/dict/updateDict",
         deleteDict: server + "/am/dict/deleteDict",
         byKey: server + "/am/dict/byKey",
+    },
+    image: {
+        get: server + "/am/image/get",
+        list: server + "/am/image/list",
+        create: server + "/am/image/create",
+        update: server + "/am/image/update",
+        delete: server + "/am/image/delete",
+        upload: server + "/am/image/upload",
+        batchUpload: server + "/am/image/batchUpload",
+        copyToFolder: server + "/am/image/copyToFolder",
+        moveToFolder: server + "/am/image/moveToFolder",
+        getFolder: server + "/am/image/getFolder",
+        folderList: server + "/am/image/getAllFolders", // 获取所有文件夹（用于树形结构）
+        listFolder: server + "/am/image/listFolder", // 文件夹列表（分页）
+        createFolder: server + "/am/image/createFolder",
+        updateFolder: server + "/am/image/updateFolder",
+        deleteFolder: server + "/am/image/deleteFolder",
+        // 高级编辑相关接口
+        updateFolderAdvanced: server + "/am/image/updateFolderAdvanced",
+        getVolumeUnits: server + "/am/image/getVolumeUnits",
+        getWeightUnits: server + "/am/image/getWeightUnits",
+        // 图片预览接口
+        view: server + "/am/image/view", // 查看缩略图
+        viewFull: server + "/am/image/viewFull", // 查看原图
     }
 }

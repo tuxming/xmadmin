@@ -56,7 +56,7 @@ public class DeptService {
 	private static String sql = "select t.*, "
 			+ " t1.name as parentName, t1.path as parentPath, t1.path_name as parentPathName "
 			+ " from sys_dept as t left "
-			+ " join sys_dept as t1 on t1.id = t.id "
+			+ " join sys_dept as t1 on t1.id = t.parent_id "
 			+ " where ";
 	
 	@Inject
@@ -75,7 +75,7 @@ public class DeptService {
 	}
 	
 	public List<Dept> findByChildPath(String path){
-		return Dept.dao.find(DEPT_CHILD_PATH, path, sql + " t.like = '"+path+"%'"); 
+		return Dept.dao.findByCache(DEPT_CHILD_PATH, path, sql + " t.path like '"+path+"%'"); 
 	}
 	
 	private void removeCache(Dept dept) {

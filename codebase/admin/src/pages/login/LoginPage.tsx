@@ -31,7 +31,7 @@ import {Logo} from "../../components/Logo";
 import { useSearchParams   } from 'react-router-dom';
 import { useTranslation, useSelector } from "../../hooks";
 import { AdminLogin } from "../../common/I18NNamespace";
-import bg from '../../assets/bg.jpg'
+import bg from '../../assets/bg.jpg';
 
 /**
  * /login?f=1&t=2
