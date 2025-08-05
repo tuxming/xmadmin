@@ -143,7 +143,7 @@ export const Modal : React.FC<ModalType> = ({
 
     const inited = useRef(height && height!='auto');
 
-    const [visible, setVisible] = useState(true);
+    const [visible, setVisible] = useState(open);
     const modalRef = useRef(null);
     const [modalState, setModalState] = useState(state);
     const [topLevel, setTopLevel] = useState(false);
@@ -166,9 +166,9 @@ export const Modal : React.FC<ModalType> = ({
     const [winPos, setWinPos] = useState<any>({
         width: computePx(width),
         height: wheight || 'auto',
-        top: (window.innerHeight - wheight) / 2,
+        top: wheight ? (window.innerHeight - wheight) / 2 : window.innerHeight / 3,
         left: (window.innerWidth - computePx(width)) /2,
-        visibility: height && height!='auto'? 'visible' : "hidden",
+        visibility: 'hidden',
         animationName: 'zoomIn'
     })
 
@@ -235,8 +235,15 @@ export const Modal : React.FC<ModalType> = ({
         // console.log("open="+open+", visible="+visible);
         if(open == false && visible){
             closeModal();
-        }else if(open){
+        }else if(open && !visible){
             setVisible(true);
+            // Set visibility to visible after a small delay to ensure smooth animation
+            setTimeout(() => {
+                if(modalRef.current){
+                    modalRef.current.style.visibility = 'visible';
+                    modalRef.current.style.animationName = 'zoomIn';
+                }
+            }, 10);
         }
     }, [open]);
 
@@ -244,7 +251,7 @@ export const Modal : React.FC<ModalType> = ({
         completePos();
     }, [modalState]);
 
-    //添加移动，改变窗口的拖拽监听
+        //添加移动，改变窗口的拖拽监听
     useEffect(() => {
         const handleMoveMouseDown = (event) => {
             setIsDragging(true);
@@ -311,33 +318,70 @@ export const Modal : React.FC<ModalType> = ({
             setIsDragging(false);
             setIsDraggingSize(false);
         };
-        
-        let moveBtn = null;
-        let resizeBtn = null;
-        if(showMove){
-            moveBtn = modalRef.current.querySelector(".x-modal-move-btn");
-            moveBtn.addEventListener('mousedown', handleMoveMouseDown);
-        }
-
-        if(showResize){
-            resizeBtn = modalRef.current.querySelector(".x-modal-resize-btn");
-            resizeBtn.addEventListener('mousedown', handleResizeMouseDown);
-        }
 
         document.addEventListener('mousemove', handleMouseMove);
         document.addEventListener('mouseup', handleMouseUp);
     
         return () => {
-            if(showMove){
+            document.removeEventListener('mousemove', handleMouseMove);
+            document.removeEventListener('mouseup', handleMouseUp);
+        };
+    }, [isDragging, isDraggingSize]);
+
+    // 单独处理按钮事件绑定，确保在DOM渲染完成后绑定
+    useEffect(() => {
+        if (!visible || !modalRef.current) return;
+
+        const handleMoveMouseDown = (event) => {
+            setIsDragging(true);
+            setPosition({
+                x: event.clientX - modalRef.current.offsetLeft,
+                y: event.clientY - modalRef.current.offsetTop,
+            });
+        };
+
+        const handleResizeMouseDown = (event) => {
+            event.preventDefault();
+            setIsDraggingSize(true);
+        };
+
+        let moveBtn = null;
+        let resizeBtn = null;
+
+        // 延迟绑定，确保DOM完全渲染
+        const bindEvents = () => {
+            if(showMove && modalRef.current){
+                moveBtn = modalRef.current.querySelector(".x-modal-move-btn");
+                if(moveBtn){
+                    moveBtn.addEventListener('mousedown', handleMoveMouseDown);
+                }
+            }
+
+            if(showResize && modalRef.current){
+                resizeBtn = modalRef.current.querySelector(".x-modal-resize-btn");
+                if(resizeBtn){
+                    resizeBtn.addEventListener('mousedown', handleResizeMouseDown);
+                }
+            }
+        };
+
+        // 立即尝试绑定，如果失败则延迟重试
+        bindEvents();
+        
+        // 如果第一次绑定失败，延迟重试
+        if (!moveBtn && showMove || !resizeBtn && showResize) {
+            setTimeout(bindEvents, 100);
+        }
+
+        return () => {
+            if(moveBtn){
                 moveBtn.removeEventListener('mousedown', handleMoveMouseDown);
             }
             if(resizeBtn){
                 resizeBtn.removeEventListener('mousedown', handleResizeMouseDown);
             }
-            document.removeEventListener('mousemove', handleMouseMove);
-            document.removeEventListener('mouseup', handleMouseUp);
         };
-    }, [isDragging, isDraggingSize]);
+    }, [visible, showMove, showResize]);
 
     //当height为auto计算出实际的height, 方便定位和绘制窗口的大小
     //添加聚焦事件，modal获得聚焦的时候，显示在最顶层，
@@ -355,7 +399,7 @@ export const Modal : React.FC<ModalType> = ({
             let npos = {
                 width: computePx(width),
                 height: wheight || 'auto',
-                top:   aheight>winHeight?0:(winHeight - aheight) / 3,
+                top: aheight > winHeight ? 0 : (winHeight - aheight) / 3,
                 left: (window.innerWidth - computePx(width)) /2,
                 visibility: 'visible',
                 animationName: 'zoomIn'
@@ -477,6 +521,8 @@ export const Modal : React.FC<ModalType> = ({
         setTimeout(() => {
             css.opacity ="0";
             css.display = "none";
+            css.visibility = "hidden";
+            css.animationName = "";
             setVisible(false);
             onClose();
         }, 300);
