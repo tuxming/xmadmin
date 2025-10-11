@@ -214,9 +214,9 @@ export const Modal : React.FC<ModalType> = ({
         if(!inited.current)
             return;
         if(modalState == "win"){
-            setCurrPos({...winPos, visibility: visible ? 'visible' : 'hidden'});
+            setCurrPos(winPos);
             if(onSizeChange){
-                onSizeChange({...winPos, visibility: visible ? 'visible' : 'hidden'});
+                onSizeChange(winPos);
             }
         }else if(modalState == 'full'){
             setCurrPos(fullPos);
@@ -232,26 +232,18 @@ export const Modal : React.FC<ModalType> = ({
     }
 
     useEffect(()=>{
+        // console.log("open="+open+", visible="+visible);
         if(open == false && visible){
             closeModal();
         }else if(open && !visible){
             setVisible(true);
-            // Immediately update currPos visibility
-            setCurrPos(prev => {
-                return {...prev, visibility: 'visible'};
-            });
-            // Set modal visibility after a small delay
+            // Set visibility to visible after a small delay to ensure smooth animation
             setTimeout(() => {
                 if(modalRef.current){
                     modalRef.current.style.visibility = 'visible';
                     modalRef.current.style.animationName = 'zoomIn';
                 }
             }, 10);
-        }else if(open && visible){
-            // When both open and visible are true, ensure currPos visibility is correct
-            setCurrPos(prev => {
-                return {...prev, visibility: 'visible'};
-            });
         }
     }, [open]);
 
@@ -573,7 +565,6 @@ export const Modal : React.FC<ModalType> = ({
         zIndex: topLevel? windowIndex: (currIndex.current || zIndex),
     }
 
-    console.log("Modal render - visible="+visible+", currPos=", currPos);
     if(visible){
     return createPortal(
         <div className={theme + " x-modal-overlay "} onClick={onClickMaskHandler}  style={overlayStye}>
@@ -596,10 +587,9 @@ export const Modal : React.FC<ModalType> = ({
             <div 
                 tabIndex={11}
                 ref={modalRef}
-                style={{...currPos, visibility: currPos.visibility || 'visible'}}
+                style={currPos}
                 className="x-modal-content"
                 onClick={(e) => e.stopPropagation()}
-                onLoad={() => console.log("Modal x-modal-content loaded, style=", currPos)}
             >
                 <div className="x-modal-inner-content" style={{
                     width: '100%', 

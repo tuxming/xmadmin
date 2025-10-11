@@ -119,7 +119,8 @@ export const UserGrantRole : React.FC<{
             onOk: () => {
                 submitAdd();
             },
-            width: 300
+            width: 300,
+            height: 220
         });
         setConfirmId(id);
     }
