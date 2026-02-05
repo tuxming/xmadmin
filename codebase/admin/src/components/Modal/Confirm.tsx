@@ -24,7 +24,7 @@
  */
 
 
-import { ReactNode, useState, useEffect } from 'react';
+import { ReactNode, useState } from 'react';
 import {Modal} from './index'
 import { Button, Divider, Typography } from 'antd';
 import { useSelector,useTranslation } from '../../hooks';
@@ -62,11 +62,6 @@ export const Confirm : React.FC<ConfirmType> = ({
 })=>{
     const {t} = useTranslation(DefaultNS);
     const [visible, setVisible] = useState<boolean>(open);
-    
-    // 监听 open 属性变化
-    useEffect(() => {
-        setVisible(open);
-    }, [open]);
     const theme = useSelector(state => state.themeConfig.theme);
     const screenHeight = useSelector(state => state.globalVar.height);
 
