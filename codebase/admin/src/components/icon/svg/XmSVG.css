@@ -23,20 +23,26 @@
  *
  */
 
+.svg-icon-wrap{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
 
 .xmsvg-main{
-    fill: var(--var-xmsvg-color);
+    /* 主色：跟随父节点 span 的 color（currentColor） */
+    fill: currentColor;
 }
 
 .xmsvg-second{
-    fill: var(--var-xmsvg-second-color);
+    /* 次色：使用 CSS 变量（如果没配就退回 currentColor） */
+    fill: var(--var-xmsvg-second-color, currentColor);
 }
 
 .ant-btn:hover  .xmsvg-main, .svg-icon-wrap:hover .xmsvg-main{
-    fill: var(--var-xmsvg-color-hover);
+    fill: var(--var-xmsvg-color-hover, currentColor);
 }
 
 .ant-btn:hover .xmsvg-second, .svg-icon-wrap:hover .xmsvg-second{
-    fill: var(--var-xmsvg-second-color-hover);
+    fill: var(--var-xmsvg-second-color-hover, var(--var-xmsvg-second-color, currentColor));
 }
-

@@ -110,6 +110,9 @@ export type ThemeConfigType = {
     sideItemOpacity: number,            //侧边菜单项的透明都
     sideItemSelectOpacity: number,       //侧边菜单项选中的透明度
     componentSize: 'small' | 'large' | 'middle',
+    modalOpacity: number,               //弹窗背景透明度
+    modalWallpaperEnabled: boolean,      //弹窗是否应用壁纸
+    modalBgBlur: number,                 //弹窗背景模糊度
 } 
 
 const defaultThemeConfig : ThemeConfigType= {
@@ -127,7 +130,10 @@ const defaultThemeConfig : ThemeConfigType= {
     sideWidth: 250,                 //侧边菜单的宽度
     bgBlur: 0,                      //背景模糊度
     onlyIcon: false,                  //是否只显示图标，一般针对按钮
-    componentSize: 'middle'            //设置按钮尺寸
+    componentSize: 'middle',            //设置按钮尺寸
+    modalOpacity: 1,                   //弹窗背景透明度
+    modalWallpaperEnabled: false,       //弹窗是否应用壁纸
+    modalBgBlur: 0,                    //弹窗背景模糊度
 }   
 
 export const themeConfigSlice = createSlice({
@@ -184,6 +190,15 @@ export const themeConfigSlice = createSlice({
         },
         changeSideWidth: (state, action) => { //设置侧边菜单的宽度
             state.sideWidth = action.payload;
+        },
+        changeModalOpacity: (state, action) => {  //modalOpacity 弹窗背景透明度
+            state.modalOpacity = action.payload;
+        },
+        changeModalWallpaperEnabled: (state, action) => {  //modalWallpaperEnabled 弹窗是否应用壁纸
+            state.modalWallpaperEnabled = action.payload;
+        },
+        changeModalBgBlur: (state, action) => {  //modalBgBlur 弹窗背景模糊度
+            state.modalBgBlur = action.payload;
         },
         /**
          * 重置主题设置

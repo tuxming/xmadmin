@@ -405,7 +405,10 @@ public class UserService {
 		
 		user.setCreated(new Date());
 		
-		if(user.getPhoto() == null) {
+		// 设置照片ID
+		if(addUser.getPhoto() != null) {
+			user.setPhoto(addUser.getPhoto());
+		} else if(user.getPhoto() == null) {
 			user.setPhoto(0);
 		}
 		

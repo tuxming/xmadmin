@@ -151,6 +151,10 @@ export const Modal : React.FC<ModalType> = ({
     const windowIndex = useSelector(state => state.globalVar.windowIndex);
     const currIndex = useRef<number>(windowIndex);
     const dispatch = useDispatch();
+    const modalOpacity = useSelector(state => state.themeConfig.modalOpacity);
+    const modalWallpaperEnabled = useSelector(state => state.themeConfig.modalWallpaperEnabled);
+    const wallpaperUrl = useSelector(state => state.themeConfig.wallpaperUrl);
+    const modalBgBlur = useSelector(state => state.themeConfig.modalBgBlur);
 
     useEffect(()=>{
         if(type == 'window'){
@@ -573,7 +577,7 @@ export const Modal : React.FC<ModalType> = ({
         zIndex: topLevel? windowIndex: (currIndex.current || zIndex),
     }
 
-    console.log("Modal render - visible="+visible+", currPos=", currPos);
+    // console.log("Modal render - visible="+visible+", currPos=", currPos);
     if(visible){
     return createPortal(
         <div className={theme + " x-modal-overlay "} onClick={onClickMaskHandler}  style={overlayStye}>
@@ -596,11 +600,26 @@ export const Modal : React.FC<ModalType> = ({
             <div 
                 tabIndex={11}
                 ref={modalRef}
-                style={{...currPos, visibility: currPos.visibility || 'visible'}}
+                style={{
+                    ...currPos, 
+                    visibility: currPos.visibility || 'visible',
+                    background: modalWallpaperEnabled && wallpaperUrl 
+                        ? `url('${wallpaperUrl}') no-repeat center center / cover` 
+                        : 'none',
+                }}
                 className="x-modal-content"
-                onClick={(e) => e.stopPropagation()}
-                onLoad={() => console.log("Modal x-modal-content loaded, style=", currPos)}
             >
+                <div
+                    style={{
+                        width: '100%',
+                        height: '100%',
+                        backdropFilter: modalBgBlur > 0 ? `blur(${modalBgBlur}px)` : undefined,
+                        background: theme === 'dark' 
+                            ? `rgba(0, 0, 0, ${modalOpacity})` 
+                            : `rgba(255, 255, 255, ${modalOpacity})`,
+                    }}
+                    onClick={(e) => e.stopPropagation()}
+                >
                 <div className="x-modal-inner-content" style={{
                     width: '100%', 
                     height: '100%', 
@@ -650,6 +669,7 @@ export const Modal : React.FC<ModalType> = ({
                             {children}
                         </ModalContext.Provider>
                     </div>
+                </div>
                 </div>
                 {showResize && (
                 <span className="x-modal-resize-btn" >

@@ -75,6 +75,9 @@ export const UserAdd: React.FC<{
             let val = values[key];
             if(key == 'roleIds'){
                 data[key] = val.map(s => s.key*1);
+            }else if(key == 'photo'){
+                // photo 字段：如果是数组，取第一个元素；否则直接使用
+                data[key] = Array.isArray(val) && val.length > 0 ? val[0] : val;
             }else if(val){
                 data[key] = val;
             }

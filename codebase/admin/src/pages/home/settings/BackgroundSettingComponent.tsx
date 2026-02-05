@@ -25,7 +25,8 @@
 
 
 import {useState} from 'react'
-import {Typography, Image, Button, Row, Col, Slider } from "antd";
+import {Typography, Image, Button, Row, Col, Slider, Space, Switch } from "antd";
+import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import { WallpaperModal} from './index';
 import { themeConfigSlice } from '../../../redux/CommonSlice';
 import { AdminSkinSetting } from '../../../common/I18NNamespace';
@@ -48,6 +49,12 @@ export const BackgroundSettingComponent : React.FC = () => {
     const sideItemSelectOpacity = useSelector(state => state.themeConfig.sideItemSelectOpacity);
     //背景模糊度
     const bgBlur = useSelector(state => state.themeConfig.bgBlur);
+    //弹窗是否应用壁纸
+    const modalWallpaperEnabled = useSelector(state => state.themeConfig.modalWallpaperEnabled);
+    //弹窗背景模糊度
+    const modalBgBlur = useSelector(state => state.themeConfig.modalBgBlur);
+    //弹窗背景透明度
+    const modalOpacity = useSelector(state => state.themeConfig.modalOpacity);
 
     const dispatch = useDispatch();
 
@@ -69,6 +76,18 @@ export const BackgroundSettingComponent : React.FC = () => {
 
     const changeBgBlur = (value) => {
         dispatch(themeConfigSlice.actions.changeBgBlur(value));
+    }
+
+    const changeModalOpacity = (value) => {
+        dispatch(themeConfigSlice.actions.changeModalOpacity(value));
+    }
+
+    const changeModalWallpaperEnabled = (checked) => {
+        dispatch(themeConfigSlice.actions.changeModalWallpaperEnabled(checked));
+    }
+
+    const changeModalBgBlur = (value) => {
+        dispatch(themeConfigSlice.actions.changeModalBgBlur(value));
     }
 
     return <>
@@ -161,6 +180,46 @@ export const BackgroundSettingComponent : React.FC = () => {
             </Col>
             <Col span={4}>
                 <Typography.Text>{bgBlur}</Typography.Text>
+            </Col>
+        </Row>
+        <Typography.Title level={5} style={{marginTop: 25}}>{t('弹窗设置')}</Typography.Title>
+        <Typography.Text strong style={{marginTop: 20, display: 'block'} }>{t('弹窗背景透明度')}</Typography.Text>
+        <Row align='middle'>
+            <Col span={20}>
+                <Slider
+                    min={0}
+                    step={0.1}
+                    max={1}
+                    onChange={changeModalOpacity}
+                    value={modalOpacity}
+                />
+            </Col>
+            <Col span={4}>
+                <Typography.Text>{modalOpacity}</Typography.Text>
+            </Col>
+        </Row>
+        <Typography.Text strong style={{marginTop: 20, display: 'block'} }>{t('弹窗是否应用壁纸')}</Typography.Text>
+        <Space align="center">
+            <Switch
+                checkedChildren={<CheckOutlined />}
+                unCheckedChildren={<CloseOutlined />}
+                defaultChecked={modalWallpaperEnabled}
+                onChange={changeModalWallpaperEnabled}
+            />
+        </Space>
+        <Typography.Text strong style={{marginTop: 20, display: 'block'} }>{t('弹窗背景模糊度')}</Typography.Text>
+        <Row align='middle'>
+            <Col span={20}>
+                <Slider
+                    min={0}
+                    step={1}
+                    max={100}
+                    onChange={changeModalBgBlur}
+                    value={modalBgBlur}
+                />
+            </Col>
+            <Col span={4}>
+                <Typography.Text>{modalBgBlur}</Typography.Text>
             </Col>
         </Row>
         <WallpaperModal open={open} close={() => setOpen(false)}/>

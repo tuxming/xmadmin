@@ -23,7 +23,7 @@
  *
  */
 
-import React, { forwardRef, useEffect, useRef, useState } from "react"
+import React, { useEffect, useRef } from "react"
 import { theme } from 'antd'
 import "./XmSVG.css"
 import { useSelector } from "../../../hooks";
@@ -78,11 +78,7 @@ const isBlackColor = (color: string) => {
     }
 }
 
-/**
- * 这里的svg定义： path的默认颜色是黑色的是主颜色，其他颜色的是次要颜色
- * @param 
- * @returns 
- */
+// 保留原有功能：主色/次色 + 多状态，同时结合 currentColor（主色由 span 控制）
 export const XmSVG : React.FC<XmSVGType> = ({
     SVGElement,
     primaryColor,
@@ -116,155 +112,158 @@ export const XmSVG : React.FC<XmSVGType> = ({
 //     ...props
 // }) => {
     const svgRef = useRef<HTMLSpanElement>(null);
-    // const [mainColor, setMainColor] = useState(primaryColor);
-    let mainColor = primaryColor;
-    let mainHoverColor = primaryHoverColor;
 
     const {token} = theme.useToken();
 
     const size = useSelector(state => state.themeConfig.componentSize);
 
-    const buildPos = (width, height, size) => {
-        if(width && height){
-            let tw = width, th = height;
-            if(typeof tw == 'number'){
-                tw = tw+"px"
+    const buildPos = (w: number | string | undefined, h: number | string | undefined, s: string | undefined) => {
+        if (w && h) {
+            let tw: string | number = w;
+            let th: string | number = h;
+            if (typeof tw === 'number') {
+                tw = tw + 'px';
             }
-            if(typeof th == 'number'){
-                th = th+"px"
+            if (typeof th === 'number') {
+                th = th + 'px';
             }
-            
-            return {width: tw, height: th};
-        }else{
-            if(size == 'small'){
-               return {width: "12px", height: "12px"}
-            }else if(size == 'large'){
-                return {width: "20px", height: "20px"};
-            }else {
-                return {width: "16px", height: "16px"};
-            }
+            return { width: tw as string, height: th as string };
         }
-    }
-
-    if(type){
-        if(type == 'primary'){
-            if(danger){
-                if(ghost){
-                    mainColor = token.colorError;
-                    mainHoverColor = token.colorErrorHover;
-                    secondColor = token.colorError;
-                    secondHoverColor = token.colorErrorHover;
-                }else{
-                    mainColor = token.colorWhite;
-                    mainHoverColor = token.colorWhite;
-                    secondColor = token.colorWhite;
-                    secondHoverColor = token.colorWhite;
-                }
-            }else{
-                if(ghost){
-                    mainColor = token.colorPrimary;
-                    mainHoverColor = token.colorPrimaryHover;
-                    secondColor = token.colorError;
-                    secondHoverColor = token.colorErrorHover;
-                }else{
-                    mainColor = token.colorWhite;
-                    mainHoverColor = token.colorWhite;
-                    secondColor = token.colorError;
-                    secondHoverColor = token.colorErrorHover;
-                }
-            }
-        }else if(type == 'default'){
-            if(danger){
-                if(ghost){
-                    mainColor = token.colorError;
-                    mainHoverColor = token.colorErrorHover;
-                    secondColor = token.colorPrimary;
-                    secondHoverColor = token.colorPrimaryHover;
-                }else{
-                    mainColor = token.colorError;
-                    mainHoverColor = token.colorErrorHover;
-                    secondColor = token.colorPrimary;
-                    secondHoverColor = token.colorPrimaryHover;
-                }
-            }else{
-                if(ghost){
-                    mainColor = token.colorPrimaryHover;
-                    mainHoverColor = token.colorPrimaryHover;
-                    secondColor = "";
-                    secondHoverColor = "";
-                }else{
-                    mainColor = token.colorText;
-                    mainHoverColor = token.colorPrimaryHover;
-                    secondColor = token.colorPrimary;
-                    secondHoverColor = token.colorPrimaryHover;
-                }
-            }
+        if (s === 'small') {
+            return { width: '12px', height: '12px' };
         }
-    }
-
-    const style: any = {
-        "--var-xmsvg-color": mainColor,
-        position: 'relative',
-        top: offSetY,
-        ...props.style
+        if (s === 'large') {
+            return { width: '20px', height: '20px' };
+        }
+        return { width: '16px', height: '16px' };
     };
 
-    if(mainHoverColor){
+    // 计算主色/次色及 hover 色
+    let mainColor = primaryColor;
+    let mainHoverColor = primaryHoverColor;
+    let second = secondColor;
+    let secondHover = secondHoverColor;
+
+    if (type) {
+        if (type === 'primary') {
+            if (danger) {
+                if (ghost) {
+                    mainColor = token.colorError;
+                    mainHoverColor = token.colorErrorHover;
+                    second = token.colorError;
+                    secondHover = token.colorErrorHover;
+                } else {
+                    mainColor = token.colorWhite;
+                    mainHoverColor = token.colorWhite;
+                    second = token.colorWhite;
+                    secondHover = token.colorWhite;
+                }
+            } else {
+                if (ghost) {
+                    mainColor = token.colorPrimary;
+                    mainHoverColor = token.colorPrimaryHover;
+                    second = token.colorError;
+                    secondHover = token.colorErrorHover;
+                } else {
+                    mainColor = token.colorWhite;
+                    mainHoverColor = token.colorWhite;
+                    second = token.colorError;
+                    secondHover = token.colorErrorHover;
+                }
+            }
+        } else if (type === 'default') {
+            if (danger) {
+                if (ghost) {
+                    mainColor = token.colorError;
+                    mainHoverColor = token.colorErrorHover;
+                    second = token.colorPrimary;
+                    secondHover = token.colorPrimaryHover;
+                } else {
+                    mainColor = token.colorError;
+                    mainHoverColor = token.colorErrorHover;
+                    second = token.colorPrimary;
+                    secondHover = token.colorPrimaryHover;
+                }
+            } else {
+                if (ghost) {
+                    mainColor = token.colorPrimaryHover;
+                    mainHoverColor = token.colorPrimaryHover;
+                    second = '';
+                    secondHover = '';
+                } else {
+                    mainColor = token.colorText;
+                    mainHoverColor = token.colorPrimaryHover;
+                    second = token.colorPrimary;
+                    secondHover = token.colorPrimaryHover;
+                }
+            }
+        }
+    }
+
+    // 主色通过 currentColor 继承（span 的 color）
+    const style: any = {
+        color: mainColor || token.colorText,
+        position: 'relative',
+        top: offSetY,
+        ...props.style,
+    };
+
+    // hover / 次色通过 CSS 变量控制
+    if (mainHoverColor) {
         style['--var-xmsvg-color-hover'] = mainHoverColor;
     }
-    if(secondColor) {
-        style['--var-xmsvg-second-color'] = secondColor;
+    if (second) {
+        style['--var-xmsvg-second-color'] = second;
     }
-    if(secondHoverColor) {
-        style['--var-xmsvg-second-color-hover'] = secondHoverColor;
+    if (secondHover) {
+        style['--var-xmsvg-second-color-hover'] = secondHover;
     }
 
-    useEffect(()=>{
-        if(!mainColor) return;
+    useEffect(() => {
+        if (!svgRef.current) return;
+        const svg = svgRef.current.querySelector('svg') as any;
+        if (!svg) return;
 
-        let paths  = svgRef.current.querySelectorAll("path");
-        paths.forEach(path => { 
-            let fill = path.getAttribute("fill");
-            if(!fill){
-                fill = path.style.fill;
-            }
-
-            if(!fill) return;
-
-            //给path标记className, 以配合css样式
-            let isBlack = isBlackColor(fill);
-
-            if(isBlack){
-                if(mainColor){
-                    path.classList.add("xmsvg-main");
-                    path.style.cssText = "";
-                    path.removeAttribute("fill");
-                }
-            }else{
-                if(secondColor){
-                    path.classList.add("xmsvg-second");
-                    path.style.cssText = "";
-                    path.removeAttribute("fill");
-                }
-            }
-
-        })
-
-        let svg = svgRef.current.querySelector("svg");
-        let pos = buildPos(width, height, size);
+        // 设置 svg 尺寸
+        const pos = buildPos(width, height, size) as { width: string; height: string };
         svg.style.width = pos.width;
-        svg.style.height = pos.height; 
+        svg.style.height = pos.height;
 
-    }, [svgRef]);
+        // 根据 path 的原始 fill 颜色打主色/次色标记
+        const paths = svg.querySelectorAll('path');
+        paths.forEach((path: SVGPathElement) => {
+            let fill = path.getAttribute('fill') || path.style.fill || '';
+            if (!fill) return;
+
+            const black = isBlackColor(fill);
+
+            if (black && mainColor) {
+                path.classList.add('xmsvg-main');
+                path.style.cssText = '';
+                path.removeAttribute('fill');
+            } else if (!black && second) {
+                path.classList.add('xmsvg-second');
+                path.style.cssText = '';
+                path.removeAttribute('fill');
+            }
+        });
+    }, [svgRef, width, height, size, mainColor, second]);
 
     let localClassName = "svg-icon-wrap";
     if(className){
         localClassName = className + " "+ localClassName
     }
 
-    return <span className={localClassName} {...props} ref={svgRef} style={{...style, ...props.style}}>
+    return (
+        <span
+            className={localClassName}
+            {...props}
+            ref={svgRef}
+            style={style}
+        >
             <SVGElement />
         </span>
+    )
 
 }
 

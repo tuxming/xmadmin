@@ -50,6 +50,7 @@ public class UserAddDto {
 	private String phone;
 	private List<Integer> roleIds;
 	private Integer gender;
+	private Integer photo;
 	public Integer getDeptId() {
 		return deptId;
 	}
@@ -103,6 +104,12 @@ public class UserAddDto {
 	}
 	public void setGender(Integer gender) {
 		this.gender = gender;
+	}
+	public Integer getPhoto() {
+		return photo;
+	}
+	public void setPhoto(Integer photo) {
+		this.photo = photo;
 	}
 	
 }
