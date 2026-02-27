@@ -215,6 +215,10 @@ public class GlobalInterceptor implements Interceptor{
 		}else {
 			RequirePermission requiresPermission = inv.getMethod().getAnnotation(RequirePermission.class);
 			if(requiresPermission!=null) {
+				ShiroUser user = ShiroKit.getLoginUser();
+				if(user.isAdmin()) {
+					return true;
+				}
 				isPermitted = SecurityUtils.getSubject().isPermitted(requiresPermission.val());
 			}
 		}
