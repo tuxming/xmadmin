@@ -219,6 +219,14 @@ public class ShiroKit {
 	    RoleService roleService = Aop.get(RoleService.class);
 	    List<Role> roles = roleService.findByUser(user.getId());
 	    if(!roles.isEmpty()) {
+	    	
+	    	for(Role role : roles) {
+	    		if(role.getType() <= Role.TYPE_ADMIN) {
+	    			buildAdmin(account);
+	    			return;
+				}
+	    	}
+	    	
 	    	account.setRoles(roles.stream().map(s -> new ShiroRole(s.getId(), s.getRoleName(), s.getType()))
 	    				.collect(Collectors.toList())
 	    			);
