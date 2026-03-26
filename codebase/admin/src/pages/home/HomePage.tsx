@@ -34,7 +34,10 @@ import { Logo, Modal} from '../../components';
 import "./HomePage.css";
 import { SideMenuComponent, HomeHeader } from "./index";
 import { ActiveTabSlice, TabItemsSlice, openItemSlice, themeConfigSlice } from "../../redux/slice";
+import { persistedUserSlice } from "../../redux/loginSlice";
 import { AdminHome } from "../../common/I18NNamespace";
+import { api } from "../../common/api";
+import { useRequest } from "../../hooks";
 
 const { Header, Sider, Content } = Layout;
 
@@ -59,10 +62,25 @@ export const HomePage : React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const outlet = useOutlet();
+    const request = useRequest();
+    
     const cacheKey = useMemo(() => {
         return location.pathname + location.search;
     }, [location]);
 
+    useEffect(() => {
+        const fetchUserInfo = async () => {
+            try {
+                const res = await request.get(api.user.userInfo);
+                if (res && res.status && res.data) {
+                    dispatch(persistedUserSlice.actions.persist(res.data));
+                }
+            } catch (e) {
+                console.error('Failed to fetch user info', e);
+            }
+        };
+        fetchUserInfo();
+    }, []);
 
     useEffect(() => {
         // console.log(openItem);

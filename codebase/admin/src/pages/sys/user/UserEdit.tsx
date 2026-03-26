@@ -35,6 +35,8 @@ import { UserEditBasicInfo, UserEditSecurity, UserGrantDataPermission } from "./
 import { CustomScroll } from "react-custom-scroll"
 import { UserGrantRole } from "./UserGrantRole"
 import { useShowResult } from "../../../hooks/useShowResult"
+import { useDispatch, useSelector } from "../../../hooks"
+import { persistedUserSlice } from "../../../redux/loginSlice"
 
 export type UserEditType = {
     user: UserProps,
@@ -55,6 +57,8 @@ export const UserEdit : React.FC<UserEditType> = ({
     const [visible, setVisible] = useState(open);
     const request = useRequest();
     const showResult = useShowResult(AdminUser);
+    const dispatch = useDispatch();
+    const persistedUser = useSelector(state => state.persistedUser);
 
     const onModalClose = (refresh) => {
         setVisible(false);
@@ -71,6 +75,12 @@ export const UserEdit : React.FC<UserEditType> = ({
         if(result.status){
             if(key == 'token'){
                 setEditUser({...editUser, [key]: result.data});
+            }
+            if (persistedUser && persistedUser.id === editUser.id) {
+                const info = await request.get(api.user.userInfo);
+                if (info && info.status && info.data) {
+                    dispatch(persistedUserSlice.actions.persist(info.data));
+                }
             }
         }
 

@@ -25,7 +25,7 @@
 
 
 import React, {useState} from 'react';
-import { Button, Input, Space,Form,theme } from "antd"
+import { Button, Input, Space, Form, Row, Col, theme } from "antd"
 import { useSelector } from "../../hooks"
 import { DoubleLeftOutlined, ReloadOutlined, SearchOutlined } from "@ant-design/icons";
 import { SearchIcon } from '../icon/svg/Icons';
@@ -50,41 +50,12 @@ export type QueryComponentType = {
 export const QueryComponent : React.FC<QueryComponentType> = ({items = [], onQuery}) => {
     const collasped = useSelector(state => state.themeConfig.sidemenuCollapsed);
     const width = useSelector(state => state.globalVar.width);
-    const [basicValue, setBasicValue] = useState();
     const {token} =  theme.useToken();
     const size = useSelector(state => state.themeConfig.componentSize);
 
     let isQueryMin = (width < 768 && width > 576 && !collasped) || width<576;
 
     const [isQueryBasic, setIsQueryBasic] = useState(true);
-    let basicLayoutCss : React.CSSProperties = {
-        boxSizing: 'content-box',
-        display: 'flex',
-        justifyContent: "space-between",
-        gap: 10,
-        flexWrap: 'wrap'
-    }
-
-    let advLayoutCss : React.CSSProperties = {
-        boxSizing: 'content-box',
-        display: 'flex',
-        flexWrap: 'wrap',
-        gap: 10,
-        justifyContent: 'space-between'
-    }
-
-    let basicQueryBtnsCss : React.CSSProperties = {
-        flexShrink:0, flexGrow:1,
-        textAlign:'center',
-    }
-
-    let advQueryBtnsCss : React.CSSProperties = {
-        textAlign:isQueryMin? 'center':'right',
-        flexShrink:0, flexGrow:1,
-    }
-
-    let layoutCss = isQueryBasic ? basicLayoutCss: advLayoutCss;
-    let queryBtnsCss = isQueryBasic ? basicQueryBtnsCss : advQueryBtnsCss;
 
     const doQuery = (values) => {
         // let fields = form.getFieldsValue();
@@ -103,48 +74,58 @@ export const QueryComponent : React.FC<QueryComponentType> = ({items = [], onQue
     const [form] = Form.useForm();
 
     return <>
-        <Form style={layoutCss} 
+        <Form
             form={form}
             onFinish={doQuery}
         >
-            <Form.Item name="basicValue"
-                style={{
-                    display: isQueryBasic?"block":"none",
-                    padding: width<992? '0 15px':'0 10%', 
-                    textAlign: 'center', 
-                    minWidth: isQueryMin? '100%': 'calc(100% - 300px)',
-                    marginBottom: '0px'
-                }}
-            >
-                <Input name="basicValue" size={size} value={basicValue} allowClear
-                    prefix={<SearchIcon  primaryColor={token.colorPrimary} secondColor={token.colorError} offSetY={3}/>}
-                />
-            </Form.Item>
-            {items.map(item => <Form.Item  key={item.label} label={item.label} name={item.name}
-                        style={{
-                            display: isQueryBasic?"none":"block", flexShrink:0, flexGrow:1,
-                            marginBottom: 0
-                        }}
-                    >
-                        {item.inputElement}
-                    </Form.Item>
-                )
-            }
+            <Row gutter={[12, 12]} align="middle" style={{ padding: '8px 12px' }}>
+                {isQueryBasic && (
+                    <Col flex="auto" style={{ minWidth: isQueryMin ? '100%' : 360 }}>
+                        <Form.Item name="basicValue" style={{ marginBottom: 0 }}>
+                            <Input
+                                name="basicValue"
+                                size={size}
+                                allowClear
+                                placeholder="输入关键字搜索用户"
+                                prefix={<SearchIcon primaryColor={token.colorPrimary} secondColor={token.colorError} offSetY={3} />}
+                            />
+                        </Form.Item>
+                    </Col>
+                )}
 
-            <div style={queryBtnsCss} >
-                <Space align='center' style={{height: '100%'}}>
-                    <Button size={size} icon={<SearchOutlined />} type="primary" onClick={() => form.submit()}>搜索</Button>
-                    <Button size={size} icon={<ReloadOutlined />} type="primary" ghost onClick={(()=>form.resetFields())}>重置</Button>
-                    {items.length>0 && <Button size={size} type="text" iconPosition="end" 
-                        onClick={() => setIsQueryBasic(!isQueryBasic)}
-                        icon={<DoubleLeftOutlined style={{transform: `rotate(${isQueryBasic? '-90deg':'90deg'})`}}/> }
+                {!isQueryBasic && items.map(item => (
+                    <Col
+                        key={item.label}
+                        xs={24}
+                        sm={12}
+                        md={8}
+                        lg={6}
+                        style={{ minWidth: 220 }}
                     >
-                        {isQueryBasic?'高级':'基础'}
-                    </Button>
-                    }
-                   
-                </Space>
-            </div>
+                        <Form.Item label={item.label} name={item.name} style={{ marginBottom: 0 }}>
+                            {item.inputElement}
+                        </Form.Item>
+                    </Col>
+                ))}
+
+                <Col flex="none">
+                    <Space align="center" size={8} wrap>
+                        <Button size={size} icon={<SearchOutlined />} type="primary" onClick={() => form.submit()}>搜索</Button>
+                        <Button size={size} icon={<ReloadOutlined />} type="primary" ghost onClick={(() => form.resetFields())}>重置</Button>
+                        {items.length > 0 && (
+                            <Button
+                                size={size}
+                                type="text"
+                                iconPosition="end"
+                                onClick={() => setIsQueryBasic(!isQueryBasic)}
+                                icon={<DoubleLeftOutlined style={{ transform: `rotate(${isQueryBasic ? '-90deg' : '90deg'})` }} />}
+                            >
+                                {isQueryBasic ? '高级' : '基础'}
+                            </Button>
+                        )}
+                    </Space>
+                </Col>
+            </Row>
         </Form>
     </>
 }

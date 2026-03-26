@@ -26,6 +26,7 @@
 package com.xm2013.admin.basic.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.jfinal.plugin.activerecord.Db;
 import com.xm2013.admin.common.Kit;
@@ -41,9 +42,19 @@ public class HistoryService {
 		
 		String sql = "select user_id, username, ip_addr, type, created, group_concat(remark order by id SEPARATOR '') as remark "
 				+ " from sys_history "
-				+ " where history_id=? group by history_id limit 1";
+				+ " where history_id=? order by id asc";
 		
-		return History.dao.findFirst(sql, historyId);
+		List<History> hists =  History.dao.find(sql, historyId);
+		
+		if(hists.size()>0) {
+			String param = hists.stream().map(s -> s.getRemark()).collect(Collectors.joining(","));
+			History hist = hists.get(0);
+			hist.setRemark(param);
+			return hist;
+		}
+		
+		return null;
+		
 	}
 
 	public PageInfo<History> pageList(HistoryQuery query, ShiroUser user) {

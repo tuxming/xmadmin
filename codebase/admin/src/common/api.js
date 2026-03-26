@@ -30,6 +30,7 @@ export const api = {
     user: {
         get: server + "/am/user/get",
         list: server + "/am/user/list",
+        userInfo: server + "/am/user/userInfo",
         search: server + "/am/user/search",
         delete: server + "/am/user/delete",
         create: server + "/am/user/create",
@@ -77,6 +78,7 @@ export const api = {
         create: server + "/am/dept/create",
         update: server + "/am/dept/update",
         delete: server + "/am/dept/delete",
+        get: server + "/am/dept/get",  // ?id=
     },
     lang: {
         groups: server + "/am/lang/groups",

@@ -62,7 +62,19 @@ public class DeptService {
 	@Inject
 	private UserService userService;
 	
+	public Dept findById(int id, ShiroUser user) {
+		if(user.isAdmin()) {
+			return findById(id);
+		}
+		
+		if(user.getDeptIds().contains(id)) {
+			return findById(id);
+		}
+		return null;
+	}
+	
 	public Dept findById(int deptId) {
+		
 		return Dept.dao.findFirstByCache(DEPT_ID, deptId, sql + " t.id = ?", deptId);
 	}
 

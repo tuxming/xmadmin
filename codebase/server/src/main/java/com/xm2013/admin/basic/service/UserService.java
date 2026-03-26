@@ -35,6 +35,10 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.mgt.DefaultSecurityManager;
+import org.apache.shiro.realm.Realm;
+
 import com.jfinal.aop.Inject;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.redis.Redis;
@@ -52,6 +56,7 @@ import com.xm2013.admin.domain.model.UserRole;
 import com.xm2013.admin.exception.BusinessErr;
 import com.xm2013.admin.exception.BusinessException;
 import com.xm2013.admin.exception.Msg;
+import com.xm2013.admin.shiro.ShiroRealm;
 import com.xm2013.admin.shiro.dto.ShiroUser;
 import com.xm2013.admin.shiro.dto.ShiroUserData;
 
@@ -81,12 +86,12 @@ public class UserService {
 	}
 
 	public User findByPhone(String phone) {
-		User user = User.dao.findFirstByCache(CacheKey.USER_EMAIL, phone, sql + " t.phone=?", phone);
+		User user = User.dao.findFirstByCache(CacheKey.USER_PHONE, phone, sql + " t.phone=?", phone);
 		return user;
 	}
 	
 	public User findByEmail(String email) {
-		User user = User.dao.findFirstByCache(CacheKey.USER_PHONE, email, sql + " t.email=?", email);
+		User user = User.dao.findFirstByCache(CacheKey.USER_EMAIL, email, sql + " t.email=?", email);
 		return user;
 	}
 
@@ -100,9 +105,24 @@ public class UserService {
 		}
 		Redis.use().hdel(CacheKey.USER_ID, user.getId());
 		Redis.use().hdel(CacheKey.USER_NAME, user.getUsername());
-		Redis.use().hdel(CacheKey.USER_NAME, user.getPhone());
-		Redis.use().hdel(CacheKey.USER_EMAIL, user.getEmail());
 		Redis.use().hdel(CacheKey.USER_PHONE, user.getPhone());
+		Redis.use().hdel(CacheKey.USER_EMAIL, user.getEmail());
+
+		org.apache.shiro.mgt.SecurityManager securityManager = SecurityUtils.getSecurityManager();
+		if(securityManager instanceof DefaultSecurityManager) {
+			DefaultSecurityManager defaultSecurityManager = (DefaultSecurityManager) securityManager;
+			for(Realm realm : defaultSecurityManager.getRealms()) {
+				if(realm instanceof ShiroRealm) {
+					ShiroRealm shiroRealm = (ShiroRealm) realm;
+					if(shiroRealm.getAuthenticationCache() != null) {
+						if(Kit.isNotNull(user.getUsername())) shiroRealm.getAuthenticationCache().remove(user.getUsername());
+						if(Kit.isNotNull(user.getEmail())) shiroRealm.getAuthenticationCache().remove(user.getEmail());
+						if(Kit.isNotNull(user.getPhone())) shiroRealm.getAuthenticationCache().remove(user.getPhone());
+					}
+					break;
+				}
+			}
+		}
 	}
 	
 	/**

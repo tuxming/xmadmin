@@ -43,6 +43,17 @@ public class DeptController extends BaseController{
 	@Inject
 	private DeptService deptService;
 	
+	
+	public void get() {
+		int id = getParaToInt("id", 0);
+		if(id == 0 ) {
+			renderJson(JsonResult.error(BusinessErr.NULL_PARAM));
+		}
+		
+		renderJson(JsonResult.ok(Msg.OK_GET, deptService.findById(id, ShiroKit.getLoginUser())));
+		
+	}
+	
 	/**
 	 * 根据parentId获取菜单， 如果不传入任何参数，则返回所能拿到最大的根节点
 	 * 如果没有传parentId则直接获取当前登录的组织节点

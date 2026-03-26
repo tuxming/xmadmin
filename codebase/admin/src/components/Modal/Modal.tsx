@@ -137,7 +137,7 @@ export const Modal : React.FC<ModalType> = ({
     showMove = true,
     showMaxize = true,
     showMinize = true,
-    type= "window",
+    type= "modal",
     onSizeChange,
 }) => {
 
@@ -149,6 +149,7 @@ export const Modal : React.FC<ModalType> = ({
     const [topLevel, setTopLevel] = useState(false);
 
     const windowIndex = useSelector(state => state.globalVar.windowIndex);
+    const modalIndex = useSelector(state => state.globalVar.modalIndex);
     const currIndex = useRef<number>(windowIndex);
     const dispatch = useDispatch();
     const modalOpacity = useSelector(state => state.themeConfig.modalOpacity);
@@ -433,9 +434,15 @@ export const Modal : React.FC<ModalType> = ({
 
         const focusHandler = (event) => {
             event.preventDefault(); //阻止浏览器的默认行为，比如选中文字
-            dispatch(globalVarSlice.actions.addWindowZIndex(windowIndex));
-            let currWindowIndex = store.store.getState().globalVar.windowIndex;
-            currIndex.current = currWindowIndex;
+            if(type === 'window'){
+                dispatch(globalVarSlice.actions.addWindowZIndex(windowIndex));
+                let currWindowIndex = store.store.getState().globalVar.windowIndex;
+                currIndex.current = currWindowIndex;
+            }else{
+                dispatch(globalVarSlice.actions.addModalZIndex(modalIndex));
+                let currModalIndex = store.store.getState().globalVar.modalIndex;
+                currIndex.current = currModalIndex;
+            }
             // console.log("focus");
             setTopLevel(true);
         }
@@ -574,7 +581,7 @@ export const Modal : React.FC<ModalType> = ({
     
     //设置一些css信息
     const overlayStye = {
-        zIndex: topLevel? windowIndex: (currIndex.current || zIndex),
+        zIndex: topLevel ? (type === 'window' ? windowIndex : modalIndex) : (currIndex.current || zIndex || 1000),
     }
 
     // console.log("Modal render - visible="+visible+", currPos=", currPos);
@@ -663,7 +670,7 @@ export const Modal : React.FC<ModalType> = ({
                         display: modalState == 'min'?'none': 'block', 
                         height: height && height !== 'auto' ? 'calc(100% - 30px)' : 'auto', 
                         overflow: height && height !== 'auto' ? 'auto' : 'visible',
-                        paddingTop: height && height !== 'auto' ? '25px' : '0px'
+                        paddingTop: '0px'
                     }}>
                         <ModalContext.Provider value={currPos}>
                             {children}

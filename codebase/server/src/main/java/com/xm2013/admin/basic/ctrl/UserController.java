@@ -120,6 +120,19 @@ public class UserController extends BaseController{
 	}
 	
 	/**
+	 * 获取当前登录用户的信息 (ShiroUser)
+	 */
+	@Op("获取当前登录用户信息")
+	public void userInfo() {
+		ShiroUser loginUser = ShiroKit.getLoginUser();
+		if (loginUser != null) {
+			renderJson(JsonResult.ok(Msg.OK_GET, loginUser));
+		} else {
+			renderJson(JsonResult.error("未登录或登录已过期"));
+		}
+	}
+	
+	/**
 	 * 关键字搜索
 	 * 返回key：value形式：key=id, value=显示的值
 	 */

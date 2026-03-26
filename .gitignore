@@ -6,9 +6,15 @@
 /codebase/home/node_modules
 
 /codebase/admin/dist
+/codebase/admin/build
+/codebase/admin/.vscode
+
 /codebase/app/dist
 /codebase/home/dist
 
+/codebase/admin-vue3/dist
+/codebase/admin-vue3/build
+/codebase/admin-vue3/.vscode
 
 /codebase/admin/package-lock.json
 /codebase/app/package-lock.json

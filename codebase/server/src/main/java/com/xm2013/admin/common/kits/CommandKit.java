@@ -38,15 +38,25 @@ public class CommandKit {
 		
 		String result = "";
 		
-		log.debug(cmd);
 		try {
 			
-			Process p = Runtime.getRuntime().exec(cmd);
+			boolean isWin = System.getProperty("os.name").toLowerCase().contains("windows");
+			Process p;
+			if(cmd.length == 1) {
+				if(isWin) {
+					p = new ProcessBuilder("cmd.exe", "/c", cmd[0]).redirectErrorStream(true).start();
+				}else {
+					p = new ProcessBuilder("/bin/sh", "-c", cmd[0]).redirectErrorStream(true).start();
+				}
+			}else {
+				p = new ProcessBuilder(cmd).redirectErrorStream(true).start();
+			}
 			
 			//取得命令结果的输出流    
 			InputStream fis=p.getInputStream();    
 			//用一个读输出流类去读    
-			InputStreamReader isr=new InputStreamReader(fis);    
+			log.debug(cmd[0]);
+			InputStreamReader isr=new InputStreamReader(fis, isWin ? "GBK" : "UTF-8");    
 			//用缓冲器读行    
 			BufferedReader br=new BufferedReader(isr);    
 			String line=null;   
@@ -56,7 +66,12 @@ public class CommandKit {
 			{    
 				result += line+"\n";
 			}  
-			log.debug(result);  
+			int code = p.waitFor();
+			if(code == 0) {
+				log.debug(result);
+			}else {
+				log.error("exit="+code+" "+result);
+			}
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
@@ -82,6 +97,15 @@ public class CommandKit {
 		}
 	}
 	
+	private static String normalizeWindowsPath(String p) {
+		if (p == null) return "";
+		String path = p.trim().replace("/", "\\");
+		if (path.matches("^\\\\[A-Za-z]:.*")) {
+			path = path.substring(1);
+		}
+		return path;
+	}
+	
 	/**
 	 * 防止被非法删除
 	 * @param path
@@ -95,14 +119,20 @@ public class CommandKit {
 		
 		String os = System.getProperty("os.name").toLowerCase();
 		if(os.indexOf("windows")>-1) {
-			path = path.replace("/", "\\");
-			String cmd = "del /Q /F /S "+path;
-			System.out.println(cmd);
-			exec(new String[] {
-					"cmd.exe",
-					"/c", "del", "/Q", "/F", "/S",
-					path
-			});
+			path = normalizeWindowsPath(path);
+			File f = new File(path);
+			if(f.isDirectory()) {
+				String cmd = "del /Q /F /S \""+path+"\\*\" && rd /S /Q \""+path+"\"";
+				exec(new String[] {cmd});
+			}else {
+				String cmd = "del /Q /F \""+path+"\"";
+				exec(new String[] {cmd});
+			}
+			
+//			File file = new File(path);
+//			boolean res = file.delete();
+//			System.out.println(path+":"+res);
+			
 			
 //			File file = new File(path);
 //			boolean res = file.delete();

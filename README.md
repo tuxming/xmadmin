@@ -1,10 +1,10 @@
 <h2 align="center">Xm.Admin 后台管理系统</h2>
 <h4 align="center">基于jfinal + react18/Antd5 通用后台管理系统</h4>
 
-<h2 style="color:red;">vue3版本正在开发中，详细见codebase/admin-vue3</h2>
+<h2 style="color:red;">vue3版本已完成：项目路径 codebase/admin-vue3（下方提供使用说明）</h2>
 
 # ✨概述
-- 面向中小企业快速开发平台框架，框架采用主流技术开发设计，前后端分离架构模式，后端采用java8(jfinal框架),前端采用react18(Antd5)，下一步计划开发vue3版本的
+- 面向中小企业快速开发平台框架，框架采用主流技术开发设计，前后端分离架构模式，后端采用java8(jfinal框架),前端提供react18(Antd5)与vue3(tdesign-vue-next)两个版本
 - 本系统完成了基本的权限体系，支持session,jwttoken,无状态三种模式，日志功能，字典，文件管理，等基本的管理功能，可以快速用于实际业务开发
 - 本系统采用redis缓存服务，可以根据需要快速实现分布式部署
 - 本系统抽离已有项目，经受了近亿数据量的业务压力
@@ -61,5 +61,15 @@
 - 建议用vscode打开前端项目，前端项目位于：codebase/admin
 - 运行npm install 
 - 运行npm start
+
+### 前端（Vue3版）
+- 环境需求：node ≥ 18（推荐 20.8.1）
+- 建议用vscode打开前端项目，前端项目位于：codebase/admin-vue3
+- 运行npm install
+- 开发运行：npm run dev
+- 打包：npm run build
+- 预览：npm run preview
+- 相关依赖：vue3、vite8、tdesign-vue-next、pinia
+- 更多说明见：codebase/admin-vue3/README.md
 
 [更多文档](./doc/文档列表.md)

@@ -1,22 +1,27 @@
-import './assets/main.css'
+import { createApp } from 'vue';
+import TDesign from 'tdesign-vue-next';
+import 'tdesign-vue-next/es/style/index.css';
+import App from './App.vue';
+import router from './router';
+import { store } from './store';
+import i18n from './i18n';
+import './assets/iconfont/iconfont.css';
+import './style/index.less';
 
-import { createApp } from 'vue'
-import { createPinia } from 'pinia'
+const app = createApp(App);
 
-import App from './App.vue'
-import router from './router'
-import ElementPlus from 'element-plus'
-import 'element-plus/dist/index.css'
-// import zhCn from 'element-plus/es/locale/lang/zh-cn'
+if (import.meta.env.DEV) {
+  app.config.warnHandler = (msg, instance, trace) => {
+    if (typeof msg === 'string' && msg.includes('Slot "default" invoked outside of the render function')) {
+      return;
+    }
+    console.warn(msg + trace);
+  };
+}
 
-const app = createApp(App)
+app.use(TDesign);
+app.use(store);
+app.use(router);
+app.use(i18n);
 
-app.use(ElementPlus, 
-//     {
-//     locale: zhCn,
-// }
-)
-app.use(createPinia())
-app.use(router)
-
-app.mount('#app')
+app.mount('#app');

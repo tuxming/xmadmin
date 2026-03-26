@@ -189,7 +189,7 @@ public class LanguageService {
 	 */
 	public Integer saveLang(Language lang) {
 		lang.save();
-		Redis.use().hdel(CacheKey.LANGS);
+		Redis.use().hdel(CacheKey.LANGS, "all");
 		return lang.getId();
 	}
 
@@ -200,7 +200,7 @@ public class LanguageService {
 	 */
 	public Integer updateLang(Language lang) {
 		lang.update();
-		Redis.use().hdel(CacheKey.LANGS);
+		Redis.use().hdel(CacheKey.LANGS, "all");
 		return lang.getId();
 	}
 	
@@ -215,7 +215,7 @@ public class LanguageService {
 			public boolean run() throws SQLException {
 				Db.delete("delete from sys_language where id=?", id);
 				Db.delete("delete from sys_language_resource where language_id=?", id);
-				Redis.use().hdel(CacheKey.LANGS);
+				Redis.use().hdel(CacheKey.LANGS, "all");
 				return true;
 			}
 		});
@@ -263,7 +263,7 @@ public class LanguageService {
 		}
 		
 		Db.delete("delete from sys_language_resource where id in ("+idStr+")");
-		Redis.use().hdel(CacheKey.LANG_RES);
+		Redis.use().del(CacheKey.LANG_RES);
 	}
 	
 	
