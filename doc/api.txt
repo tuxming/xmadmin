@@ -1,0 +1,1202 @@
+curl ^"http://localhost/public/locales?lng=zh_CN^&ns=translation^" ^
+  -H ^"Accept: */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^" ^
+  -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"146^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^", ^\^"Google Chrome^\^";v=^\^"146^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^"
+
+
+curl ^"http://localhost/public/localesAdd?lng=zh_CN^&ns=AdminDept^" ^
+  -X ^"OPTIONS^" ^
+  -H ^"Accept: */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Access-Control-Request-Headers: content-type^" ^
+  -H ^"Access-Control-Request-Method: POST^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^"
+
+curl ^"http://localhost/am/menu/curr^" ^
+  -H ^"Accept: application/json, text/plain, */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -b ^"stoken=eyJhbGciOiJIUzI1NiJ9.eyJhdXRoTG9naW4iOmZhbHNlLCJleHAiOjE3NzQ1Nzk2MTQsImlhdCI6MTc3NDQ5MzIxNCwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.PHtEKFqGzN8UWB2dhUhLpNw6JBkFM6eW1FJSDtNijIk; jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzQ2MjU4NjUsImlhdCI6MTc3NDUzOTQ2NSwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.ZVhf_FLXjoesq3JbjB8o3MbCO39kWznw3bdAw-sEpJY^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^" ^
+  -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"146^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^", ^\^"Google Chrome^\^";v=^\^"146^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^"
+
+curl ^"http://localhost/am/lang/langs^" ^
+  -H ^"Accept: application/json, text/plain, */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -b ^"stoken=eyJhbGciOiJIUzI1NiJ9.eyJhdXRoTG9naW4iOmZhbHNlLCJleHAiOjE3NzQ1Nzk2MTQsImlhdCI6MTc3NDQ5MzIxNCwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.PHtEKFqGzN8UWB2dhUhLpNw6JBkFM6eW1FJSDtNijIk; jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzQ2MjU4NjUsImlhdCI6MTc3NDUzOTQ2NSwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.ZVhf_FLXjoesq3JbjB8o3MbCO39kWznw3bdAw-sEpJY^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^" ^
+  -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"146^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^", ^\^"Google Chrome^\^";v=^\^"146^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^"
+
+curl ^"http://localhost/am/user/userInfo^" ^
+  -H ^"Accept: application/json, text/plain, */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -b ^"stoken=eyJhbGciOiJIUzI1NiJ9.eyJhdXRoTG9naW4iOmZhbHNlLCJleHAiOjE3NzQ1Nzk2MTQsImlhdCI6MTc3NDQ5MzIxNCwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.PHtEKFqGzN8UWB2dhUhLpNw6JBkFM6eW1FJSDtNijIk; jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzQ2MjU4NjUsImlhdCI6MTc3NDUzOTQ2NSwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.ZVhf_FLXjoesq3JbjB8o3MbCO39kWznw3bdAw-sEpJY^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^" ^
+  -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"146^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^", ^\^"Google Chrome^\^";v=^\^"146^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^"
+
+curl ^"http://localhost/am/dict/byKey?key=DeptType^" ^
+  -H ^"Accept: application/json, text/plain, */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -b ^"stoken=eyJhbGciOiJIUzI1NiJ9.eyJhdXRoTG9naW4iOmZhbHNlLCJleHAiOjE3NzQ1Nzk2MTQsImlhdCI6MTc3NDQ5MzIxNCwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.PHtEKFqGzN8UWB2dhUhLpNw6JBkFM6eW1FJSDtNijIk; jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzQ2MjU4NjUsImlhdCI6MTc3NDUzOTQ2NSwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.ZVhf_FLXjoesq3JbjB8o3MbCO39kWznw3bdAw-sEpJY^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^" ^
+  -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"146^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^", ^\^"Google Chrome^\^";v=^\^"146^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^"
+
+curl ^"http://localhost/am/dept/list^" ^
+  -H ^"Accept: application/json, text/plain, */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -H ^"Content-Type: application/json^" ^
+  -b ^"stoken=eyJhbGciOiJIUzI1NiJ9.eyJhdXRoTG9naW4iOmZhbHNlLCJleHAiOjE3NzQ1Nzk2MTQsImlhdCI6MTc3NDQ5MzIxNCwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.PHtEKFqGzN8UWB2dhUhLpNw6JBkFM6eW1FJSDtNijIk; jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzQ2MjU4NjUsImlhdCI6MTc3NDUzOTQ2NSwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.ZVhf_FLXjoesq3JbjB8o3MbCO39kWznw3bdAw-sEpJY^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^" ^
+  -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"146^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^", ^\^"Google Chrome^\^";v=^\^"146^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^" ^
+  --data-raw ^"^{^\^"start^\^":0,^\^"length^\^":20^}^"
+
+curl ^"http://localhost/am/dept/list^" ^
+  -H ^"Accept: application/json, text/plain, */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -H ^"Content-Type: application/json^" ^
+  -b ^"stoken=eyJhbGciOiJIUzI1NiJ9.eyJhdXRoTG9naW4iOmZhbHNlLCJleHAiOjE3NzQ1Nzk2MTQsImlhdCI6MTc3NDQ5MzIxNCwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.PHtEKFqGzN8UWB2dhUhLpNw6JBkFM6eW1FJSDtNijIk; jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzQ2MjU4NjUsImlhdCI6MTc3NDUzOTQ2NSwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.ZVhf_FLXjoesq3JbjB8o3MbCO39kWznw3bdAw-sEpJY^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^" ^
+  -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"146^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^", ^\^"Google Chrome^\^";v=^\^"146^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^" ^
+  --data-raw ^"^{^\^"parentId^\^":1^}^"
+
+curl ^"http://localhost/am/dept/create^" ^
+  -H ^"Accept: application/json, text/plain, */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -H ^"Content-Type: application/json^" ^
+  -b ^"stoken=eyJhbGciOiJIUzI1NiJ9.eyJhdXRoTG9naW4iOmZhbHNlLCJleHAiOjE3NzQ1Nzk2MTQsImlhdCI6MTc3NDQ5MzIxNCwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.PHtEKFqGzN8UWB2dhUhLpNw6JBkFM6eW1FJSDtNijIk; jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzQ2MjU4NjUsImlhdCI6MTc3NDUzOTQ2NSwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.ZVhf_FLXjoesq3JbjB8o3MbCO39kWznw3bdAw-sEpJY^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^" ^
+  -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"146^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^", ^\^"Google Chrome^\^";v=^\^"146^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^" ^
+  --data-raw ^"^{^\^"id^\^":null,^\^"name^\^":^\^"1^ ^\^",^\^"parentId^\^":34,^\^"type^\^":1^}^"
+
+
+curl ^"http://localhost/am/dept/delete?id=85^" ^
+  -H ^"Accept: application/json, text/plain, */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -b ^"stoken=eyJhbGciOiJIUzI1NiJ9.eyJhdXRoTG9naW4iOmZhbHNlLCJleHAiOjE3NzQ1Nzk2MTQsImlhdCI6MTc3NDQ5MzIxNCwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.PHtEKFqGzN8UWB2dhUhLpNw6JBkFM6eW1FJSDtNijIk; jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzQ2MjU4NjUsImlhdCI6MTc3NDUzOTQ2NSwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.ZVhf_FLXjoesq3JbjB8o3MbCO39kWznw3bdAw-sEpJY^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^" ^
+  -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"146^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^", ^\^"Google Chrome^\^";v=^\^"146^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^"
+
+curl ^"http://localhost/am/dept/update^" ^
+  -H ^"Accept: application/json, text/plain, */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -H ^"Content-Type: application/json^" ^
+  -b ^"stoken=eyJhbGciOiJIUzI1NiJ9.eyJhdXRoTG9naW4iOmZhbHNlLCJleHAiOjE3NzQ1Nzk2MTQsImlhdCI6MTc3NDQ5MzIxNCwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.PHtEKFqGzN8UWB2dhUhLpNw6JBkFM6eW1FJSDtNijIk; jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzQ2MjU4NjUsImlhdCI6MTc3NDUzOTQ2NSwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.ZVhf_FLXjoesq3JbjB8o3MbCO39kWznw3bdAw-sEpJY^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^" ^
+  -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"146^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^", ^\^"Google Chrome^\^";v=^\^"146^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^" ^
+  --data-raw ^"^{^\^"id^\^":86,^\^"name^\^":^\^"^ 1^\^",^\^"parentId^\^":34,^\^"type^\^":0^}^"
+
+curl ^"http://localhost/am/user/list^" ^
+  -H ^"Accept: application/json, text/plain, */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -H ^"Content-Type: application/json^" ^
+  -b ^"stoken=eyJhbGciOiJIUzI1NiJ9.eyJhdXRoTG9naW4iOmZhbHNlLCJleHAiOjE3NzQ1Nzk2MTQsImlhdCI6MTc3NDQ5MzIxNCwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.PHtEKFqGzN8UWB2dhUhLpNw6JBkFM6eW1FJSDtNijIk; jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzQ2MjU4NjUsImlhdCI6MTc3NDUzOTQ2NSwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.ZVhf_FLXjoesq3JbjB8o3MbCO39kWznw3bdAw-sEpJY^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^" ^
+  -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"146^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^", ^\^"Google Chrome^\^";v=^\^"146^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^" ^
+  --data-raw ^"^{^\^"start^\^":0,^\^"length^\^":20^}^"
+
+curl ^"http://localhost/am/user/list^" ^
+  -H ^"Accept: application/json, text/plain, */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -H ^"Content-Type: application/json^" ^
+  -b ^"stoken=eyJhbGciOiJIUzI1NiJ9.eyJhdXRoTG9naW4iOmZhbHNlLCJleHAiOjE3NzQ1Nzk2MTQsImlhdCI6MTc3NDQ5MzIxNCwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.PHtEKFqGzN8UWB2dhUhLpNw6JBkFM6eW1FJSDtNijIk; jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzQ2MjU4NjUsImlhdCI6MTc3NDUzOTQ2NSwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.ZVhf_FLXjoesq3JbjB8o3MbCO39kWznw3bdAw-sEpJY^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^" ^
+  -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"146^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^", ^\^"Google Chrome^\^";v=^\^"146^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^" ^
+  --data-raw ^"^{^\^"basicValue^\^":^\^"tt^\^",^\^"start^\^":0,^\^"length^\^":20^}^"
+
+curl ^"http://localhost/am/user/list^" ^
+  -H ^"Accept: application/json, text/plain, */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -H ^"Content-Type: application/json^" ^
+  -b ^"stoken=eyJhbGciOiJIUzI1NiJ9.eyJhdXRoTG9naW4iOmZhbHNlLCJleHAiOjE3NzQ1Nzk2MTQsImlhdCI6MTc3NDQ5MzIxNCwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.PHtEKFqGzN8UWB2dhUhLpNw6JBkFM6eW1FJSDtNijIk; jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzQ2MjU4NjUsImlhdCI6MTc3NDUzOTQ2NSwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.ZVhf_FLXjoesq3JbjB8o3MbCO39kWznw3bdAw-sEpJY^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^" ^
+  -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"146^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^", ^\^"Google Chrome^\^";v=^\^"146^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^" ^
+  --data-raw ^"^{^\^"fullname^\^":^\^"tuxming^\^",^\^"startDate^\^":^\^"2022-12-01^\^",^\^"endDate^\^":^\^"2026-01-23^\^",^\^"start^\^":0,^\^"length^\^":20^}^"
+
+curl ^"http://localhost/am/role/search?k=a^" ^
+  -H ^"Accept: application/json, text/plain, */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -b ^"stoken=eyJhbGciOiJIUzI1NiJ9.eyJhdXRoTG9naW4iOmZhbHNlLCJleHAiOjE3NzQ1Nzk2MTQsImlhdCI6MTc3NDQ5MzIxNCwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.PHtEKFqGzN8UWB2dhUhLpNw6JBkFM6eW1FJSDtNijIk; jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzQ2MjU4NjUsImlhdCI6MTc3NDUzOTQ2NSwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.ZVhf_FLXjoesq3JbjB8o3MbCO39kWznw3bdAw-sEpJY^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^" ^
+  -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"146^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^", ^\^"Google Chrome^\^";v=^\^"146^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^"
+
+curl ^"http://localhost/am/document/upload?type=^" ^
+  -H ^"Accept: */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -H ^"Content-Type: multipart/form-data; boundary=----WebKitFormBoundary6X0haTLMlIu28tgR^" ^
+  -b ^"stoken=eyJhbGciOiJIUzI1NiJ9.eyJhdXRoTG9naW4iOmZhbHNlLCJleHAiOjE3NzQ1Nzk2MTQsImlhdCI6MTc3NDQ5MzIxNCwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.PHtEKFqGzN8UWB2dhUhLpNw6JBkFM6eW1FJSDtNijIk; jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzQ2MjU4NjUsImlhdCI6MTc3NDUzOTQ2NSwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.ZVhf_FLXjoesq3JbjB8o3MbCO39kWznw3bdAw-sEpJY^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^" ^
+  -H ^"X-Requested-With: XMLHttpRequest^" ^
+  -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"146^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^", ^\^"Google Chrome^\^";v=^\^"146^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^" ^
+  --data-raw ^"------WebKitFormBoundary6X0haTLMlIu28tgR^
+
+Content-Disposition: form-data; name=^\^"file^\^"; filename=^\^"31_0.jpg^\^"^
+
+Content-Type: image/jpeg^
+
+^
+
+^
+
+------WebKitFormBoundary6X0haTLMlIu28tgR--^
+
+^"
+
+curl ^"http://localhost/am/user/create^" ^
+  -X ^"OPTIONS^" ^
+  -H ^"Accept: */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Access-Control-Request-Headers: content-type^" ^
+  -H ^"Access-Control-Request-Method: POST^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^"
+
+curl ^"http://localhost/am/user/update^" ^
+  -H ^"Accept: application/json, text/plain, */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -H ^"Content-Type: application/json^" ^
+  -b ^"stoken=eyJhbGciOiJIUzI1NiJ9.eyJhdXRoTG9naW4iOmZhbHNlLCJleHAiOjE3NzQ1Nzk2MTQsImlhdCI6MTc3NDQ5MzIxNCwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.PHtEKFqGzN8UWB2dhUhLpNw6JBkFM6eW1FJSDtNijIk; jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzQ2MjU4NjUsImlhdCI6MTc3NDUzOTQ2NSwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.ZVhf_FLXjoesq3JbjB8o3MbCO39kWznw3bdAw-sEpJY^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^" ^
+  -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"146^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^", ^\^"Google Chrome^\^";v=^\^"146^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^" ^
+  --data-raw ^"^{^\^"id^\^":147,^\^"fullname^\^":^\^"test2^\^"^}^"
+
+curl ^"http://localhost/am/user/update^" ^
+  -H ^"Accept: application/json, text/plain, */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -H ^"Content-Type: application/json^" ^
+  -b ^"stoken=eyJhbGciOiJIUzI1NiJ9.eyJhdXRoTG9naW4iOmZhbHNlLCJleHAiOjE3NzQ1Nzk2MTQsImlhdCI6MTc3NDQ5MzIxNCwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.PHtEKFqGzN8UWB2dhUhLpNw6JBkFM6eW1FJSDtNijIk; jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzQ2MjU4NjUsImlhdCI6MTc3NDUzOTQ2NSwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.ZVhf_FLXjoesq3JbjB8o3MbCO39kWznw3bdAw-sEpJY^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^" ^
+  -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"146^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^", ^\^"Google Chrome^\^";v=^\^"146^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^" ^
+  --data-raw ^"^{^\^"id^\^":147,^\^"refreshToken^\^":true^}^"
+
+curl ^"http://localhost/am/user/update^" ^
+  -H ^"Accept: application/json, text/plain, */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -H ^"Content-Type: application/json^" ^
+  -b ^"stoken=eyJhbGciOiJIUzI1NiJ9.eyJhdXRoTG9naW4iOmZhbHNlLCJleHAiOjE3NzQ1Nzk2MTQsImlhdCI6MTc3NDQ5MzIxNCwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.PHtEKFqGzN8UWB2dhUhLpNw6JBkFM6eW1FJSDtNijIk; jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzQ2MjU4NjUsImlhdCI6MTc3NDUzOTQ2NSwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.ZVhf_FLXjoesq3JbjB8o3MbCO39kWznw3bdAw-sEpJY^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^" ^
+  -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"146^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^", ^\^"Google Chrome^\^";v=^\^"146^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^" ^
+  --data-raw ^"^{^\^"id^\^":147,^\^"password^\^":^\^"123456^\^",^\^"newPassword^\^":^\^"123456^\^",^\^"rePassword^\^":^\^"123456^\^"^}^"
+
+curl ^"http://localhost/am/user/search?k=tt^" ^
+  -H ^"Accept: application/json, text/plain, */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -b ^"stoken=eyJhbGciOiJIUzI1NiJ9.eyJhdXRoTG9naW4iOmZhbHNlLCJleHAiOjE3NzQ1Nzk2MTQsImlhdCI6MTc3NDQ5MzIxNCwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.PHtEKFqGzN8UWB2dhUhLpNw6JBkFM6eW1FJSDtNijIk; jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzQ2MjU4NjUsImlhdCI6MTc3NDUzOTQ2NSwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.ZVhf_FLXjoesq3JbjB8o3MbCO39kWznw3bdAw-sEpJY^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^" ^
+  -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"146^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^", ^\^"Google Chrome^\^";v=^\^"146^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^"
+
+curl ^"http://localhost/am/user/userDataAdd^" ^
+  -H ^"Accept: application/json, text/plain, */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -H ^"Content-Type: application/json^" ^
+  -b ^"stoken=eyJhbGciOiJIUzI1NiJ9.eyJhdXRoTG9naW4iOmZhbHNlLCJleHAiOjE3NzQ1Nzk2MTQsImlhdCI6MTc3NDQ5MzIxNCwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.PHtEKFqGzN8UWB2dhUhLpNw6JBkFM6eW1FJSDtNijIk; jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzQ2MjU4NjUsImlhdCI6MTc3NDUzOTQ2NSwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.ZVhf_FLXjoesq3JbjB8o3MbCO39kWznw3bdAw-sEpJY^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^" ^
+  -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"146^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^", ^\^"Google Chrome^\^";v=^\^"146^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^" ^
+  --data-raw ^"^{^\^"type^\^":1,^\^"userId^\^":147,^\^"refId^\^":146^}^"
+
+curl ^"http://localhost/am/user/userDataDelete?id=26^" ^
+  -H ^"Accept: application/json, text/plain, */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -b ^"stoken=eyJhbGciOiJIUzI1NiJ9.eyJhdXRoTG9naW4iOmZhbHNlLCJleHAiOjE3NzQ1Nzk2MTQsImlhdCI6MTc3NDQ5MzIxNCwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.PHtEKFqGzN8UWB2dhUhLpNw6JBkFM6eW1FJSDtNijIk; jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzQ2MjU4NjUsImlhdCI6MTc3NDUzOTQ2NSwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.ZVhf_FLXjoesq3JbjB8o3MbCO39kWznw3bdAw-sEpJY^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^" ^
+  -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"146^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^", ^\^"Google Chrome^\^";v=^\^"146^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^"
+
+curl ^"http://localhost/am/user/userDataAdd^" ^
+  -H ^"Accept: application/json, text/plain, */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -H ^"Content-Type: application/json^" ^
+  -b ^"stoken=eyJhbGciOiJIUzI1NiJ9.eyJhdXRoTG9naW4iOmZhbHNlLCJleHAiOjE3NzQ1Nzk2MTQsImlhdCI6MTc3NDQ5MzIxNCwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.PHtEKFqGzN8UWB2dhUhLpNw6JBkFM6eW1FJSDtNijIk; jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzQ2MjU4NjUsImlhdCI6MTc3NDUzOTQ2NSwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.ZVhf_FLXjoesq3JbjB8o3MbCO39kWznw3bdAw-sEpJY^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^" ^
+  -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"146^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^", ^\^"Google Chrome^\^";v=^\^"146^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^" ^
+  --data-raw ^"^{^\^"type^\^":2,^\^"userId^\^":147,^\^"refId^\^":34^}^"
+
+curl ^"http://localhost/am/user/dataPermissions?type=2^&id=147^" ^
+  -H ^"Accept: application/json, text/plain, */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -H ^"Content-Type: application/json^" ^
+  -b ^"stoken=eyJhbGciOiJIUzI1NiJ9.eyJhdXRoTG9naW4iOmZhbHNlLCJleHAiOjE3NzQ1Nzk2MTQsImlhdCI6MTc3NDQ5MzIxNCwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.PHtEKFqGzN8UWB2dhUhLpNw6JBkFM6eW1FJSDtNijIk; jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzQ2MjU4NjUsImlhdCI6MTc3NDUzOTQ2NSwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.ZVhf_FLXjoesq3JbjB8o3MbCO39kWznw3bdAw-sEpJY^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^" ^
+  -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"146^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^", ^\^"Google Chrome^\^";v=^\^"146^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^" ^
+  --data-raw ^"^{^\^"start^\^":0,^\^"length^\^":20^}^"
+
+curl ^"http://localhost/am/user/userDataDelete?id=27^" ^
+  -H ^"Accept: application/json, text/plain, */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -b ^"stoken=eyJhbGciOiJIUzI1NiJ9.eyJhdXRoTG9naW4iOmZhbHNlLCJleHAiOjE3NzQ1Nzk2MTQsImlhdCI6MTc3NDQ5MzIxNCwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.PHtEKFqGzN8UWB2dhUhLpNw6JBkFM6eW1FJSDtNijIk; jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzQ2MjU4NjUsImlhdCI6MTc3NDUzOTQ2NSwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.ZVhf_FLXjoesq3JbjB8o3MbCO39kWznw3bdAw-sEpJY^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^" ^
+  -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"146^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^", ^\^"Google Chrome^\^";v=^\^"146^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^"
+
+curl ^"http://localhost/am/user/userRoleAdd?id=147^&rid=4^" ^
+  -H ^"Accept: application/json, text/plain, */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -b ^"stoken=eyJhbGciOiJIUzI1NiJ9.eyJhdXRoTG9naW4iOmZhbHNlLCJleHAiOjE3NzQ1Nzk2MTQsImlhdCI6MTc3NDQ5MzIxNCwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.PHtEKFqGzN8UWB2dhUhLpNw6JBkFM6eW1FJSDtNijIk; jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzQ2MjU4NjUsImlhdCI6MTc3NDUzOTQ2NSwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.ZVhf_FLXjoesq3JbjB8o3MbCO39kWznw3bdAw-sEpJY^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^" ^
+  -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"146^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^", ^\^"Google Chrome^\^";v=^\^"146^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^"
+
+curl ^"http://localhost/am/user/userRoles?id=147^" ^
+  -H ^"Accept: application/json, text/plain, */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -b ^"stoken=eyJhbGciOiJIUzI1NiJ9.eyJhdXRoTG9naW4iOmZhbHNlLCJleHAiOjE3NzQ1Nzk2MTQsImlhdCI6MTc3NDQ5MzIxNCwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.PHtEKFqGzN8UWB2dhUhLpNw6JBkFM6eW1FJSDtNijIk; jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzQ2MjU4NjUsImlhdCI6MTc3NDUzOTQ2NSwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.ZVhf_FLXjoesq3JbjB8o3MbCO39kWznw3bdAw-sEpJY^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^" ^
+  -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"146^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^", ^\^"Google Chrome^\^";v=^\^"146^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^"
+
+curl ^"http://localhost/am/user/delete?id=147^" ^
+  -H ^"Accept: application/json, text/plain, */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -b ^"stoken=eyJhbGciOiJIUzI1NiJ9.eyJhdXRoTG9naW4iOmZhbHNlLCJleHAiOjE3NzQ1Nzk2MTQsImlhdCI6MTc3NDQ5MzIxNCwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.PHtEKFqGzN8UWB2dhUhLpNw6JBkFM6eW1FJSDtNijIk; jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzQ2MjU4NjUsImlhdCI6MTc3NDUzOTQ2NSwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.ZVhf_FLXjoesq3JbjB8o3MbCO39kWznw3bdAw-sEpJY^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^" ^
+  -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"146^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^", ^\^"Google Chrome^\^";v=^\^"146^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^"
+
+curl ^"http://localhost/am/permission/list^" ^
+  -H ^"Accept: application/json, text/plain, */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -H ^"Content-Type: application/json^" ^
+  -b ^"stoken=eyJhbGciOiJIUzI1NiJ9.eyJhdXRoTG9naW4iOmZhbHNlLCJleHAiOjE3NzQ1Nzk2MTQsImlhdCI6MTc3NDQ5MzIxNCwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.PHtEKFqGzN8UWB2dhUhLpNw6JBkFM6eW1FJSDtNijIk; jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzQ2MjU4NjUsImlhdCI6MTc3NDUzOTQ2NSwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.ZVhf_FLXjoesq3JbjB8o3MbCO39kWznw3bdAw-sEpJY^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^" ^
+  -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"146^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^", ^\^"Google Chrome^\^";v=^\^"146^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^" ^
+  --data-raw ^"^{^\^"start^\^":0,^\^"length^\^":20^}^"
+
+curl ^"http://localhost/am/permission/list^" ^
+  -H ^"Accept: application/json, text/plain, */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -H ^"Content-Type: application/json^" ^
+  -b ^"stoken=eyJhbGciOiJIUzI1NiJ9.eyJhdXRoTG9naW4iOmZhbHNlLCJleHAiOjE3NzQ1Nzk2MTQsImlhdCI6MTc3NDQ5MzIxNCwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.PHtEKFqGzN8UWB2dhUhLpNw6JBkFM6eW1FJSDtNijIk; jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzQ2MjU4NjUsImlhdCI6MTc3NDUzOTQ2NSwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.ZVhf_FLXjoesq3JbjB8o3MbCO39kWznw3bdAw-sEpJY^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^" ^
+  -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"146^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^", ^\^"Google Chrome^\^";v=^\^"146^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^" ^
+  --data-raw ^"^{^\^"basicValue^\^":^\^"^ ^ ^\^",^\^"start^\^":0,^\^"length^\^":20^}^"
+
+curl ^"http://localhost/am/permission/create^" ^
+  -H ^"Accept: application/json, text/plain, */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -H ^"Content-Type: application/json^" ^
+  -b ^"stoken=eyJhbGciOiJIUzI1NiJ9.eyJhdXRoTG9naW4iOmZhbHNlLCJleHAiOjE3NzQ1Nzk2MTQsImlhdCI6MTc3NDQ5MzIxNCwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.PHtEKFqGzN8UWB2dhUhLpNw6JBkFM6eW1FJSDtNijIk; jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzQ2MjU4NjUsImlhdCI6MTc3NDUzOTQ2NSwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.ZVhf_FLXjoesq3JbjB8o3MbCO39kWznw3bdAw-sEpJY^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^" ^
+  -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"146^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^", ^\^"Google Chrome^\^";v=^\^"146^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^" ^
+  --data-raw ^"^{^\^"groupName^\^":^\^"^ ^ ^ ^ ^\^",^\^"name^\^":^\^"^ ^ ^ ^ ^\^",^\^"expression^\^":^\^"product:add^\^",^\^"type^\^":null^}^"
+
+curl ^"http://localhost/am/permission/update^" ^
+  -H ^"Accept: application/json, text/plain, */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -H ^"Content-Type: application/json^" ^
+  -b ^"stoken=eyJhbGciOiJIUzI1NiJ9.eyJhdXRoTG9naW4iOmZhbHNlLCJleHAiOjE3NzQ1Nzk2MTQsImlhdCI6MTc3NDQ5MzIxNCwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.PHtEKFqGzN8UWB2dhUhLpNw6JBkFM6eW1FJSDtNijIk; jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzQ2MjU4NjUsImlhdCI6MTc3NDUzOTQ2NSwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.ZVhf_FLXjoesq3JbjB8o3MbCO39kWznw3bdAw-sEpJY^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^" ^
+  -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"146^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^", ^\^"Google Chrome^\^";v=^\^"146^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^" ^
+  --data-raw ^"^{^\^"id^\^":2038,^\^"groupName^\^":^\^"^ ^ ^ ^ ^\^",^\^"name^\^":^\^"^ ^ ^ ^ ^\^",^\^"expression^\^":^\^"product:edit^\^",^\^"type^\^":null^}^"
+
+curl ^"http://localhost/am/permission/scan^" ^
+  -H ^"Accept: application/json, text/plain, */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -b ^"stoken=eyJhbGciOiJIUzI1NiJ9.eyJhdXRoTG9naW4iOmZhbHNlLCJleHAiOjE3NzQ1Nzk2MTQsImlhdCI6MTc3NDQ5MzIxNCwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.PHtEKFqGzN8UWB2dhUhLpNw6JBkFM6eW1FJSDtNijIk; jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzQ2MjU4NjUsImlhdCI6MTc3NDUzOTQ2NSwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.ZVhf_FLXjoesq3JbjB8o3MbCO39kWznw3bdAw-sEpJY^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^" ^
+  -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"146^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^", ^\^"Google Chrome^\^";v=^\^"146^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^"
+
+curl ^"http://localhost/am/permission/deletes?ids=2038^" ^
+  -H ^"Accept: application/json, text/plain, */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -b ^"stoken=eyJhbGciOiJIUzI1NiJ9.eyJhdXRoTG9naW4iOmZhbHNlLCJleHAiOjE3NzQ1Nzk2MTQsImlhdCI6MTc3NDQ5MzIxNCwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.PHtEKFqGzN8UWB2dhUhLpNw6JBkFM6eW1FJSDtNijIk; jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzQ2MjU4NjUsImlhdCI6MTc3NDUzOTQ2NSwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.ZVhf_FLXjoesq3JbjB8o3MbCO39kWznw3bdAw-sEpJY^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^" ^
+  -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"146^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^", ^\^"Google Chrome^\^";v=^\^"146^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^"
+
+curl ^"http://localhost/am/role/list^" ^
+  -H ^"Accept: application/json, text/plain, */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -H ^"Content-Type: application/json^" ^
+  -b ^"stoken=eyJhbGciOiJIUzI1NiJ9.eyJhdXRoTG9naW4iOmZhbHNlLCJleHAiOjE3NzQ1Nzk2MTQsImlhdCI6MTc3NDQ5MzIxNCwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.PHtEKFqGzN8UWB2dhUhLpNw6JBkFM6eW1FJSDtNijIk; jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzQ2MjU4NjUsImlhdCI6MTc3NDUzOTQ2NSwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.ZVhf_FLXjoesq3JbjB8o3MbCO39kWznw3bdAw-sEpJY^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^" ^
+  -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"146^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^", ^\^"Google Chrome^\^";v=^\^"146^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^" ^
+  --data-raw ^"^{^\^"start^\^":0,^\^"length^\^":20^}^"
+
+curl ^"http://localhost/am/role/create^" ^
+  -H ^"Accept: application/json, text/plain, */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -H ^"Content-Type: application/json^" ^
+  -b ^"stoken=eyJhbGciOiJIUzI1NiJ9.eyJhdXRoTG9naW4iOmZhbHNlLCJleHAiOjE3NzQ1Nzk2MTQsImlhdCI6MTc3NDQ5MzIxNCwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.PHtEKFqGzN8UWB2dhUhLpNw6JBkFM6eW1FJSDtNijIk; jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzQ2MjU4NjUsImlhdCI6MTc3NDUzOTQ2NSwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.ZVhf_FLXjoesq3JbjB8o3MbCO39kWznw3bdAw-sEpJY^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^" ^
+  -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"146^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^", ^\^"Google Chrome^\^";v=^\^"146^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^" ^
+  --data-raw ^"^{^\^"roleName^\^":^\^"^ ^ ^ ^ ^\^",^\^"code^\^":^\^"^ ^ ^\^",^\^"type^\^":3^}^"
+
+curl ^"http://localhost/am/role/list^" ^
+  -H ^"Accept: application/json, text/plain, */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -H ^"Content-Type: application/json^" ^
+  -b ^"stoken=eyJhbGciOiJIUzI1NiJ9.eyJhdXRoTG9naW4iOmZhbHNlLCJleHAiOjE3NzQ1Nzk2MTQsImlhdCI6MTc3NDQ5MzIxNCwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.PHtEKFqGzN8UWB2dhUhLpNw6JBkFM6eW1FJSDtNijIk; jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzQ2MjU4NjUsImlhdCI6MTc3NDUzOTQ2NSwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.ZVhf_FLXjoesq3JbjB8o3MbCO39kWznw3bdAw-sEpJY^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^" ^
+  -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"146^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^", ^\^"Google Chrome^\^";v=^\^"146^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^" ^
+  --data-raw ^"^{^\^"basicValue^\^":^\^"^ ^ ^\^",^\^"start^\^":0,^\^"length^\^":20^}^"
+
+curl ^"http://localhost/am/role/update^" ^
+  -H ^"Accept: application/json, text/plain, */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -H ^"Content-Type: application/json^" ^
+  -b ^"stoken=eyJhbGciOiJIUzI1NiJ9.eyJhdXRoTG9naW4iOmZhbHNlLCJleHAiOjE3NzQ1Nzk2MTQsImlhdCI6MTc3NDQ5MzIxNCwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.PHtEKFqGzN8UWB2dhUhLpNw6JBkFM6eW1FJSDtNijIk; jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzQ2MjU4NjUsImlhdCI6MTc3NDUzOTQ2NSwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.ZVhf_FLXjoesq3JbjB8o3MbCO39kWznw3bdAw-sEpJY^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^" ^
+  -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"146^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^", ^\^"Google Chrome^\^";v=^\^"146^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^" ^
+  --data-raw ^"^{^\^"id^\^":14,^\^"roleName^\^":^\^"^ ^ ^ ^ ^\^",^\^"code^\^":^\^"^ ^ ^ ^ ^\^",^\^"type^\^":3^}^"
+
+curl ^"http://localhost/am/menu/byRole?id=14^" ^
+  -H ^"Accept: application/json, text/plain, */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -b ^"stoken=eyJhbGciOiJIUzI1NiJ9.eyJhdXRoTG9naW4iOmZhbHNlLCJleHAiOjE3NzQ1Nzk2MTQsImlhdCI6MTc3NDQ5MzIxNCwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.PHtEKFqGzN8UWB2dhUhLpNw6JBkFM6eW1FJSDtNijIk; jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzQ2MjU4NjUsImlhdCI6MTc3NDUzOTQ2NSwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.ZVhf_FLXjoesq3JbjB8o3MbCO39kWznw3bdAw-sEpJY^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^" ^
+  -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"146^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^", ^\^"Google Chrome^\^";v=^\^"146^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^"
+
+  curl ^"http://localhost/am/role/grantMenus?id=14^" ^
+  -H ^"Accept: application/json, text/plain, */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -H ^"Content-Type: application/json^" ^
+  -b ^"stoken=eyJhbGciOiJIUzI1NiJ9.eyJhdXRoTG9naW4iOmZhbHNlLCJleHAiOjE3NzQ1Nzk2MTQsImlhdCI6MTc3NDQ5MzIxNCwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.PHtEKFqGzN8UWB2dhUhLpNw6JBkFM6eW1FJSDtNijIk; jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzQ2MjU4NjUsImlhdCI6MTc3NDUzOTQ2NSwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.ZVhf_FLXjoesq3JbjB8o3MbCO39kWznw3bdAw-sEpJY^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^" ^
+  -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"146^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^", ^\^"Google Chrome^\^";v=^\^"146^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^" ^
+  --data-raw ^"^[^{^\^"menuId^\^":24,^\^"checked^\^":2^},^{^\^"menuId^\^":7,^\^"checked^\^":2^},^{^\^"menuId^\^":8,^\^"checked^\^":2^},^{^\^"menuId^\^":18,^\^"checked^\^":2^},^{^\^"menuId^\^":19,^\^"checked^\^":2^}^]^"
+
+curl ^"http://localhost/am/permission/byRole?id=14^" ^
+  -H ^"Accept: application/json, text/plain, */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -b ^"stoken=eyJhbGciOiJIUzI1NiJ9.eyJhdXRoTG9naW4iOmZhbHNlLCJleHAiOjE3NzQ1Nzk2MTQsImlhdCI6MTc3NDQ5MzIxNCwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.PHtEKFqGzN8UWB2dhUhLpNw6JBkFM6eW1FJSDtNijIk; jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzQ2MjU4NjUsImlhdCI6MTc3NDUzOTQ2NSwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.ZVhf_FLXjoesq3JbjB8o3MbCO39kWznw3bdAw-sEpJY^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^" ^
+  -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"146^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^", ^\^"Google Chrome^\^";v=^\^"146^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^"
+
+curl ^"http://localhost/am/role/grantPermissions?id=14^" ^
+  -H ^"Accept: application/json, text/plain, */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -H ^"Content-Type: application/json^" ^
+  -b ^"stoken=eyJhbGciOiJIUzI1NiJ9.eyJhdXRoTG9naW4iOmZhbHNlLCJleHAiOjE3NzQ1Nzk2MTQsImlhdCI6MTc3NDQ5MzIxNCwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.PHtEKFqGzN8UWB2dhUhLpNw6JBkFM6eW1FJSDtNijIk; jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzQ2MjU4NjUsImlhdCI6MTc3NDUzOTQ2NSwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.ZVhf_FLXjoesq3JbjB8o3MbCO39kWznw3bdAw-sEpJY^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^" ^
+  -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"146^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^", ^\^"Google Chrome^\^";v=^\^"146^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^" ^
+  --data-raw ^"^[32,33,34,35^]^"
+
+curl ^"http://localhost/am/role/deletes?ids=14^" ^
+  -H ^"Accept: application/json, text/plain, */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -b ^"stoken=eyJhbGciOiJIUzI1NiJ9.eyJhdXRoTG9naW4iOmZhbHNlLCJleHAiOjE3NzQ1Nzk2MTQsImlhdCI6MTc3NDQ5MzIxNCwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.PHtEKFqGzN8UWB2dhUhLpNw6JBkFM6eW1FJSDtNijIk; jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzQ2MjU4NjUsImlhdCI6MTc3NDUzOTQ2NSwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.ZVhf_FLXjoesq3JbjB8o3MbCO39kWznw3bdAw-sEpJY^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^" ^
+  -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"146^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^", ^\^"Google Chrome^\^";v=^\^"146^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^"
+
+curl ^"http://localhost/am/menu/list?id=0^" ^
+  -H ^"Accept: application/json, text/plain, */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -b ^"stoken=eyJhbGciOiJIUzI1NiJ9.eyJhdXRoTG9naW4iOmZhbHNlLCJleHAiOjE3NzQ1Nzk2MTQsImlhdCI6MTc3NDQ5MzIxNCwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.PHtEKFqGzN8UWB2dhUhLpNw6JBkFM6eW1FJSDtNijIk; jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzQ2MjU4NjUsImlhdCI6MTc3NDUzOTQ2NSwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.ZVhf_FLXjoesq3JbjB8o3MbCO39kWznw3bdAw-sEpJY^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^" ^
+  -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"146^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^", ^\^"Google Chrome^\^";v=^\^"146^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^"
+
+curl ^"http://localhost/am/menu/saveOrUpdate^" ^
+  -H ^"Accept: application/json, text/plain, */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -H ^"Content-Type: application/json^" ^
+  -b ^"stoken=eyJhbGciOiJIUzI1NiJ9.eyJhdXRoTG9naW4iOmZhbHNlLCJleHAiOjE3NzQ1Nzk2MTQsImlhdCI6MTc3NDQ5MzIxNCwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.PHtEKFqGzN8UWB2dhUhLpNw6JBkFM6eW1FJSDtNijIk; jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzQ2MjU4NjUsImlhdCI6MTc3NDUzOTQ2NSwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.ZVhf_FLXjoesq3JbjB8o3MbCO39kWznw3bdAw-sEpJY^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^" ^
+  -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"146^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^", ^\^"Google Chrome^\^";v=^\^"146^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^" ^
+  --data-raw ^"^{^\^"name^\^":^\^"^ ^ ^ ^ ^\^",^\^"parentId^\^":1,^\^"path^\^":^\^"/sys/product^\^",^\^"type^\^":1,^\^"icon^\^":^\^"icon-guojihua^\^",^\^"status^\^":0,^\^"sort^\^":10,^\^"query^\^":^\^"^\^",^\^"id^\^":0^}^"
+
+curl ^"http://localhost/am/menu/delete?id=33^" ^
+  -H ^"Accept: application/json, text/plain, */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -b ^"stoken=eyJhbGciOiJIUzI1NiJ9.eyJhdXRoTG9naW4iOmZhbHNlLCJleHAiOjE3NzQ1Nzk2MTQsImlhdCI6MTc3NDQ5MzIxNCwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.PHtEKFqGzN8UWB2dhUhLpNw6JBkFM6eW1FJSDtNijIk; jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzQ2MjU4NjUsImlhdCI6MTc3NDUzOTQ2NSwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.ZVhf_FLXjoesq3JbjB8o3MbCO39kWznw3bdAw-sEpJY^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^" ^
+  -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"146^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^", ^\^"Google Chrome^\^";v=^\^"146^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^"
+
+curl ^"http://localhost/am/history/list^" ^
+  -H ^"Accept: application/json, text/plain, */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -H ^"Content-Type: application/json^" ^
+  -b ^"stoken=eyJhbGciOiJIUzI1NiJ9.eyJhdXRoTG9naW4iOmZhbHNlLCJleHAiOjE3NzQ1Nzk2MTQsImlhdCI6MTc3NDQ5MzIxNCwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.PHtEKFqGzN8UWB2dhUhLpNw6JBkFM6eW1FJSDtNijIk; jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzQ2MjU4NjUsImlhdCI6MTc3NDUzOTQ2NSwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.ZVhf_FLXjoesq3JbjB8o3MbCO39kWznw3bdAw-sEpJY^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^" ^
+  -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"146^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^", ^\^"Google Chrome^\^";v=^\^"146^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^" ^
+  --data-raw ^"^{^\^"start^\^":0,^\^"length^\^":20^}^"
+
+curl ^"http://localhost/am/history/get?historyId=0d2f68da^" ^
+  -H ^"Accept: application/json, text/plain, */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -b ^"stoken=eyJhbGciOiJIUzI1NiJ9.eyJhdXRoTG9naW4iOmZhbHNlLCJleHAiOjE3NzQ1Nzk2MTQsImlhdCI6MTc3NDQ5MzIxNCwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.PHtEKFqGzN8UWB2dhUhLpNw6JBkFM6eW1FJSDtNijIk; jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzQ2MjU4NjUsImlhdCI6MTc3NDUzOTQ2NSwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.ZVhf_FLXjoesq3JbjB8o3MbCO39kWznw3bdAw-sEpJY^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^" ^
+  -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"146^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^", ^\^"Google Chrome^\^";v=^\^"146^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^"
+
+curl ^"http://localhost/am/history/deletes?ids=3655^" ^
+  -H ^"Accept: application/json, text/plain, */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -b ^"stoken=eyJhbGciOiJIUzI1NiJ9.eyJhdXRoTG9naW4iOmZhbHNlLCJleHAiOjE3NzQ1Nzk2MTQsImlhdCI6MTc3NDQ5MzIxNCwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.PHtEKFqGzN8UWB2dhUhLpNw6JBkFM6eW1FJSDtNijIk; jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzQ2MjU4NjUsImlhdCI6MTc3NDUzOTQ2NSwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.ZVhf_FLXjoesq3JbjB8o3MbCO39kWznw3bdAw-sEpJY^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^" ^
+  -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"146^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^", ^\^"Google Chrome^\^";v=^\^"146^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^"
+
+curl ^"http://localhost/am/document/list^" ^
+  -H ^"Accept: application/json, text/plain, */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -H ^"Content-Type: application/json^" ^
+  -b ^"stoken=eyJhbGciOiJIUzI1NiJ9.eyJhdXRoTG9naW4iOmZhbHNlLCJleHAiOjE3NzQ1Nzk2MTQsImlhdCI6MTc3NDQ5MzIxNCwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.PHtEKFqGzN8UWB2dhUhLpNw6JBkFM6eW1FJSDtNijIk; jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzQ2MjU4NjUsImlhdCI6MTc3NDUzOTQ2NSwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.ZVhf_FLXjoesq3JbjB8o3MbCO39kWznw3bdAw-sEpJY^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^" ^
+  -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"146^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^", ^\^"Google Chrome^\^";v=^\^"146^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^" ^
+  --data-raw ^"^{^\^"start^\^":0,^\^"length^\^":20^}^"
+
+curl ^"http://localhost/am/document/deletes?ids=1102^" ^
+  -H ^"Accept: application/json, text/plain, */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -b ^"stoken=eyJhbGciOiJIUzI1NiJ9.eyJhdXRoTG9naW4iOmZhbHNlLCJleHAiOjE3NzQ1Nzk2MTQsImlhdCI6MTc3NDQ5MzIxNCwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.PHtEKFqGzN8UWB2dhUhLpNw6JBkFM6eW1FJSDtNijIk; jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzQ2MjU4NjUsImlhdCI6MTc3NDUzOTQ2NSwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.ZVhf_FLXjoesq3JbjB8o3MbCO39kWznw3bdAw-sEpJY^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^" ^
+  -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"146^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^", ^\^"Google Chrome^\^";v=^\^"146^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^"
+
+curl ^"http://localhost/am/lang/groups^" ^
+  -H ^"Accept: application/json, text/plain, */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -b ^"stoken=eyJhbGciOiJIUzI1NiJ9.eyJhdXRoTG9naW4iOmZhbHNlLCJleHAiOjE3NzQ1Nzk2MTQsImlhdCI6MTc3NDQ5MzIxNCwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.PHtEKFqGzN8UWB2dhUhLpNw6JBkFM6eW1FJSDtNijIk; jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzQ2MjU4NjUsImlhdCI6MTc3NDUzOTQ2NSwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.ZVhf_FLXjoesq3JbjB8o3MbCO39kWznw3bdAw-sEpJY^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^" ^
+  -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"146^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^", ^\^"Google Chrome^\^";v=^\^"146^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^"
+
+curl ^"http://localhost/am/lang/langs^" ^
+  -H ^"Accept: application/json, text/plain, */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -b ^"stoken=eyJhbGciOiJIUzI1NiJ9.eyJhdXRoTG9naW4iOmZhbHNlLCJleHAiOjE3NzQ1Nzk2MTQsImlhdCI6MTc3NDQ5MzIxNCwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.PHtEKFqGzN8UWB2dhUhLpNw6JBkFM6eW1FJSDtNijIk; jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzQ2MjU4NjUsImlhdCI6MTc3NDUzOTQ2NSwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.ZVhf_FLXjoesq3JbjB8o3MbCO39kWznw3bdAw-sEpJY^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^" ^
+  -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"146^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^", ^\^"Google Chrome^\^";v=^\^"146^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^"
+
+curl ^"http://localhost/am/lang/addLang^" ^
+  -H ^"Accept: application/json, text/plain, */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -H ^"Content-Type: application/json^" ^
+  -b ^"stoken=eyJhbGciOiJIUzI1NiJ9.eyJhdXRoTG9naW4iOmZhbHNlLCJleHAiOjE3NzQ1Nzk2MTQsImlhdCI6MTc3NDQ5MzIxNCwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.PHtEKFqGzN8UWB2dhUhLpNw6JBkFM6eW1FJSDtNijIk; jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzQ2MjU4NjUsImlhdCI6MTc3NDUzOTQ2NSwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.ZVhf_FLXjoesq3JbjB8o3MbCO39kWznw3bdAw-sEpJY^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^" ^
+  -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"146^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^", ^\^"Google Chrome^\^";v=^\^"146^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^" ^
+  --data-raw ^"^{^\^"label^\^":^\^"^ ^ ^\^",^\^"code^\^":^\^"fr^\^",^\^"type^\^":null,^\^"id^\^":null^}^"
+
+curl ^"http://localhost/am/lang/updateLang^" ^
+  -H ^"Accept: application/json, text/plain, */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -H ^"Content-Type: application/json^" ^
+  -b ^"stoken=eyJhbGciOiJIUzI1NiJ9.eyJhdXRoTG9naW4iOmZhbHNlLCJleHAiOjE3NzQ1Nzk2MTQsImlhdCI6MTc3NDQ5MzIxNCwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.PHtEKFqGzN8UWB2dhUhLpNw6JBkFM6eW1FJSDtNijIk; jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzQ2MjU4NjUsImlhdCI6MTc3NDUzOTQ2NSwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.ZVhf_FLXjoesq3JbjB8o3MbCO39kWznw3bdAw-sEpJY^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^" ^
+  -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"146^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^", ^\^"Google Chrome^\^";v=^\^"146^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^" ^
+  --data-raw ^"^{^\^"label^\^":^\^"^ ^ ^\^",^\^"code^\^":^\^"fr_fr^\^",^\^"type^\^":null,^\^"id^\^":13^}^"
+
+curl ^"http://localhost/am/lang/deleteLang?id=13^" ^
+  -H ^"Accept: application/json, text/plain, */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -b ^"stoken=eyJhbGciOiJIUzI1NiJ9.eyJhdXRoTG9naW4iOmZhbHNlLCJleHAiOjE3NzQ1Nzk2MTQsImlhdCI6MTc3NDQ5MzIxNCwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.PHtEKFqGzN8UWB2dhUhLpNw6JBkFM6eW1FJSDtNijIk; jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzQ2MjU4NjUsImlhdCI6MTc3NDUzOTQ2NSwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.ZVhf_FLXjoesq3JbjB8o3MbCO39kWznw3bdAw-sEpJY^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^" ^
+  -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"146^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^", ^\^"Google Chrome^\^";v=^\^"146^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^"
+
+curl ^"http://localhost/am/lang/resources^" ^
+  -H ^"Accept: application/json, text/plain, */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -H ^"Content-Type: application/json^" ^
+  -b ^"stoken=eyJhbGciOiJIUzI1NiJ9.eyJhdXRoTG9naW4iOmZhbHNlLCJleHAiOjE3NzQ1Nzk2MTQsImlhdCI6MTc3NDQ5MzIxNCwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.PHtEKFqGzN8UWB2dhUhLpNw6JBkFM6eW1FJSDtNijIk; jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzQ2MjU4NjUsImlhdCI6MTc3NDUzOTQ2NSwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.ZVhf_FLXjoesq3JbjB8o3MbCO39kWznw3bdAw-sEpJY^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^" ^
+  -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"146^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^", ^\^"Google Chrome^\^";v=^\^"146^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^" ^
+  --data-raw ^"^{^\^"groupName^\^":^\^"AdminDept^\^",^\^"langId^\^":1,^\^"start^\^":0,^\^"length^\^":20^}^"
+
+curl ^"http://localhost/am/lang/updateRes^" ^
+  -H ^"Accept: application/json, text/plain, */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -H ^"Content-Type: application/json^" ^
+  -b ^"stoken=eyJhbGciOiJIUzI1NiJ9.eyJhdXRoTG9naW4iOmZhbHNlLCJleHAiOjE3NzQ1Nzk2MTQsImlhdCI6MTc3NDQ5MzIxNCwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.PHtEKFqGzN8UWB2dhUhLpNw6JBkFM6eW1FJSDtNijIk; jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzQ2MjU4NjUsImlhdCI6MTc3NDUzOTQ2NSwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.ZVhf_FLXjoesq3JbjB8o3MbCO39kWznw3bdAw-sEpJY^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^" ^
+  -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"146^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^", ^\^"Google Chrome^\^";v=^\^"146^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^" ^
+  --data-raw ^"^[^{^\^"id^\^":null,^\^"resValue^\^":^\^"^ ^ ^ ^\^",^\^"languageId^\^":1,^\^"category^\^":^\^"AdminDept^\^",^\^"resKey^\^":^\^"^ ^ ^ ^\^"^},^{^\^"id^\^":null,^\^"resValue^\^":^\^"^ ^ ^ ^\^",^\^"languageId^\^":2,^\^"category^\^":^\^"AdminDept^\^",^\^"resKey^\^":^\^"^ ^ ^ ^\^"^},^{^\^"id^\^":null,^\^"resValue^\^":^\^"i don't know^\^",^\^"languageId^\^":3,^\^"category^\^":^\^"AdminDept^\^",^\^"resKey^\^":^\^"^ ^ ^ ^\^"^}^]^"
+
+curl ^"http://localhost/am/lang/deleteRes?id=3173^&a=1^" ^
+  -H ^"Accept: application/json, text/plain, */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -b ^"stoken=eyJhbGciOiJIUzI1NiJ9.eyJhdXRoTG9naW4iOmZhbHNlLCJleHAiOjE3NzQ1Nzk2MTQsImlhdCI6MTc3NDQ5MzIxNCwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.PHtEKFqGzN8UWB2dhUhLpNw6JBkFM6eW1FJSDtNijIk; jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzQ2MjU4NjUsImlhdCI6MTc3NDUzOTQ2NSwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.ZVhf_FLXjoesq3JbjB8o3MbCO39kWznw3bdAw-sEpJY^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^" ^
+  -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"146^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^", ^\^"Google Chrome^\^";v=^\^"146^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^"
+
+curl ^"http://localhost/am/dict/groups^" ^
+  -H ^"Accept: application/json, text/plain, */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -b ^"stoken=eyJhbGciOiJIUzI1NiJ9.eyJhdXRoTG9naW4iOmZhbHNlLCJleHAiOjE3NzQ1Nzk2MTQsImlhdCI6MTc3NDQ5MzIxNCwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.PHtEKFqGzN8UWB2dhUhLpNw6JBkFM6eW1FJSDtNijIk; jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzQ2MjU4NjUsImlhdCI6MTc3NDUzOTQ2NSwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.ZVhf_FLXjoesq3JbjB8o3MbCO39kWznw3bdAw-sEpJY^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^" ^
+  -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"146^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^", ^\^"Google Chrome^\^";v=^\^"146^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^"
+
+curl ^"http://localhost/am/dict/dicts^" ^
+  -H ^"Accept: application/json, text/plain, */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -H ^"Content-Type: application/json^" ^
+  -b ^"stoken=eyJhbGciOiJIUzI1NiJ9.eyJhdXRoTG9naW4iOmZhbHNlLCJleHAiOjE3NzQ1Nzk2MTQsImlhdCI6MTc3NDQ5MzIxNCwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.PHtEKFqGzN8UWB2dhUhLpNw6JBkFM6eW1FJSDtNijIk; jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzQ2MjU4NjUsImlhdCI6MTc3NDUzOTQ2NSwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.ZVhf_FLXjoesq3JbjB8o3MbCO39kWznw3bdAw-sEpJY^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^" ^
+  -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"146^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^", ^\^"Google Chrome^\^";v=^\^"146^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^" ^
+  --data-raw ^"^{^\^"groupName^\^":^\^"orderStatus^\^",^\^"start^\^":0,^\^"length^\^":20^}^"
+
+curl ^"http://localhost/am/dict/addDict^" ^
+  -H ^"Accept: application/json, text/plain, */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -H ^"Content-Type: application/json^" ^
+  -b ^"stoken=eyJhbGciOiJIUzI1NiJ9.eyJhdXRoTG9naW4iOmZhbHNlLCJleHAiOjE3NzQ1Nzk2MTQsImlhdCI6MTc3NDQ5MzIxNCwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.PHtEKFqGzN8UWB2dhUhLpNw6JBkFM6eW1FJSDtNijIk; jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzQ2MjU4NjUsImlhdCI6MTc3NDUzOTQ2NSwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.ZVhf_FLXjoesq3JbjB8o3MbCO39kWznw3bdAw-sEpJY^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^" ^
+  -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"146^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^", ^\^"Google Chrome^\^";v=^\^"146^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^" ^
+  --data-raw ^"^{^\^"groupName^\^":^\^"orderStatus^\^",^\^"dictLabel^\^":^\^"^ ^ ^ ^\^",^\^"dictKey^\^":^\^"WAITING_SEND^\^",^\^"type^\^":1,^\^"dictValue^\^":^\^"1^\^"^}^"
+
+curl ^"http://localhost/am/dict/updateDict^" ^
+  -H ^"Accept: application/json, text/plain, */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -H ^"Content-Type: application/json^" ^
+  -b ^"stoken=eyJhbGciOiJIUzI1NiJ9.eyJhdXRoTG9naW4iOmZhbHNlLCJleHAiOjE3NzQ1Nzk2MTQsImlhdCI6MTc3NDQ5MzIxNCwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.PHtEKFqGzN8UWB2dhUhLpNw6JBkFM6eW1FJSDtNijIk; jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzQ2MjU4NjUsImlhdCI6MTc3NDUzOTQ2NSwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.ZVhf_FLXjoesq3JbjB8o3MbCO39kWznw3bdAw-sEpJY^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^" ^
+  -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"146^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^", ^\^"Google Chrome^\^";v=^\^"146^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^" ^
+  --data-raw ^"^{^\^"id^\^":44,^\^"groupName^\^":^\^"orderStatus^\^",^\^"dictLabel^\^":^\^"^ ^ ^ ^\^",^\^"dictKey^\^":^\^"WAIT_SEND^\^",^\^"type^\^":1,^\^"dictValue^\^":^\^"2^\^",^\^"remark^\^":^\^"^\^"^}^"
+
+curl ^"http://localhost/am/dict/deleteDict?id=44^" ^
+  -H ^"Accept: application/json, text/plain, */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -b ^"stoken=eyJhbGciOiJIUzI1NiJ9.eyJhdXRoTG9naW4iOmZhbHNlLCJleHAiOjE3NzQ1Nzk2MTQsImlhdCI6MTc3NDQ5MzIxNCwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.PHtEKFqGzN8UWB2dhUhLpNw6JBkFM6eW1FJSDtNijIk; jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzQ2MjU4NjUsImlhdCI6MTc3NDUzOTQ2NSwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.ZVhf_FLXjoesq3JbjB8o3MbCO39kWznw3bdAw-sEpJY^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^" ^
+  -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"146^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^", ^\^"Google Chrome^\^";v=^\^"146^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^"
+
+curl ^"http://localhost/am/dict/deleteGroup?code=orderStatus^" ^
+  -H ^"Accept: application/json, text/plain, */*^" ^
+  -H ^"Accept-Language: zh-CN,zh;q=0.9,en;q=0.8^" ^
+  -H ^"Cache-Control: no-cache^" ^
+  -H ^"Connection: keep-alive^" ^
+  -b ^"stoken=eyJhbGciOiJIUzI1NiJ9.eyJhdXRoTG9naW4iOmZhbHNlLCJleHAiOjE3NzQ1Nzk2MTQsImlhdCI6MTc3NDQ5MzIxNCwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.PHtEKFqGzN8UWB2dhUhLpNw6JBkFM6eW1FJSDtNijIk; jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzQ2MjU4NjUsImlhdCI6MTc3NDUzOTQ2NSwianRpIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIn0.ZVhf_FLXjoesq3JbjB8o3MbCO39kWznw3bdAw-sEpJY^" ^
+  -H ^"Origin: http://localhost:3000^" ^
+  -H ^"Pragma: no-cache^" ^
+  -H ^"Referer: http://localhost:3000/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: same-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36^" ^
+  -H ^"sec-ch-ua: ^\^"Chromium^\^";v=^\^"146^\^", ^\^"Not-A.Brand^\^";v=^\^"24^\^", ^\^"Google Chrome^\^";v=^\^"146^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^"
+

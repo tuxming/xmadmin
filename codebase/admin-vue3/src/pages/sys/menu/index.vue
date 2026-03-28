@@ -326,9 +326,7 @@ const onSelect = (value: any[], context: any) => {
 
 const prepareAdd = () => {
   let parentId = selectedMenu.value?.id ?? 1;
-  if (selectedMenu.value && selectedMenu.value.type !== 0) {
-    parentId = selectedMenu.value.parentId || 1;
-  }
+  
   const newMenu = {
     id: null,
     parentId,

@@ -90,7 +90,7 @@ export const RemoteAutoComplete : React.FC<RemoteCompleteProps> = ({
                         let option = {
                             label: data[key], 
                             value: data[key],
-                            key: key
+                            id: key
                         }
                         return option as any; 
                     }));

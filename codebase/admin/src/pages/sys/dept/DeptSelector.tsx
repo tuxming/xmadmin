@@ -123,10 +123,10 @@ export const DeptSelector : React.FC<TreeSelectProps> = (props) => {
             treeLine
             treeNodeLabelProp="pathName"
             style={{ width: '100%' }}
-            dropdownStyle={style}
+            styles={{ popup: style }}
             loadData={onLoadData}
             treeData={treeData}
-            dropdownRender = {(originNode) => {
+            popupRender = {(originNode) => {
                 return <div style={{position: 'relative'}}>
                     <Button size='small' icon={<ArrowsAltOutlined /> }  onClick={onScale}
                         style={{position: 'absolute', right: 15, top: 5, zIndex: 10000}}

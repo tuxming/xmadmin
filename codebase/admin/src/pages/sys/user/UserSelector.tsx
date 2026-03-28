@@ -38,6 +38,7 @@ import { AdminUser } from '../../../common/I18NNamespace';
 export const UserSelector : React.FC<any> = ({
     mode,
     onChange,
+    value,
     ...props
 }) => {
     const {t} = useTranslation(AdminUser);
@@ -45,9 +46,23 @@ export const UserSelector : React.FC<any> = ({
     //真实的值用于存在value
     //innValue是文本框显示的值
 
-    // const [value, setValue] = useState<any>();
-
     const [innValue, setInnValue] = useState<any>();
+
+    React.useEffect(() => {
+        if (value) {
+            if (mode === 'single') {
+                if (Array.isArray(value) && value.length > 0) {
+                    setInnValue(value[0].label || value[0].value);
+                } else if (typeof value === 'string' || typeof value === 'number') {
+                    setInnValue(value);
+                }
+            } else {
+                setInnValue(value);
+            }
+        } else {
+            setInnValue(undefined);
+        }
+    }, [value, mode]);
 
     const onValueChange = (newValue) => {
         // setValue(newValue);
@@ -68,7 +83,7 @@ export const UserSelector : React.FC<any> = ({
         setInnValue(option.label);
         // setValue([option]);
         if(onChange){
-            onChange([option]);
+            onChange([{label: option.label, value: option.id || option.value}]);
         }
     }
 

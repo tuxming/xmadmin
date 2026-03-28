@@ -47,11 +47,15 @@ export const UserGrantRoleModal : React.FC<{
     }
 
     return <Modal open={visible} onClose={onModalClose} height={250} width={350}>
-        <CustomScroll heightRelativeToParent="100%" >
-            <UserGrantRole userId={userId} titleLevel={4} 
-                titleStyle={{textAlign: 'center', margin: '25px 0 15px 0'}} 
-                wrapperStyle={{paddingLeft: 20, paddingRight: 20}}    
-            />
-        </CustomScroll>
+        <div style={{height: '100%', display: 'flex', flexDirection: 'column'}}>
+            <div style={{flex: 1, minHeight: 0}}>
+                <CustomScroll heightRelativeToParent="100%">
+                    <UserGrantRole userId={userId} titleLevel={4} 
+                        titleStyle={{textAlign: 'center', margin: '25px 0 15px 0'}} 
+                        wrapperStyle={{paddingLeft: 20, paddingRight: 20}}    
+                    />
+                </CustomScroll>
+            </div>
+        </div>
     </Modal>
 }

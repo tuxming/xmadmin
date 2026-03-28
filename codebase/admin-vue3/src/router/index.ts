@@ -96,14 +96,11 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach((to, from) => {
+router.beforeEach((to) => {
   const userStore = useUserStore();
   const token = userStore.token;
   
   if (to.path === '/login') {
-    if (token) {
-      return { path: basePath };
-    }
     return true;
   } else {
     if (!token) {

@@ -259,7 +259,6 @@ public class UserService {
 		
 		where += SqlKit.eq("t.dept_id", query.getDeptId());
 		where += SqlKit.buildDateRange("t.created", query.getStartDate(), query.getEndDate());
-		where += " and t.status != "+User.STATUS_DELETE;
 		
 		return where;
 	}
@@ -361,26 +360,56 @@ public class UserService {
 
 
 	/**
-	 * 删除用户，将用户设置为删除状态
-	 * 前5个账户为预留账户，不能删除
+	 * 删除用户，不能删除系统用户
 	 * @param id
-	 * @param loginUser
 	 * @return
 	 */
 	public boolean delete(Integer id, ShiroUser loginUser) {
-		if(id < 5 || !loginUser.isOwnerData(null, id)) {
+		
+		if(id<5) {
 			return false;
 		}
 		
 		User user = findById(id);
-		if(user == null) {
+		if(!loginUser.isOwnerData(user.getStr("deptPath"), user.getId())) {
 			return false;
 		}
 		
-		boolean result = Db.update("update sys_user set status=3 where id=?", id)>0;
-		removeUserCache(user);
+		boolean r =  new User().setId(id).setStatus(User.STATUS_DELETE).update();
+		if(r) {
+			removeUserCache(user);
+		}
+		return r;
+	}
+	
+	/**
+	 * 彻底删除用户（物理删除并清除关联数据）
+	 * @param id
+	 * @param loginUser
+	 * @return
+	 */
+	public boolean forceDelete(Integer id, ShiroUser loginUser) {
+		if(id < 5) {
+			return false; // 保留前几个系统账号
+		}
 		
-		return result;
+		User user = findById(id);
+		if(user == null || !loginUser.isOwnerData(user.getStr("deptPath"), user.getId())) {
+			return false;
+		}
+		
+		return Db.tx(() -> {
+			// 删除用户角色
+			Db.delete("delete from sys_user_role where user_id = ?", id);
+			// 删除用户数据权限
+			Db.delete("delete from sys_user_data where user_id = ?", id);
+			// 删除用户表数据
+			boolean r = user.delete();
+			if(r) {
+				removeUserCache(user);
+			}
+			return r;
+		});
 	}
 
 
@@ -634,6 +663,48 @@ public class UserService {
 			throw new BusinessException(BusinessErr.ERR_NO_DATA_AUTH);
 		}
 		
+		int type = userData.getType();
+		int refId = userData.getRefId();
+		
+		// 校验要添加的目标是否存在，并且是否有权限分配
+		if(type == 1) {
+			User refUser = findById(refId);
+			if(refUser == null) {
+				throw new BusinessException(BusinessErr.ERROR.setMsg("目标用户不存在"));
+			}
+			if(!loginUser.isOwnerData(refUser.getStr("deptPath"), refUser.getId())) {
+				throw new BusinessException(BusinessErr.ERR_NO_DATA_AUTH.setMsg("您没有权限分配该用户的数据"));
+			}
+		} else if(type == 2) {
+			Dept refDept = deptService.findById(refId);
+			if(refDept == null) {
+				throw new BusinessException(BusinessErr.ERROR.setMsg("目标组织不存在"));
+			}
+			if(!loginUser.isOwnerData(refDept.getPath())) {
+				throw new BusinessException(BusinessErr.ERR_NO_DATA_AUTH.setMsg("您没有权限分配该组织的数据"));
+			}
+			
+			// 检查是否已经在已有组织的子节点中
+			List<UserData> existingDepts = UserData.dao.find("select t.ref_id, t1.path from sys_user_data t left join sys_dept t1 on t.ref_id = t1.id where t.user_id=? and t.type=2", userData.getUserId());
+			for(UserData ud : existingDepts) {
+				if(ud.getRefId() == refId) {
+					// 已经在下面检查重复了，这里先跳过
+					continue;
+				}
+				String existPath = ud.getStr("path");
+				if(existPath != null && refDept.getPath().startsWith(existPath)) {
+					throw new BusinessException(BusinessErr.ERROR.setMsg("该组织已在已有组织数据权限的子节点中，无需重复添加"));
+				}
+			}
+		}
+		
+		// 检查是否已经存在相同的数据权限，避免重复添加
+		UserData exist = UserData.dao.findFirst("select * from sys_user_data where user_id=? and type=? and ref_id=?", 
+				userData.getUserId(), type, refId);
+		if(exist != null) {
+			throw new BusinessException(BusinessErr.ERROR.setMsg("该数据权限已存在，请勿重复添加"));
+		}
+		
 		return userData.save();
 	}
 
@@ -672,6 +743,15 @@ public class UserService {
 		User user = findById(userId);
 		if(user==null || !loginUser.isOwnerData(user.getStr("deptPath"), user.getId())) {
 			throw new BusinessException(BusinessErr.ERR_NO_DATA_AUTH);
+		}
+		
+		// 校验要添加的角色是否存在，是否有权限分配（暂不强制角色权限，但至少需存在）
+		// 可以根据需求增加 roleService.findById 的存在性验证
+		
+		// 检查是否已经存在该角色分配，避免重复添加
+		UserRole exist = UserRole.dao.findFirst("select * from sys_user_role where user_id=? and role_id=?", userId, roleId);
+		if(exist != null) {
+			throw new BusinessException(BusinessErr.ERROR.setMsg("该用户已分配此角色，请勿重复添加"));
 		}
 		
 		return new UserRole().setUserId(userId).setRoleId(roleId).save();

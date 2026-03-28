@@ -2,14 +2,16 @@
 <h4 align="center">基于jfinal + react18/Antd5 通用后台管理系统</h4>
 
 <h2 style="color:red;">vue3版本已完成：项目路径 codebase/admin-vue3（下方提供使用说明）</h2>
+<h2 style="color:red;">Golang后端版本已完成：项目路径 codebase/server-go（下方提供使用说明）</h2>
 
 # ✨概述
-- 面向中小企业快速开发平台框架，框架采用主流技术开发设计，前后端分离架构模式，后端采用java8(jfinal框架),前端提供react18(Antd5)与vue3(tdesign-vue-next)两个版本
+- 面向中小企业快速开发平台框架，框架采用主流技术开发设计，前后端分离架构模式，后端提供java8(jfinal框架)与Golang(Gin)两个版本，前端提供react18(Antd5)与vue3(tdesign-vue-next)两个版本
 - 本系统完成了基本的权限体系，支持session,jwttoken,无状态三种模式，日志功能，字典，文件管理，等基本的管理功能，可以快速用于实际业务开发
 - 本系统采用redis缓存服务，可以根据需要快速实现分布式部署
 - 本系统抽离已有项目，经受了近亿数据量的业务压力
 - 本系统注释详细，简单易懂，上手就能用，在一些起奇怪的代码处有详细的注释
 - 后端框架不选spring的原因，一个是大部分的需求都是伪需求用不到这么复杂的框架，另一个是spring的ruoyi已经做的很好了没必要重复造轮子，jfinal用作者的话就是快速上手，易于开发和维护，根据本人从接触jfinal到现在也有7，8年的时间，jfinal基本能满足我能接触的所有项目，有特别需求的当我没说，技术无对错，根据自己的需要来选择就好。
+- 新增Golang后端实现，使用Gin和sqlx，性能更强，部署更轻量级，满足不同技术栈需求。
 - 本系统采用MIT开源协议
 
 # &#x1F31F;亮点
@@ -17,10 +19,10 @@
 - 高性能：redis缓存、支持集群部署；
 - 个性UI：支持自定义主题，自定义背景，全局设置组件外观
 - 自定义弹窗：支持最大化，缩小，移动，多窗体。
-- 前后端分离：后端jfinal，管理端antd5；
+- 前后端分离：后端支持jfinal或Golang，管理端支持React或Vue3；
 - 代码规范：遵循PSR-2命名规范、Restful标准接口、代码严格分层、注释齐全、统一错误码；
 - 权限管理：内置多种鉴权方式，支持多角色，支持数据权限控制，灵活控制每一个用户，每一条数据
-- 快速上手：得益于jfinal的便捷，React的规范，可以快速上手着手业务开发
+- 快速上手：得益于jfinal和Gin的便捷，React和Vue3的规范，可以快速上手着手业务开发
   
 # &#x1F389;效果展示
 <table>
@@ -47,16 +49,28 @@
 # &#x26A1;快速开始
 ## 本地开发
 ### 数据库
-- 安装mysql5.7，由于是基础项目，sql脚本并不复杂，自己可以使用任意数据库
+- 安装mysql5.7+，由于是基础项目，sql脚本并不复杂，自己可以使用任意数据库
 - 导入resources/script.sql到数据库
-### 后端
+### 后端（Java版）
 - 安装redis，并运行，具体方法自行百度
 - 导入maven项目codebase/server到eclipse/idea中
 - 默认redis是采用的无密码的连接方式，线上一定要设置密码
 - 打开：/src/main/resources/config.properties修改数据库连接
 - 运行XmAdminLanucher.java里面的main方法
 
-### 前端
+### 后端（Golang版）
+- 环境需求：Go ≥ 1.20
+- 项目路径：codebase/server-go
+- 配置文件在 `codebase/server-go/config/application.properties` 中修改数据库和Redis连接
+- 安装依赖并运行：
+  ```bash
+  cd codebase/server-go
+  go mod tidy
+  go run ./cmd/server-go
+  ```
+- 更多说明和Linux部署见：codebase/server-go/README.md
+
+### 前端（React版）
 - 环境需求：node20.8.1
 - 建议用vscode打开前端项目，前端项目位于：codebase/admin
 - 运行npm install 

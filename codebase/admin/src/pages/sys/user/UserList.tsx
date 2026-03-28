@@ -29,6 +29,7 @@ import { useTranslation } from '../../../hooks';
 import { api } from '../../../common/api';
 import { computePx } from '../../../common/kit';
 import { useContext, useEffect, useState } from 'react';
+import { UserStatusTag } from './UserType';
 
 export type UserListType = {
     query: any,
@@ -94,6 +95,7 @@ export const UserList : React.FC<UserListType> = ({
             filter: true,
             ellipsis: true,
             width: 120,
+            render: (text: any) => <UserStatusTag>{text}</UserStatusTag>,
         },
         {
             title: t('创建时间'),

@@ -142,9 +142,7 @@ const onCheck = (checked: any[], context: any) => {
 const onCloseModal = () => {
   visible.value = false;
   emit('update:open', false);
-  setTimeout(() => {
-    emit('close');
-  }, 500);
+  emit('close');
 };
 
 const onClickOk = async () => {

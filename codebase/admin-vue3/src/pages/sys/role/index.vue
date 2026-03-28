@@ -61,14 +61,16 @@
 
     <RoleGrantPermission
       v-if="grantPermissionVisible"
-      v-model:open="grantPermissionVisible"
+      :open="grantPermissionVisible"
+      @update:open="grantPermissionVisible = $event"
       :role-id="grantPermissionRoleId"
       @close="() => grantPermissionVisible = false"
     />
 
     <RoleGrantMenu
       v-if="grantMenuVisible"
-      v-model:open="grantMenuVisible"
+      :open="grantMenuVisible"
+      @update:open="grantMenuVisible = $event"
       :role-id="grantMenuRoleId"
       @close="() => grantMenuVisible = false"
     />

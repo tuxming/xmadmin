@@ -1,6 +1,6 @@
 <template>
   <div>
-    <t-form ref="formRef" :data="formData" @submit="onFinish" label-align="left" :label-width="80">
+    <t-form ref="formRef" :data="formData" :rules="rules" @submit="onFinish" label-align="left" :label-width="80">
       <t-form-item name="password" :label="t('原 密 码')">
         <t-input v-model="formData.password" type="password"></t-input>
       </t-form-item>
@@ -20,13 +20,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue';
+import { ref, reactive, onMounted } from 'vue';
 import { useTranslation } from '@/hooks/useTranslation';
 import type { SubmitContext } from 'tdesign-vue-next';
 import { AdminUser } from '@/utils/I18NNamespace';
 
 const emit = defineEmits<{
   (e: 'submit', values: any): void;
+  (e: 'registerSubmit', fn: () => void): void;
 }>();
 
 const { t } = useTranslation(AdminUser);
@@ -109,6 +110,10 @@ const submitForm = () => {
     formRef.value.submit();
   }
 };
+
+onMounted(() => {
+  emit('registerSubmit', submitForm);
+});
 
 const onFinish = ({ validateResult, firstError }: SubmitContext) => {
   if (validateResult === true) {

@@ -1,8 +1,8 @@
 <template>
-  <form class="qc" @submit.prevent="doQuery">
+  <div class="qc" @keyup.enter="doQuery">
     <table class="qc-table">
       <colgroup>
-        <col v-for="n in colCount" :key="`col-${n}`" />
+        <col v-for="n in colCount" :key="`col-${n}`" :style="(n === colCount && colCount > 1) ? 'width: 300px;' : ''" />
       </colgroup>
       <tbody v-if="colCount === 1">
         <tr v-if="isQueryBasic">
@@ -15,7 +15,7 @@
               </div>
               <div class="qc-basic-actions">
                 <t-space :size="8" align="center">
-                  <t-button theme="primary" type="submit">
+                  <t-button theme="primary" @click="doQuery">
                     <template #icon><t-icon name="search" /></template>
                     搜索
                   </t-button>
@@ -50,7 +50,7 @@
             </td>
             <td v-else class="qc-td-actions">
               <t-space :size="8" align="center">
-                <t-button theme="primary" type="submit">
+                <t-button theme="primary" @click="doQuery">
                   <template #icon><t-icon name="search" /></template>
                   搜索
                 </t-button>
@@ -83,7 +83,7 @@
               </div>
               <div class="qc-basic-actions">
                 <t-space :size="8" align="center">
-                  <t-button theme="primary" type="submit">
+                  <t-button theme="primary" @click="doQuery">
                     <template #icon><t-icon name="search" /></template>
                     搜索
                   </t-button>
@@ -118,7 +118,7 @@
             </td>
             <td v-else class="qc-td-actions">
               <t-space :size="8" align="center">
-                <t-button theme="primary" type="submit">
+                <t-button theme="primary" @click="doQuery">
                   <template #icon><t-icon name="search" /></template>
                   搜索
                 </t-button>
@@ -141,7 +141,7 @@
         </tr>
       </tbody>
     </table>
-  </form>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -184,9 +184,13 @@ watch(
   (items) => {
     const nextInit: Record<string, any> = { basicValue: initialValues.value.basicValue ?? '' };
     items.forEach((it) => {
-      nextInit[it.name] = it.value ?? nextInit[it.name];
+      const isDateRange = it.component === 't-date-range-picker' || 
+                          (typeof it.component === 'string' && it.component.includes('range'));
+      const defaultVal = isDateRange ? [] : '';
+      
+      nextInit[it.name] = it.value ?? nextInit[it.name] ?? defaultVal;
       if (values[it.name] === undefined) {
-        values[it.name] = it.value;
+        values[it.name] = it.value ?? defaultVal;
       }
     });
     initialValues.value = nextInit;

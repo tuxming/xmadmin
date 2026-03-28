@@ -33,6 +33,7 @@ export const api = {
         userInfo: server + "/am/user/userInfo",
         search: server + "/am/user/search",
         delete: server + "/am/user/delete",
+        forceDelete: server + "/am/user/forceDelete",
         create: server + "/am/user/create",
         update: server + "/am/user/update",
         dataPermissions: server + "/am/user/dataPermissions",

@@ -1,25 +1,26 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-/codebase/admin/node_modules
-/codebase/app/node_modules
-/codebase/home/node_modules
 
+
+/codebase/admin/node_modules
 /codebase/admin/dist
 /codebase/admin/build
 /codebase/admin/.vscode
-
-/codebase/app/dist
-/codebase/home/dist
+/codebase/admin/package-lock.json
 
 /codebase/admin-vue3/dist
 /codebase/admin-vue3/build
 /codebase/admin-vue3/.vscode
+/codebase/admin-vue3/node_modules
+/codebase/admin-vue3/package-lock.json
 
-/codebase/admin/package-lock.json
+/codebase/app/node_modules
+/codebase/home/node_modules
+/codebase/app/dist
+/codebase/home/dist
 /codebase/app/package-lock.json
 /codebase/home/package-lock.json
-
 
 /codebase/client/.vscode
 

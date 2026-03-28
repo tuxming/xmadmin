@@ -32,6 +32,7 @@ import { useState } from "react";
 import { AddIcon, DeleteIcon } from "../../../components/icon/svg/Icons";
 import { UserSelector } from "./UserSelector";
 import { DeptSelector } from "../dept";
+import { CustomScroll } from "react-custom-scroll";
 
 
 /**
@@ -253,7 +254,7 @@ export const UserGrantDataPermission : React.FC<{
         const [type, setType] = useState<number>(1);
         const onRadioChange = (event) => {
             // console.log("radio change", event.target.value);
-            form.setFieldValue("refId", null);
+            form.setFieldValue("refId", undefined);
             setType(event.target.value);
         }
 
@@ -297,27 +298,34 @@ export const UserGrantDataPermission : React.FC<{
         setConfirmId(id);
     }
 
-    return <div style={wrapperStyle}>
-        <div style={{position: 'relative'}}>
+    return <div style={{...wrapperStyle, display: 'flex', flexDirection: 'column', height: '100%'}}>
+        <div style={{position: 'relative', flexShrink: 0}}>
             <Typography.Title level={titleLevel}  style={titleStyle} >
                 {t("数据权限")}
             </Typography.Title>
             <Tooltip title={t("添加数据权限")}>
-                <Button style={{position: 'absolute', bottom: -5, right: 30}} 
+                <Button style={{position: 'absolute', bottom: 5, right: 30}} 
                     onClick={onAdd}
                     type="primary"
                     icon={<AddIcon type="primary"/>} />
             </Tooltip>
         </div>
-        <TableComponent pageSize={20} query={query} apiUrl={api.user.dataPermissions + "?type=1&id="+userId} 
-            onSelect={onSelect} width={465}
-            columns={useCols}
-            refresh={userRefresh}
-        />
-        <TableComponent pageSize={20} query={query} apiUrl={api.user.dataPermissions + "?type=2&id="+userId} 
-            onSelect={onSelect} width={565}
-            columns={deptCols}
-            refresh={deptRefresh}
-        />
+        <div style={{flex: 1, minHeight: 0}}>
+            <CustomScroll heightRelativeToParent="100%">
+                <div style={{paddingBottom: 20, overflowX: 'hidden', paddingRight: 10}}>
+                    <TableComponent pageSize={20} query={query} apiUrl={api.user.dataPermissions + "?type=1&id="+userId} 
+                        onSelect={onSelect} 
+                        columns={useCols}
+                        refresh={userRefresh}
+                    />
+                    <div style={{height: 20}}></div>
+                    <TableComponent pageSize={20} query={query} apiUrl={api.user.dataPermissions + "?type=2&id="+userId} 
+                        onSelect={onSelect} 
+                        columns={deptCols}
+                        refresh={deptRefresh}
+                    />
+                </div>
+            </CustomScroll>
+        </div>
     </div>
 }

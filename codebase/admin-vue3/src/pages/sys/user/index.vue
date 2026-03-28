@@ -59,10 +59,13 @@
     />
 
     <UserEdit
-      v-if="openEdit"
-      v-model:open="openEdit"
-      :user="editUser"
-      @close="onEditClose"
+      v-for="(user, index) in editUsers"
+      :key="user.id || index"
+      :open="true"
+      :user="user"
+      :modal-offset="{ x: index * 10, y: index * 10 }"
+      @update:open="(val) => { if (!val) onEditClose(false, index) }"
+      @close="(needRefresh) => onEditClose(needRefresh, index)"
     />
 
     <UserGrantDataPermissionModal
@@ -113,11 +116,11 @@ const selectedRows = ref<any[]>([]);
 const refresh = ref({ reset: false, tag: 1 });
 
 const openAdd = ref(false);
-const openEdit = ref(false);
 const openGrantData = ref(false);
 const openGrantUserRole = ref(false);
 
-const editUser = ref<any>(null);
+// 使用数组来存储需要打开的编辑窗口的用户数据
+const editUsers = ref<any[]>([]);
 const grantUser = ref<any>(null);
 const grantRoleUser = ref<any>(null);
 
@@ -137,12 +140,14 @@ const onCreate = () => {
 
 const onEdit = async () => {
   if (selectedRows.value && selectedRows.value.length > 0) {
-    const row = selectedRows.value[0];
-    const result = await request.get(`${api.user.get}?id=${row.id}`);
-    showResult.show(result);
-    if (result.status) {
-      editUser.value = result.data;
-      openEdit.value = true;
+    // 遍历所有选中的行，为每一行获取详情并打开一个编辑窗口
+    for (const row of selectedRows.value) {
+      const result = await request.get(`${api.user.get}?id=${row.id}`);
+      showResult.show(result);
+      if (result.status) {
+        // 将获取到的用户详情推入数组
+        editUsers.value.push(result.data);
+      }
     }
   } else {
     message.warning(t('请先选中用户，再编辑'));
@@ -169,6 +174,26 @@ const onDelete = () => {
   });
 };
 
+const onForceDelete = () => {
+  if (!selectedRows.value || selectedRows.value.length === 0) {
+    message.warning(t('请选中要删除的用户后，再操作'));
+    return;
+  }
+
+  confirm({
+    content: f('确定要彻底删除用户及相关数据权限：%s?', [selectedRows.value[0].fullname]),
+    onOk: async (close) => {
+      const result = await request.get(`${api.user.forceDelete}?id=${selectedRows.value[0].id}`);
+      showResult.show(result);
+      if (result.status) {
+        refresh.value = { reset: true, tag: refresh.value.tag + 1 };
+        selectedRows.value = [];
+        close();
+      }
+    }
+  });
+};
+
 const setNeedRefresh = (needRefresh: boolean) => {
   if (needRefresh) {
     refresh.value = { reset: true, tag: refresh.value.tag + 1 };
@@ -180,9 +205,10 @@ const onAddClose = (needRefresh: boolean) => {
   openAdd.value = false;
 };
 
-const onEditClose = (needRefresh: boolean) => {
+const onEditClose = (needRefresh: boolean, index: number) => {
   setNeedRefresh(needRefresh);
-  openEdit.value = false;
+  // 从数组中移除当前关闭的编辑窗口数据
+  editUsers.value.splice(index, 1);
 };
 
 const grantData = () => {
@@ -244,12 +270,15 @@ const loginAsUser = () => {
 const dropdownItems = computed(() => {
   const items = [];
   
-  // Here we would normally check permissions using auth hook/store
-  // For now, assuming user has permissions or they will be checked in the API
-  
   items.push({ content: t('分配角色'), value: 'grantRole' });
   items.push({ content: t('分配数据权限'), value: 'grantData' });
   items.push({ content: t('登录此用户'), value: 'loginAs' });
+  
+  items.push({ 
+    content: t('彻底删除'), 
+    value: 'forceDelete',
+    theme: 'error' 
+  });
   
   return items;
 });
@@ -261,6 +290,8 @@ const handleDropdownClick = (data: any) => {
     grantData();
   } else if (data.value === 'loginAs') {
     loginAsUser();
+  } else if (data.value === 'forceDelete') {
+    onForceDelete();
   }
 };
 </script>

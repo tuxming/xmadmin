@@ -87,7 +87,7 @@ public class PermissionService {
 				+ " where 1=1 ";
 		
 		String where = buildWhere(query, user);
-		sql += where + " order by group_name asc limit "
+		sql += where + " order by id desc limit "
 				+query.getStart() + " , " + query.getLength();
 		
 //		System.out.println(query);

@@ -48,7 +48,7 @@ const columns : any[] = [
     filterOptions: "UserStatus",
     ellipsis: true, 
     width: 120,
-    render: (text: any) => h(UserStatusTag, { value: text }),
+    render: (text: any) => h(UserStatusTag, null, { default: () => text }),
   },
   { title: t('创建时间'), key: 'created', sort: true, filter: "datepicker", ellipsis: true, width: 200 },
   { title: t('推广码'), key: 'code', sort: true, filter: "input", ellipsis: true, width: 120 },

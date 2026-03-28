@@ -9,6 +9,7 @@
       :loading="loading"
       :pagination="pagination"
       :selected-row-keys="selectedRowKeys"
+      v-model:expanded-tree-nodes="expandedTreeNodes"
       :height="tableHeight"
       :scroll="{ type: 'virtual', rowHeight: 48, bufferSize: 20 }"
       :tree="treeConfig"
@@ -28,7 +29,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, inject, computed, onMounted, onUnmounted } from 'vue';
+import { ref, watch, inject, computed, onMounted, onUnmounted, nextTick } from 'vue';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useRequest } from '@/hooks/useRequest';
 import { useLayer } from '@/hooks/useLayer';
@@ -52,6 +53,7 @@ const { message } = useLayer();
 const data = ref<any[]>([]);
 const loading = ref(false);
 const selectedRowKeys = ref<any[]>([]);
+const expandedTreeNodes = ref<any[]>([]);
 const tableRef = ref();
 
 const pagination = ref({
@@ -209,6 +211,12 @@ const onExpandedTreeNodesChange = async (expandedTreeNodes: any[], context: any,
 
   // ctx.rowState.expanded 在 type === 'expand' 且 trigger === 'expand-fold-icon' 时为 true
   if (ctx.type === 'expand' && ctx.row.hasChildren) {
+    // 如果已经加载过子节点，就不需要再请求了
+    const rowState = tableRef.value?.getData(ctx.row.id);
+    if (rowState && Array.isArray(rowState.children) && rowState.children.length > 0) {
+      return;
+    }
+
     const result = await request.post(api.dept.list, { parentId: ctx.row.id });
     if (result.status && result.data && result.data.list) {
       const children = result.data.list.map((item: any) => {
@@ -225,147 +233,85 @@ const onExpandedTreeNodesChange = async (expandedTreeNodes: any[], context: any,
 
 const refreshNode = async (type: string, object: any) => {
   console.log(type, object)
+
+  // 1. 收集所有当前展开节点的 path，解析出所有需要加载子节点的父节点 ID
+  const pathsToLoad = new Set<number>();
+  let oldExpandedKeys = [...expandedTreeNodes.value];
+
   if (type === 'delete') {
-    tableRef.value?.remove(object.id);
-    return;
+    oldExpandedKeys = oldExpandedKeys.filter(k => k !== object.id);
   }
   
+  oldExpandedKeys.forEach(id => {
+    const rowData = tableRef.value?.getData(id)?.row;
+    if (rowData && rowData.path) {
+      const parts = String(rowData.path).split('/').filter(Boolean).map(Number);
+      parts.forEach(p => pathsToLoad.add(p));
+    }
+    pathsToLoad.add(Number(id)); // 确保展开节点本身也被记录
+  });
+
+  // 如果是新建或删除操作，要把父节点加进去，确保它能被加载和更新状态
+  if (type === 'create' || type === 'delete') {
+    const parentId = object.parentId || 0;
+    if (parentId !== 0) {
+      pathsToLoad.add(parentId);
+      if (type === 'create' && !oldExpandedKeys.includes(parentId)) {
+        oldExpandedKeys.push(parentId);
+      }
+    }
+  }
+
+  // 如果是更新（移动节点），要把新旧父节点都加进去
   if (type === 'update') {
     const rowState = tableRef.value?.getData(object.id);
-    if (rowState) {
-      const oldParentId = rowState.row?.parentId || 0;
-      const newParentId = object.parentId || 0;
-
-      if (oldParentId === newParentId) {
-        const rawData = { ...rowState.row, ...object };
-        if (rawData.hasChildren) {
-          rawData.children = true;
-        }
-        tableRef.value?.setData(object.id, rawData);
-        return;
+    const oldParentId = rowState?.row?.parentId || 0;
+    const newParentId = object.parentId || 0;
+    
+    if (oldParentId !== 0) pathsToLoad.add(oldParentId);
+    if (newParentId !== 0) {
+      pathsToLoad.add(newParentId);
+      if (!oldExpandedKeys.includes(newParentId)) {
+        oldExpandedKeys.push(newParentId);
       }
-
-      const refreshParentChildren = async (parentId: number, forceExpand = false) => {
-        if (!parentId) {
-          fetchData();
-          return;
-        }
-
-        let parentState = tableRef.value?.getData(parentId);
-        if (!parentState) {
-          if (forceExpand) {
-            await fetchData();
-            await new Promise((resolve) => setTimeout(resolve, 120));
-            parentState = tableRef.value?.getData(parentId);
-          }
-          if (!parentState) {
-            return;
-          }
-        }
-
-        const needFetchChildren = forceExpand || parentState.expanded;
-        if (needFetchChildren) {
-          const result = await request.post(api.dept.list, { parentId });
-          if (result.status && result.data && result.data.list) {
-            const children = result.data.list.map((item: any) => {
-              if (item.hasChildren) return { ...item, children: true };
-              return item;
-            });
-
-            tableRef.value?.removeChildren(parentId);
-            if (children.length > 0) {
-              tableRef.value?.appendTo(parentId, children);
-            } else {
-              const latestParent = tableRef.value?.getData(parentId);
-              if (latestParent) {
-                tableRef.value?.setData(parentId, { ...latestParent.row, hasChildren: false, children: [] });
-              }
-            }
-          }
-        }
-
-        if (forceExpand) {
-          const latestParent = tableRef.value?.getData(parentId);
-          if (latestParent && !latestParent.expanded) {
-            tableRef.value?.toggleExpandData(latestParent);
-          }
-        }
-        return;
-      };
-
-      tableRef.value?.remove(object.id);
-
-      if (!oldParentId || !newParentId) {
-        await refreshParentChildren(oldParentId);
-        await refreshParentChildren(newParentId, true);
-        return;
-      }
-
-      await refreshParentChildren(oldParentId);
-      await refreshParentChildren(newParentId, true);
     }
-    return;
+  }
+
+  // 2. 重新加载根节点
+  await fetchData();
+  await nextTick();
+
+  // 3. 按层级（BFS）依次加载之前展开过的子节点
+  let queue = data.value.map(item => item.id);
+  while (queue.length > 0) {
+    const currentId = queue.shift();
+    if (currentId && pathsToLoad.has(currentId)) {
+      const result = await request.post(api.dept.list, { parentId: currentId });
+      if (result.status && result.data && result.data.list) {
+        const children = result.data.list.map((item: any) => {
+          if (item.hasChildren) return { ...item, children: true };
+          return item;
+        });
+        
+        if (children.length > 0) {
+          tableRef.value?.appendTo(currentId, children);
+          await nextTick();
+          queue.push(...children.map((c: any) => c.id));
+        } else {
+          // 如果后端返回没有子节点，确保将其标记为叶子节点
+          const latestParent = tableRef.value?.getData(currentId);
+          if (latestParent) {
+            const newRow = { ...latestParent.row, hasChildren: false };
+            delete newRow.children;
+            tableRef.value?.setData(currentId, newRow);
+          }
+        }
+      }
+    }
   }
   
-  if (type === 'create') {
-    const parentId = object.parentId || 0;
-    if (parentId === 0) {
-      fetchData();
-      return;
-    }
-
-    const rowState = tableRef.value?.getData(parentId);
-    if (rowState) {
-      const rawData = { ...rowState.row };
-
-      if (rawData.hasChildren && rawData.children !== true) {
-        rawData.children = true;
-        tableRef.value?.setData(parentId, rawData);
-      }
-
-      const rowChildren = rowState.children;
-      const hasLoadedChildren = Array.isArray(rowChildren) && rowChildren.length > 0;
-      const isLeafNode = !rawData.hasChildren && !hasLoadedChildren;
-
-      // 1. 如果它是叶子节点（原来没有子节点），让它变成父节点并展开
-      if (isLeafNode) {
-        rawData.hasChildren = true;
-        rawData.children = true;
-
-        tableRef.value?.setData(parentId, rawData);
-
-        setTimeout(() => {
-          const newState = tableRef.value?.getData(parentId);
-          if (!newState) return;
-          if (!newState.expanded) {
-            tableRef.value?.toggleExpandData(newState);
-            return;
-          }
-          tableRef.value?.toggleExpandData(newState);
-          setTimeout(() => {
-            tableRef.value?.toggleExpandData(newState);
-          }, 100);
-        }, 100);
-        return;
-      }
-
-      // 2. 如果它本来就是父节点，并且已经加载过子节点了
-      if (rowState.expanded) {
-        const result = await request.post(api.dept.list, { parentId: parentId });
-        if (result.status && result.data && result.data.list) {
-          const children = result.data.list.map((item: any) => {
-            if (item.hasChildren) return { ...item, children: true };
-            return item;
-          });
-          tableRef.value?.removeChildren(parentId);
-          tableRef.value?.appendTo(parentId, children);
-        }
-        return;
-      }
-
-      tableRef.value?.toggleExpandData(rowState);
-    }
-  }
+  // 4. 恢复展开状态
+  expandedTreeNodes.value = oldExpandedKeys;
 };
 
 defineExpose({

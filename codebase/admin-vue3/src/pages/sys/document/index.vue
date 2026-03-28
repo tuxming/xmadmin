@@ -6,9 +6,8 @@
     <t-space wrap>
       <t-upload
         ref="uploadRef"
-        :action="api.document.upload"
         theme="custom"
-        :with-credentials="true"
+        :request-method="customUpload"
         :show-upload-progress="false"
         @success="onUploadSuccess"
         @fail="onUploadFail"
@@ -62,7 +61,7 @@ import DocumentList from './DocumentList.vue';
 import AuthButton from '@/components/AuthButton.vue';
 import { AdminDocument } from '@/utils/I18NNamespace';
 
-const { t, f } = useTranslation(AdminDocument);
+const { t } = useTranslation(AdminDocument);
 const request = useRequest();
 const { message, confirm } = useLayer();
 const showResult = useShowResult(AdminDocument);
@@ -74,6 +73,27 @@ const refresh = ref({ reset: false, tag: 1 });
 
 const onlyIcon = computed(() => themeStore.onlyIcon);
 
+const uploadType = 'common';
+const uploadAction = computed(() => `${api.document.upload}?type=${encodeURIComponent(uploadType)}`);
+
+const customUpload = async (file: any) => {
+  try {
+    const formData = new FormData();
+    formData.append('file', file.raw);
+    const res: any = await request.post(uploadAction.value, formData, {
+      'Content-Type': 'multipart/form-data'
+    });
+    
+    if (res && res.status) {
+      return { status: 'success', response: res };
+    } else {
+      return { status: 'fail', error: res?.msg || '上传失败' };
+    }
+  } catch (err: any) {
+    return { status: 'fail', error: err.message || '上传失败' };
+  }
+};
+
 const onQuery = (values: any) => {
   query.value = values;
 };
@@ -82,8 +102,8 @@ const onTableSelectChange = (rows: any[]) => {
   selectedRows.value = rows;
 };
 
-const onRefresh = () => {
-  refresh.value = { reset: false, tag: refresh.value.tag + 1 };
+const onRefresh = (reset = false) => {
+  refresh.value = { reset, tag: refresh.value.tag + 1 };
 };
 
 const onDelete = () => {
@@ -112,8 +132,15 @@ const onDelete = () => {
 
 const onUploadSuccess = (context: any) => {
   const { file } = context;
-  message.success(`${file.name} ${t('上传成功')}`);
-  onRefresh();
+  // context.response contains the formatted response returned by formatUploadResponse
+  const response = context.response;
+
+  if (response?.status === 'success' || response?.status === true) {
+    message.success(`${file.name} ${t('上传成功')}`);
+    onRefresh(true);
+  } else {
+    message.error(`${file.name} ${t('上传失败')}: ${response?.error || response?.msg || ''}`);
+  }
 };
 
 const onUploadFail = (context: any) => {

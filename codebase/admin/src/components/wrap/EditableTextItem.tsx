@@ -105,16 +105,16 @@ export const EditableTextItem : React.FC<{
 
     if(editing){
         return (
-            <Space.Compact>
+            <Space.Compact style={{ display: 'flex', width: '100%' }}>
                 {type == 'text'? (
                     <Input value={localValue} onBlur={onBlur}
                         onChange={(e)=>setLocalValue(e.target.value)} 
-                        style={{width: computeWidth(value)}}
+                        style={{ flex: 1 }}
                     ></Input>
                 ): (
                     <Input.Password value={localValue} onBlur={onBlur}
                         onChange={(e)=>setLocalValue(e.target.value)} 
-                        style={{width: computeWidth(value)}}
+                        style={{ flex: 1 }}
                     ></Input.Password>
                 )}
                 <Button icon={<CheckOutlined type="primary" />}

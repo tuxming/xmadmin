@@ -4,6 +4,7 @@
     :title="title"
     :width="1100"
     :show-mask="false"
+    :offset="modalOffset"
     @close="onModalClose(false)"
   >
     <div class="user-edit">
@@ -74,6 +75,7 @@ import { useUserStore } from '@/store/modules/user';
 const props = defineProps<{
   user: any;
   open: boolean;
+  modalOffset?: { x: number; y: number };
 }>();
 
 const emit = defineEmits<{

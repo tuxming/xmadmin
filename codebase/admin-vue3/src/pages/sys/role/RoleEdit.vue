@@ -127,9 +127,7 @@ watch(() => props.open, (val) => {
 const onModalClose = (refresh: boolean) => {
   visible.value = false;
   emit('update:open', false);
-  setTimeout(() => {
-    emit('close', refresh);
-  }, 500);
+  emit('close', refresh);
 };
 
 const onSubmit = () => {

@@ -1,16 +1,16 @@
 <template>
   <div class="editable-tag-wrap" style="position: relative; padding-right: 30px">
     <template v-if="editing">
-      <t-space align="center">
+      <div style="display: flex; width: 100%; align-items: center; gap: 8px;">
         <DeptSelector
           v-model="localValue.value"
-          style="width: calc(100% - 50px)"
+          style="flex: 1; width: 100%;"
           @change="onSelect"
         />
         <t-button theme="primary" variant="text" shape="square" @click="onEnter">
           <template #icon><t-icon name="check" /></template>
         </t-button>
-      </t-space>
+      </div>
     </template>
     <template v-else>
       <span>{{ deptName }}<br/>{{ deptPath }}<br/>{{ deptPathName }}</span>

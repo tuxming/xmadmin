@@ -40,7 +40,7 @@
                 v-model="formData.dictValue"
                 theme="image"
                 accept="image/*"
-                :action="uploadUrl"
+                :request-method="customUpload"
                 :max="1"
               />
             </template>
@@ -108,7 +108,26 @@ const visible = ref(props.open);
 const formRef = ref<any>(null);
 const dictType = ref<number>(0);
 
-const uploadUrl = api.document?.upload || '/api/upload';
+const uploadUrl = computed(() => `${api.document.upload}?type=common`);
+
+const customUpload = async (file: any) => {
+  try {
+    const formData = new FormData();
+    formData.append('file', file.raw);
+    const res: any = await request.post(uploadUrl.value, formData, {
+      'Content-Type': 'multipart/form-data'
+    });
+    
+    if (res && res.status) {
+      const url = res.data ? `${api.document.img}?id=${res.data}` : res.url;
+      return { status: 'success', response: { url: url, id: res.data } };
+    } else {
+      return { status: 'fail', error: res?.msg || '上传失败' };
+    }
+  } catch (err: any) {
+    return { status: 'fail', error: err.message || '上传失败' };
+  }
+};
 
 const formData = reactive<DictEditFormType>({
   id: null,
@@ -143,7 +162,7 @@ onMounted(() => {
     const initialData = { ...props.dict };
     
     if (initialData.type === 3) {
-      initialData.dictValue = initialData.dictValue ? [{ url: initialData.dictValue }] : [];
+      initialData.dictValue = initialData.dictValue ? [{ url: `${api.document.img}?id=${initialData.dictValue}`, id: initialData.dictValue }] : [];
     }
     
     Object.assign(formData, initialData);
@@ -157,9 +176,7 @@ watch(() => props.open, (val) => {
 const onModalClose = (refresh: boolean) => {
   visible.value = false;
   emit('update:open', false);
-  setTimeout(() => {
-    emit('close', refresh);
-  }, 300);
+  emit('close', refresh);
 };
 
 const onSubmit = () => {
@@ -188,7 +205,9 @@ const onFinish = async ({ validateResult, firstError }: SubmitContext) => {
     let data: any = { ...formData };
     
     if (data.type === 3) {
-      data.dictValue = data.dictValue && data.dictValue.length > 0 ? (data.dictValue[0].response?.url || data.dictValue[0].url) : '';
+      data.dictValue = data.dictValue && data.dictValue.length > 0 
+        ? (data.dictValue[0].response?.id || data.dictValue[0].id || data.dictValue[0].response?.url || data.dictValue[0].url) 
+        : '';
     }
     
     const url = data.id ? api.dict.updateDict : api.dict.addDict;

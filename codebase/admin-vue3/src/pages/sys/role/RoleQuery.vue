@@ -17,7 +17,7 @@ const emit = defineEmits<{
 const { t } = useTranslation(AdminRole);
 
 const queryItems = computed(() => [
-  { label: t('角色名'), name: 'userId', component: UserSelector, props: { mode: 'single', clearable: true } },
+  { label: t('角色名'), name: 'roleName', component: 't-input', props: { clearable: true } },
   { label: t('角色代码'), name: 'code', component: 't-input', props: { clearable: true } },
   { label: t('角色类型'), name: 'types', component: RoleTypeSelector, props: { clearable: true } },
   { label: t('创建人'), name: 'creaters', component: UserSelector, props: { mode: 'multiple', clearable: true } },
@@ -32,10 +32,6 @@ const onQueryEvent = (values: any) => {
 
   if (v.creaters) {
     v.creaters = Array.isArray(v.creaters) ? v.creaters.map((x: any) => Number(x)) : [Number(v.creaters)];
-  }
-
-  if (v.userId !== undefined && v.userId !== null && v.userId !== '') {
-    v.userId = Number(v.userId);
   }
 
   emit('query', v);

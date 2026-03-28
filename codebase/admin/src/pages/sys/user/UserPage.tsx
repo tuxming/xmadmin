@@ -180,6 +180,37 @@ export const UserPage : React.FC = () => {
 
     }
 
+    //彻底删除
+    const onForceDelete = () => {
+        setSelectedRows(prev => {
+            if(!prev || prev.length==0){
+                message.warning(t("请选中要删除的用户后，再操作"));
+                return [];
+            }
+
+            confirm({
+                content: f("确定要彻底删除用户及相关数据权限：%s?", [prev[0].fullname]),
+                onOk: (close) => {
+                    let doDelete = async () => {
+                        let result = await request.get(api.user.forceDelete+"?id="+prev[0].id);
+                        showResult.show(result);
+                        if(result.status){
+                            setRefresh({
+                                reset: true,
+                                tag: refresh.tag+1
+                            });
+                            setSelectedRows([]);
+                            close();
+                        }
+                    }
+                    doDelete();
+                }
+            });
+
+            return prev;
+        });
+    }
+
     // 添加登录此用户的处理函数
     const loginAsUser = () => {
         setSelectedRows(prev => {
@@ -260,6 +291,16 @@ export const UserPage : React.FC = () => {
                 onClick: loginAsUser
             });
         }
+        // 添加彻底删除菜单项
+        if(auth.has("sys:user:forceDelete")){
+            values.push({
+                label: t('彻底删除'),
+                key: '4',
+                icon: <DeleteIcon danger style={{color: '#ff4d4f'}} />,
+                onClick: onForceDelete
+            });
+        }
+
         return values;
     }, []);
     

@@ -163,17 +163,19 @@ export const UserEdit : React.FC<UserEditType> = ({
 
     return (
         <Modal open={visible} onClose={()=>onModalClose(false)} title={title} onSizeChange={onModalChangeSize}
-            showMask={false} width={800} 
+            showMask={false} width={"75vw"} height={600} 
         >
-            <div style={{height: '100%'}}>
+            <div style={{height: '100%', display: 'flex', flexDirection: 'column'}}>
                 <Typography.Title level={4} 
-                    style={{marginTop: 20, marginBottom: 20, textAlign: "center", boxSizing: 'content-box'}}
+                    style={{marginTop: 20, marginBottom: 20, textAlign: "center", boxSizing: 'content-box', flexShrink: 0}}
                 >
                     {title}
                 </Typography.Title>
-                <CustomScroll heightRelativeToParent="calc(100% - 100px)">
-                    <Tabs defaultActiveKey="1" items={items} tabPosition="left" style={{height: '100%'}}/>
-                </CustomScroll>
+                <div style={{flex: 1, minHeight: 0}}>
+                    <CustomScroll heightRelativeToParent="100%">
+                        <Tabs defaultActiveKey="1" items={items} tabPosition="left" style={{height: '100%'}}/>
+                    </CustomScroll>
+                </div>
             </div>
         </Modal>
     )

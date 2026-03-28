@@ -3,6 +3,7 @@ import type { AxiosInstance, AxiosRequestConfig } from 'axios';
 import { DialogPlugin } from 'tdesign-vue-next';
 import { api } from '@/utils/api';
 import { useLayer } from './useLayer';
+import { useUserStore } from '@/store';
 
 export const jsonHeaders = {
     "Content-Type": "application/json; charset=utf-8",
@@ -37,14 +38,42 @@ export interface RequestInstance extends AxiosInstance {
     post<R = ResposeDataType>(url: string, data?: any, config?: AxiosRequestConfig): Promise<R>;
 }
 
+let isLoginPromptOpen = false;
+
+const clearAuth = () => {
+    try {
+        const userStore = useUserStore();
+        userStore.logout();
+    } catch (e) {
+        console.warn('Failed to clear pinia store', e);
+    }
+    localStorage.removeItem('user');
+    sessionStorage.removeItem('user');
+    document.cookie = `jwtToken=; path=/; max-age=0`;
+    document.cookie = `jwtToken=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT`;
+};
+
 const goLogin = () => {
+    clearAuth();
+    if (window.location.pathname.includes(api.loginPage) || window.location.hash.includes(api.loginPage)) {
+        return;
+    }
+    if (isLoginPromptOpen) {
+        return;
+    }
+    isLoginPromptOpen = true;
     DialogPlugin.confirm({
         header: '提示',
         body: '登录过期，请重新登录',
         confirmBtn: '去登录',
         cancelBtn: null,
         onConfirm: () => {
+            clearAuth();
             window.location.href = api.loginPage;
+            isLoginPromptOpen = false;
+        },
+        onClose: () => {
+            isLoginPromptOpen = false;
         }
     });
 }

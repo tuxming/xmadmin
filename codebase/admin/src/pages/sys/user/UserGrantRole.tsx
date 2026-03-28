@@ -23,15 +23,16 @@
  *
  */
 
-import { Space, Tag, theme, Typography } from "antd"
+import { Button, Space, Tag, theme, Typography, Tooltip } from "antd"
 import { AdminUser, DefaultNS } from "../../../common/I18NNamespace"
-import { useLayer } from "../../../components"
+import { TableComponent, useLayer } from "../../../components"
 import { useRequest, useShowResult, useTranslation } from "../../../hooks"
 import { useEffect, useRef, useState } from "react"
-import { useDict } from "../../../common/dict"
-import { PlusOutlined } from "@ant-design/icons"
-import { RoleSelector } from "../role"
 import { api } from "../../../common/api"
+import { PlusOutlined } from "@ant-design/icons"
+import { useDict } from "../../../common/dict"
+import { RoleSelector } from "../role"
+import { CustomScroll } from "react-custom-scroll"
 
 
 export const UserGrantRole : React.FC<{
@@ -125,26 +126,52 @@ export const UserGrantRole : React.FC<{
         setConfirmId(id);
     }
 
-    return <div style={wrapperStyle}>
-        <div style={{position: 'relative'}}>
+    const useCols = [
+        {title: t("角色名称"), key: "roleName", width: 150},
+        {title: t("角色代码"), key: "code", width: 100},
+        {title: t("角色类型"), key: "type", width: 100, render: (text, record, index) => {
+            let color = roleTypes?.find(r => r.value == text)?.color;
+            let label = roleTypes?.find(r => r.value == text)?.label;
+            return <Tag color={color}>{label}</Tag>
+        }},
+        {title: t("操作"), key: "action", width: 100, render: (text, record, index) => {
+            return <Button type="link" danger onClick={() => onDelete(record)}>{t("删除")}</Button>
+        }}
+    ]
+
+    return <div style={{...wrapperStyle, display: 'flex', flexDirection: 'column', height: '100%'}}>
+        <div style={{position: 'relative', flexShrink: 0}}>
             <Typography.Title level={titleLevel}  style={titleStyle} >
                 {t("分配角色")}
             </Typography.Title>
         </div>
-        <Space wrap>
-            {userRoles && userRoles.map(r => (
-                <Tag key={r.id} color={roleTypes?.find(rt => rt.value == r.type)?.color}
-                    closable onClose={() => onDelete(r)}
-                >{r.roleName + "("+r.code+")"}
-                </Tag>
-            ))}
-            <Tag onClick={onAdd} 
-                style={{background: token.colorBgContainer,borderStyle: 'dashed',
-                    cursor: 'pointer'
-                }}
-            >
-                <PlusOutlined /> {t('添加角色')}
-            </Tag>
-        </Space>
+        <div style={{flex: 1, minHeight: 0}}>
+            <CustomScroll heightRelativeToParent="100%">
+                <div style={{paddingBottom: 20, overflowX: 'hidden', paddingRight: 10}}>
+                    <Space wrap>
+                        {userRoles && userRoles.map(r => (
+                            <Tag key={r.id} color={roleTypes?.find(rt => rt.value == r.type)?.color}
+                                closable onClose={() => onDelete(r)}
+                            >{r.roleName + "("+r.code+")"}
+                            </Tag>
+                        ))}
+                        <Tag onClick={onAdd} 
+                            style={{background: token.colorBgContainer,borderStyle: 'dashed',
+                                cursor: 'pointer'
+                            }}
+                        >
+                            <PlusOutlined /> {t('添加角色')}
+                        </Tag>
+                    </Space>
+                    <div style={{marginTop: 15}}>
+                        <TableComponent pageSize={20} query={{}} apiUrl={api.user.userRoles + "?id="+userId} 
+                            onSelect={()=>{}} 
+                            columns={useCols}
+                            refresh={{tag: 1, reset: false}}
+                        />
+                    </div>
+                </div>
+            </CustomScroll>
+        </div>
     </div>
 }

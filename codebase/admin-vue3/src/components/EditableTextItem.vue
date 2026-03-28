@@ -1,12 +1,12 @@
 <template>
   <div class="editable-tag-wrap" style="position: relative; padding-right: 30px">
     <template v-if="editing">
-      <t-space align="center" class="editable-tag-wrap__edit">
+      <div style="display: flex; width: 100%; align-items: center; gap: 8px;">
         <t-input
           v-if="type === 'text'"
           v-model="localValue"
           @blur="onBlur"
-          :style="inputStyle"
+          style="flex: 1; width: 100%;"
           auto-focus
         />
         <t-input
@@ -14,13 +14,13 @@
           v-model="localValue"
           type="password"
           @blur="onBlur"
-          :style="inputStyle"
+          style="flex: 1; width: 100%;"
           auto-focus
         />
         <t-button theme="primary" variant="text" shape="square" @click="onClickEnter">
           <template #icon><t-icon name="check" /></template>
         </t-button>
-      </t-space>
+      </div>
     </template>
     <template v-else>
       <span style="word-break: break-all;">{{ value }}</span>
@@ -44,7 +44,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue';
+import { ref, watch } from 'vue';
 import { useTranslation } from '@/hooks/useTranslation';
 
 interface Props {
@@ -106,36 +106,9 @@ const onCopy = () => {
   }, 4000);
 };
 
-const computeWidth = (str: string) => {
-  if (!str) return 150;
-  let length = 0;
-  for (let i = 0; i < str.length; i++) {
-    if (str.charCodeAt(i) > 127) {
-      length += 2;
-    } else {
-      length += 1;
-    }
-  }
-  return length < 7 ? 8 * 16 : length * 16;
-};
-
-const inputStyle = computed(() => {
-  const w = Math.min(computeWidth(props.value), 560);
-  return {
-    width: '100%',
-    maxWidth: `${w}px`,
-    flex: 1,
-    minWidth: '180px',
-  };
-});
-
 </script>
 
 <style scoped>
-.editable-tag-wrap__edit {
-  width: 100%;
-}
-
 .editable-tag-wrap .copy-icon {
   display: none;
 }

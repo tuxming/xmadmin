@@ -107,11 +107,11 @@ export const EditableDeptItem : React.FC<{
 
     if(editing){
         return (
-            <Space.Compact block>
+            <Space.Compact style={{ display: 'flex', width: '100%' }}>
                 <DeptSelectorWraper value={localValue} 
                     onSelect={onSelect}
                     showName={deptPathName}
-                    wrapStyle={{width: 'calc(100% - 50px)'}}
+                    wrapStyle={{ flex: 1 }}
                     showNamePos={{
                         bottom: 4,
                         left : 10

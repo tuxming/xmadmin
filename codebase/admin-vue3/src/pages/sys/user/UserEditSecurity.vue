@@ -80,20 +80,27 @@ const onRefreshToken = () => {
 
 const onChangePassword = () => {
   let formRef: any = null;
+  let layerCloseFn: (() => void) | null = null;
   
   Layer.confirm({
     title: t('修改密码：'),
     width: 450,
     content: h(ChangePasswordForm, {
-      ref: (el: any) => { formRef = el; },
+      // 传递一个自定义的回调方法，让子组件可以直接调用
+      onRegisterSubmit: (submitFn: () => void) => {
+        formRef = { submitForm: submitFn };
+      },
       onSubmit: (values: any) => {
         onHandleChange('password', values);
+        if (layerCloseFn) {
+          layerCloseFn();
+        }
       }
     }),
     onOk: (onClose) => {
-      if (formRef) {
+      layerCloseFn = onClose;
+      if (formRef && typeof formRef.submitForm === 'function') {
         formRef.submitForm();
-        // Don't close immediately, let the form submission handle it
       } else {
         onClose();
       }

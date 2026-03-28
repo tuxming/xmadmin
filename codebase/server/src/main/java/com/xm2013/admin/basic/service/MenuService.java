@@ -45,7 +45,8 @@ public class MenuService {
 	public RoleService roleService;
 	
 	public List<Menu> list(int id) {
-		return Menu.dao.find("select * from sys_menu where parent_id=?", id);
+		List<Menu> menus =  Menu.dao.find("select * from sys_menu where parent_id=?", id);
+		return menus;
 	}
 
 	public void create(Menu menu, ShiroUser user) {

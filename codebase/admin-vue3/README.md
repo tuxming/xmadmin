@@ -9,7 +9,7 @@ npm run preview
 ```
 
 # 环境
-- node: >= 18（推荐 20.8.1）
+- node: >= 20.19+(推荐 22)
 - vue: 3.5.30
 - vite: 8.x
 - tdesign-vue-next: 1.18.5

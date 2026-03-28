@@ -93,6 +93,7 @@ interface Props {
   type?: 'window' | 'modal';
   offsetX?: number;
   offsetY?: number;
+  offset?: { x: number; y: number };
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -138,10 +139,10 @@ const winPos = reactive<any>({
   width: winWidth,
   height: wheight || 'auto',
   top: wheight
-    ? clamp((window.innerHeight - wheight) / 2 + (props.offsetY || 0), 0, Math.max(window.innerHeight - wheight, 0))
-    : clamp(window.innerHeight / 3 + (props.offsetY || 0), 0, Math.max(window.innerHeight - 60, 0)),
+    ? clamp((window.innerHeight - wheight) / 2 + (props.offset?.y || props.offsetY || 0), 0, Math.max(window.innerHeight - wheight, 0))
+    : clamp(window.innerHeight / 3 + (props.offset?.y || props.offsetY || 0), 0, Math.max(window.innerHeight - 60, 0)),
   left: clamp(
-    (window.innerWidth - winWidth) / 2 + (props.offsetX || 0),
+    (window.innerWidth - winWidth) / 2 + (props.offset?.x || props.offsetX || 0),
     0,
     Math.max(window.innerWidth - winWidth, 0),
   ),

@@ -105,9 +105,9 @@ export const EditableTagItem : React.FC<{
 
     if(editing){
         return (
-            <Space.Compact block>
+            <Space.Compact style={{ display: 'flex', width: '100%' }}>
                 <Select onChange={(value)=>setLocalValue(value)} value={localValue} options={options} 
-                   style={{minWidth: width?width: 'calc(100% - 50px)'}}
+                   style={{ flex: 1 }}
                    onBlur={onBlur}
                 ></Select>
                 <Button icon={<CheckOutlined type="primary" />}

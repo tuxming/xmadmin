@@ -24,8 +24,9 @@
  */
 
 import { useSelector, useTranslation } from '../../../hooks';
+import { useDict } from '../../../common/dict';
 import { QueryComponent } from '../../../components';
-import { Input, DatePicker } from "antd"
+import { Input, DatePicker, Select } from "antd"
 import { RoleSelector } from '../role';
 import { UserSelector } from './index';
 import { AdminUser } from '../../../common/I18NNamespace';
@@ -40,6 +41,7 @@ export const UserQuery: React.FC<UserQueryType> = ({onQuery}) => {
 
     const {t} = useTranslation(AdminUser);
     const size = useSelector(state => state.themeConfig.componentSize);
+    const statusDict = useDict("UserStatus");
 
     const queryItems = [
         {
@@ -61,6 +63,11 @@ export const UserQuery: React.FC<UserQueryType> = ({onQuery}) => {
             label: t("电话"),
             name: "phone_Q",
             inputElement: <Input name="phone" size={size} allowClear/>
+        },
+        {
+            label: t("状态"),
+            name: "status",
+            inputElement: <Select mode="multiple" size={size} allowClear options={statusDict} />
         },
         {
             label: t("角色"),

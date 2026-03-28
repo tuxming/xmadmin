@@ -82,18 +82,23 @@ export const MenuPage : React.FC = () => {
     const menuStatus = useDict("MenuStatus");
 
     //获取菜单数据
-    const getMenus = (key, setTreeData) => {
+    const getMenus = (key, updateCallback) => {
         let get = async () => {
             let result = await request.get(api.menu.list+"?id="+key);
             if(result.data && result.data.length > 0){
                 let menus = result.data;
                 menus.sort((m1, m2) => m1.sort - m2.sort);
-                setTreeData((origin) =>
-                    updateTreeData(origin, key, convertToTreeNode(menus)),
-                );
-                // result.data.forEach(i => menus.current.add(i));
+                const nodes = convertToTreeNode(menus);
+                if (updateCallback) {
+                    updateCallback(() => nodes);
+                } else {
+                    setTreeData((origin) => updateTreeData(origin, key, nodes));
+                    setSelectTreeData((origin) => updateTreeData(origin, key, nodes));
+                }
             }else{
-                message.warning(t("无数据", DefaultNS));
+                if (key === 0) {
+                    message.warning(t("无数据", DefaultNS));
+                }
             }
         }
         get();
@@ -106,7 +111,7 @@ export const MenuPage : React.FC = () => {
                 resolve();
                 return;
             }
-            getMenus(key, setTreeData);
+            getMenus(key, null);
             resolve();
         });
     }
@@ -118,7 +123,7 @@ export const MenuPage : React.FC = () => {
                 resolve();
                 return;
             }
-            getMenus(key, setSelectTreeData);
+            getMenus(key, null);
             resolve();
         });
     }
@@ -191,9 +196,11 @@ export const MenuPage : React.FC = () => {
 
     //准备添加菜单的初始数据
     const prepareAdd = () => {
+        let parentId = menu?.id ?? 1;
+
         let newMenu = {
             id: 0,
-            parentId: menu?.id || 0,
+            parentId: parentId,
             name: "",
             sort: 0,
             path: "",

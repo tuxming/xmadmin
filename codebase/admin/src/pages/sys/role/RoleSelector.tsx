@@ -37,10 +37,12 @@ import { SearchIcon } from '../../../components/icon/svg/Icons';
 export const RoleSelector : React.FC<{
     mode?: 'multiple' | 'single'
     onChange?: (value: [{label: string, value: any}]) => void
+    value?: any
     [key: string]: any
 }> = ({
     mode = 'multiple',
     onChange,
+    value,
     ...props
 }) => {
     
@@ -52,6 +54,22 @@ export const RoleSelector : React.FC<{
     const {t} = useTranslation();
 
     const [innValue, setInnValue] = useState<any>();
+
+    React.useEffect(() => {
+        if (value) {
+            if (mode === 'single') {
+                if (Array.isArray(value) && value.length > 0) {
+                    setInnValue(value[0].label || value[0].value);
+                } else if (typeof value === 'string' || typeof value === 'number') {
+                    setInnValue(value);
+                }
+            } else {
+                setInnValue(value);
+            }
+        } else {
+            setInnValue(undefined);
+        }
+    }, [value, mode]);
 
     const onValueChange = (newValue) => {
         // setValue(newValue);
@@ -68,11 +86,11 @@ export const RoleSelector : React.FC<{
         }
     }
 
-    const onSelect = (value, option) => {
+    const onSelect = (val, option) => {
         setInnValue(option.label);
         // setValue([option]);
         if(onChange){
-            onChange([option]);
+            onChange([{label: option.label, value: option.id || option.value}]);
         }
     }
 

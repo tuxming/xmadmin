@@ -1,17 +1,17 @@
 <template>
   <div class="editable-tag-wrap" style="position: relative; padding-right: 30px">
     <template v-if="editing">
-      <t-space align="center">
+      <div style="display: flex; width: 100%; align-items: center; gap: 8px;">
         <t-select
           v-model="localValue"
           :options="options"
-          :style="{ minWidth: typeof width === 'number' ? width + 'px' : width || 'calc(100% - 50px)' }"
+          style="flex: 1; width: 100%;"
           @blur="onBlur"
         />
         <t-button theme="primary" variant="text" shape="square" @click="onClickEnter">
           <template #icon><t-icon name="check" /></template>
         </t-button>
-      </t-space>
+      </div>
     </template>
     <template v-else>
       <TypeTag :options="options" :value="localValue" />

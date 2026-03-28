@@ -117,7 +117,8 @@ const InternalTable : React.FC<TableType> = ({
     const isSetedThumbColor = useRef(false);
 
     const [tableHeight, setTableHeight] = useState<number | string>(0);
-    const [tableWidth, setTableWidth] = useState<number | string>(0);
+    const [tableWidth, setTableWidth] = useState<number>(0);
+    const [calculatedColumns, setCalculatedColumns] = useState<any[]>([]);
     const screenHeight = useSelector(state => state.globalVar.height);
     const screenWidth = useSelector(state => state.globalVar.width);
     const minScreen = useSelector(state => state.globalVar.isMinScreen);
@@ -387,17 +388,91 @@ const InternalTable : React.FC<TableType> = ({
         setTableHeight(theight);
 
         //设置表格宽度
-        let twidth = width || screenWidth 
+        //如果有传入固定的宽度，就使用传入的，否则自适应
+        let twidth: number = Number(width) || screenWidth 
             - (sidemenuCollapsed?50:245)   //侧边栏宽度
             - 50;        //padding
-        // console.log(screenWidth, width);
+        
+        // 减去容错值，防止容器误差导致滚动条
+        if (!width && tableWrapRef.current) {
+            twidth = tableWrapRef.current.clientWidth - 40; // 再次拉大容错范围，确保绝对不会被外层卡出滚动条
+        }
+
         setTableWidth(twidth);
 
+        // 重新计算列宽比例
+        // 预留 checkbox 列的宽度
+        let selectionWidth = 0;
+        if (props.rowSelection) {
+            selectionWidth = Number(props.rowSelection.columnWidth) || 45;
+        }
 
-        // console.log(width, height);
-    }, [tableWrapRef, width, height]);
+        // 重要：Ant Design Table 在使用 virtual scroll 时，其内部会有 padding 和 border
+        // 此外虚拟滚动条自身也会占据宽度。我们需要预留足够大的余量。
+        let availableWidth = twidth - selectionWidth - 50; 
+        
+        // 找出设置了 width 的列和没设置的列
+        let fixedTotalWidth = 0;
+        let flexColsCount = 0;
+        
+        tableColumns.forEach(col => {
+            if (col.width && typeof col.width === 'number') {
+                fixedTotalWidth += col.width;
+            } else {
+                flexColsCount++;
+            }
+        });
 
-    //监听主题发生变化后，动态改变表格的滚动条颜色，默认是不会改变的
+        let newCols = [...tableColumns];
+
+        if (fixedTotalWidth < availableWidth) {
+            if (flexColsCount > 0) {
+                // 有未设置宽度的列：平分剩余宽度
+                let flexWidth = Math.floor((availableWidth - fixedTotalWidth) / flexColsCount);
+                newCols = newCols.map(col => {
+                    if (!col.width) {
+                        return { ...col, width: flexWidth };
+                    }
+                    return col;
+                });
+            } else {
+                // 所有列都设置了宽度，但总和小于容器宽度：按比例放大
+                let ratio = availableWidth / fixedTotalWidth;
+                newCols = newCols.map(col => {
+                    return { ...col, width: Math.floor(col.width * ratio) };
+                });
+            }
+        } else {
+            // 总和超出了容器宽度，或者没设置宽度的列按默认处理
+            // 这里为了虚拟滚动必须有宽度，如果超出，没设置的给个保底宽度 150
+            if (flexColsCount > 0) {
+                newCols = newCols.map(col => {
+                    if (!col.width) {
+                        return { ...col, width: 150 };
+                    }
+                    return col;
+                });
+            }
+        }
+
+        // 如果重新计算后，有列宽度被修改了，且没传固定width，那么我们把实际渲染总宽度算出来
+        // 然后赋给 twidth，防止在自适应放大或平分时产生几个像素的差异导致水平滚动条
+        if (!width) {
+            let actualTotal = selectionWidth;
+            newCols.forEach(col => actualTotal += (col.width as number));
+            
+            // 为了完全消灭横向滚动条，不仅需要减小实际分配的列宽，还需要让传递给 scroll.x 的值
+            // 恰好等于甚至稍微小于外层容器的实际可用宽度，或者直接在样式上将其隐藏。
+            // 当 scroll.x 大于实际列宽总和时，Ant Design 会填补空白，但如果它大于容器宽度，就会出滚动条。
+            // 因此我们这里将 scroll.x 设置得比实际渲染宽度大一点，但又不能超过父容器宽度。
+            // 最好的办法是让 twidth 就等于 actualTotal。
+            twidth = actualTotal; 
+        }
+
+        setCalculatedColumns(newCols);
+        setTableWidth(twidth);
+
+    }, [tableWrapRef, width, height, screenWidth, screenHeight, sidemenuCollapsed, tableColumns, props.rowSelection]);
     useEffect(()=> {
         let intervalId = setInterval(() => {
             if(!tableRef.current )
@@ -484,10 +559,14 @@ const InternalTable : React.FC<TableType> = ({
                 cursor: col-resize;
                 z-index: 999;
             }
+            /* 强制隐藏 Ant Design Table 在虚拟滚动下因计算误差产生的水平滚动条 */
+            .xm-table-wrap .ant-table-body {
+                overflow-x: hidden !important;
+            }
             `
         }
         </style>
-        <Table dataSource={data} columns={tableColumns} 
+        <Table dataSource={data} columns={calculatedColumns.length > 0 ? calculatedColumns : tableColumns} 
             {...props}
             rowSelection={{
                 type: selectType,

@@ -149,10 +149,10 @@ CREATE TABLE `sys_document`  (
 -- ----------------------------
 -- Records of sys_document
 -- ----------------------------
-INSERT INTO `sys_document` VALUES (1051, 'logo192.png', '/1/common/1724755261111008.png', '2024-08-27 18:41:01', 1, 'common', '');
-INSERT INTO `sys_document` VALUES (1052, '2-OOfSf4-77_0.jpg', '/1/common/1725109644436034.jpg', '2024-08-31 21:07:25', 1, 'common', '');
-INSERT INTO `sys_document` VALUES (1081, '47_3.jpg', '/1/photo/1725690757042089.jpg', '2024-09-07 14:32:37', 1, 'photo', '');
-INSERT INTO `sys_document` VALUES (1082, '0_0.jpg', '/144/common/1727020870309095.jpg', '2024-09-23 00:01:10', 144, 'common', '');
+INSERT INTO `xmadmin`.`sys_document` (`id`, `file_name`, `path`, `created`, `user_id`, `type`, `remark`) VALUES (1106, '0_1.jpg', '/1/common/1774670253938064.jpg', '2026-03-28 11:57:34', 1, 'common', '');
+INSERT INTO `xmadmin`.`sys_document` (`id`, `file_name`, `path`, `created`, `user_id`, `type`, `remark`) VALUES (1108, '2_7.jpg', '1/user/photo/1774676107741091.jpg', '2026-03-28 13:35:08', 1, 'user/photo', '');
+INSERT INTO `xmadmin`.`sys_document` (`id`, `file_name`, `path`, `created`, `user_id`, `type`, `remark`) VALUES (1110, 'logo.png', '1/common/1774676606716061.png', '2026-03-28 13:43:27', 1, 'common', '');
+
 
 -- ----------------------------
 -- Table structure for sys_history
@@ -455,7 +455,7 @@ CREATE TABLE `sys_user`  (
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
-INSERT INTO `sys_user` VALUES (1, 'admin', 'admin', '53cdc867bd0553ab64fc5e08597096ec', 'M2ZmZmRiMTQ3Mjg1YTQzNDYwN2I4NTcyYmE2MjNlZTM=', '2024-05-19 22:57:45', 0, 'ADMIN', 0, 'admin@admin.com', '18600001211', 1052, 1, 1);
+INSERT INTO `sys_user` VALUES (1, 'admin', 'admin', '53cdc867bd0553ab64fc5e08597096ec', 'M2ZmZmRiMTQ3Mjg1YTQzNDYwN2I4NTcyYmE2MjNlZTM=', '2024-05-19 22:57:45', 0, 'ADMIN', 0, 'admin@admin.com', '18600001211', 1108, 1, 1);
 INSERT INTO `sys_user` VALUES (144, 'tuxming', 'tuxming', '53cdc867bd0553ab64fc5e08597096ec', 'MDM0ZTBlODEtYmY1NC00OGFiLWFiMmMtNjJjNTE4YWUxNDdm', '2024-09-22 09:53:11', 1, '00000144', 2, 'tuxming@sina.com', '', 1081, 34, 1);
 
 -- ----------------------------

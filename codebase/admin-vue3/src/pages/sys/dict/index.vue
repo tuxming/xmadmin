@@ -242,7 +242,7 @@ const onDeleteDict = () => {
 
 const onDictClose = (needRefresh: boolean) => {
   isDictEditOpen.value = false;
-  if (needRefresh && query.value.groupName) {
+  if (needRefresh) {
     refresh.value = { reset: true, tag: Date.now() };
   }
 };

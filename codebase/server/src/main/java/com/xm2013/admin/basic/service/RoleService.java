@@ -353,7 +353,13 @@ public class RoleService {
 			}
 		}
 		
-		Db.delete("delete from sys_role where id in ("+ids+")");
+		Db.tx(() -> {
+			Db.delete("delete from sys_role where id in ("+ids+")");
+			Db.delete("delete from sys_role_menu where role_id in ("+ids+")");
+			Db.delete("delete from sys_role_permission where role_id in ("+ids+")");
+			Db.delete("delete from sys_user_role where role_id in ("+ids+")");
+			return true;
+		});
 	}
 
 	/**

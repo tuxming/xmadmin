@@ -254,6 +254,26 @@ public class UserController extends BaseController{
 	}
 	
 	/**
+	 * 彻底删除用户（物理删除并清除关联数据）
+	 */
+	@RequirePermission(val="sys:user:forceDelete", name="彻底删除用户", group="system")
+	@Op("彻底删除用户")
+	public void forceDelete() {
+		Integer id = getParaToInt("id", 0);
+		if(id == 0) {
+			renderJson(JsonResult.error(BusinessErr.INVALID_PARAM));
+			return;
+		}
+		
+		if(userService.forceDelete(id, ShiroKit.getLoginUser())) {
+			clearShiroCache();
+			renderJson(JsonResult.ok(Msg.OK_DELETE));
+		}else {
+			renderJson(JsonResult.error(Msg.ERR_DELETE));
+		}
+	}
+	
+	/**
 	 * 获取用户的数据权限
 	 * @param type: 0-全部，1-用户， 2-组织
 	 * @param id: 要查询的用户id

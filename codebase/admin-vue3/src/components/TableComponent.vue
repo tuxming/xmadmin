@@ -16,6 +16,7 @@
       :stripe="true"
       :size="themeStore.componentSize"
       :scroll="{ type: 'virtual', rowHeight: 48, bufferSize: 20 }"
+      :resizable="true"
       bordered
       class="full-height-table"
       @page-change="onPageChange"
@@ -90,6 +91,7 @@ const baseData = ref<any[]>([]);
 const data = ref<any[]>([]);
 const loading = ref(false);
 const selectedRowKeys = ref<any[]>([]);
+const tableWrapRef = ref<HTMLElement | null>(null);
 
 const pagination = ref({
   current: 1,
@@ -196,6 +198,64 @@ const tdColumns = computed<PrimaryTableCol[]>(() => {
     });
   }
 
+  // Calculate dynamic widths based on the wrapper width
+  let twidth = props.width;
+  if (!twidth && tableWrapRef.value) {
+    twidth = tableWrapRef.value.clientWidth - 10;
+  }
+  
+  if (typeof twidth === 'number') {
+    let selectionWidth = props.selectType ? 50 : 0;
+    let availableWidth = twidth - selectionWidth - 2;
+    
+    let fixedTotalWidth = 0;
+    let flexColsCount = 0;
+    
+    props.columns.forEach(col => {
+      if (col.width && typeof col.width === 'number') {
+        fixedTotalWidth += col.width;
+      } else {
+        flexColsCount++;
+      }
+    });
+
+    if (fixedTotalWidth < availableWidth) {
+      const extraWidth = availableWidth - fixedTotalWidth;
+      
+      if (flexColsCount > 0) {
+        // Distribute remaining width to unassigned columns
+        const flexWidth = Math.floor(extraWidth / flexColsCount);
+        props.columns.forEach(col => {
+          if (!col.width) {
+            (col as any)._calculatedWidth = flexWidth;
+          } else {
+            (col as any)._calculatedWidth = col.width;
+          }
+        });
+      } else {
+        // All columns have width but total is less than available, scale them up proportionally
+        const ratio = availableWidth / fixedTotalWidth;
+        props.columns.forEach(col => {
+          (col as any)._calculatedWidth = Math.floor((col.width as number) * ratio);
+        });
+      }
+    } else {
+      // Total exceeds available, or no extra width. Provide a fallback for flex columns.
+      props.columns.forEach(col => {
+        if (!col.width) {
+          (col as any)._calculatedWidth = 150;
+        } else {
+          (col as any)._calculatedWidth = col.width;
+        }
+      });
+    }
+  } else {
+    // If we can't determine container width yet, just pass through original widths
+    props.columns.forEach(col => {
+      (col as any)._calculatedWidth = col.width;
+    });
+  }
+
   props.columns.forEach(col => {
     let filterConf: any = undefined;
     if (col.filter) {
@@ -253,7 +313,7 @@ const tdColumns = computed<PrimaryTableCol[]>(() => {
     cols.push({
       title: col.title,
       colKey: col.key,
-      width: col.width,
+      width: (col as any)._calculatedWidth,
       align: col.align || 'center',
       fixed: col.fixed,
       ellipsis: col.ellipsis,

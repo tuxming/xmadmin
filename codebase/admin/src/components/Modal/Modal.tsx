@@ -638,6 +638,7 @@ export const Modal : React.FC<ModalType> = ({
                             position: modalState == 'min'?'relative':'absolute',
                             top: modalState == 'min'?'0px':'6px',
                             paddingLeft: '15px',
+                            zIndex: 999
                         }}>
                         <span className='x-modal-title' style={{display: modalState=="min"?'block':"none" }}>{title}</span>
 

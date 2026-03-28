@@ -40,6 +40,8 @@ public class UserListQuery extends Query{
 	private String email;
 	private String phone;
 	private Set<Integer> status;
+	private String startDate;
+	private String endDate;
 	
 	public String getUsername() {
 		return username;
@@ -88,5 +90,17 @@ public class UserListQuery extends Query{
 	}
 	public void setStatus(Set<Integer> status) {
 		this.status = status;
+	}
+	public String getStartDate() {
+		return startDate;
+	}
+	public void setStartDate(String startDate) {
+		this.startDate = startDate;
+	}
+	public String getEndDate() {
+		return endDate;
+	}
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
 	}
 }

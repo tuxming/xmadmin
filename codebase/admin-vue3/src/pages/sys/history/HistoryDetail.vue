@@ -17,7 +17,7 @@
         <t-descriptions-item :label="t('操作类型')">{{ detail?.type }}</t-descriptions-item>
         <t-descriptions-item :label="t('操作时间')">{{ detail?.created }}</t-descriptions-item>
         <t-descriptions-item :label="t('请求参数')" :span="columnCount">
-          <span style="word-break: break-all;">
+          <span style="word-break: break-all; white-space: pre-wrap;">
             {{ detail?.remark }}
           </span>
         </t-descriptions-item>

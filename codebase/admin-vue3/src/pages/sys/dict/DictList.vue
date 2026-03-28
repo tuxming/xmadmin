@@ -96,7 +96,7 @@ const columns : any[] = [
     ellipsis: true,
     width: 150,
     align: 'center',
-    render: (text: any) => h(DictTypeTag, { value: text }),
+    render: (text: any) => h(DictTypeTag, null, { default: () => text }),
   }
 ];
 

@@ -95,9 +95,7 @@ watch(() => props.open, (val) => {
 const onModalClose = () => {
   visible.value = false;
   emit('update:open', false);
-  setTimeout(() => {
-    emit('close', null);
-  }, 500);
+  emit('close', null);
 };
 
 const onSubmit = () => {
@@ -117,9 +115,7 @@ const onFinish = async ({ validateResult, firstError }: SubmitContext) => {
     if (result.status) {
       visible.value = false;
       emit('update:open', false);
-      setTimeout(() => {
-        emit('close', data);
-      }, 500);
+      emit('close', data);
     }
   }
 };

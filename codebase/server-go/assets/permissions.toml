@@ -1,0 +1,263 @@
+# System Permissions Configuration
+# 格式:
+# [[permissions]]
+# name = "权限名称"
+# expression = "权限表达式"
+# groupName = "分组"
+
+# -----------------
+# 菜单管理
+# -----------------
+[[permissions]]
+name = "获取菜单"
+expression = "sys:menu:list"
+groupName = "system"
+
+[[permissions]]
+name = "创建菜单"
+expression = "sys:menu:create"
+groupName = "system"
+
+[[permissions]]
+name = "修改菜单"
+expression = "sys:menu:update"
+groupName = "system"
+
+[[permissions]]
+name = "删除菜单"
+expression = "sys:menu:delete"
+groupName = "system"
+
+# -----------------
+# 用户管理
+# -----------------
+[[permissions]]
+name = "查看用户"
+expression = "sys:user:get"
+groupName = "system"
+
+[[permissions]]
+name = "用户列表"
+expression = "sys:user:list"
+groupName = "system"
+
+[[permissions]]
+name = "创建用户"
+expression = "sys:user:create"
+groupName = "system"
+
+[[permissions]]
+name = "更新用户"
+expression = "sys:user:update"
+groupName = "system"
+
+[[permissions]]
+name = "删除用户"
+expression = "sys:user:delete"
+groupName = "system"
+
+[[permissions]]
+name = "彻底删除"
+expression = "sys:user:forceDelete"
+groupName = "system"
+
+[[permissions]]
+name = "分配数据权限"
+expression = "sys:user:grant:data"
+groupName = "system"
+
+[[permissions]]
+name = "分配角色权限"
+expression = "sys:user:grant:role"
+groupName = "system"
+
+[[permissions]]
+name = "以用户身份登录"
+expression = "sys:user:login:as"
+groupName = "system"
+
+# -----------------
+# 角色管理
+# -----------------
+[[permissions]]
+name = "角色列表"
+expression = "sys:role:list"
+groupName = "system"
+
+[[permissions]]
+name = "创建角色"
+expression = "sys:role:create"
+groupName = "system"
+
+[[permissions]]
+name = "编辑角色"
+expression = "sys:role:edit"
+groupName = "system"
+
+[[permissions]]
+name = "删除角色"
+expression = "sys:role:delete"
+groupName = "system"
+
+[[permissions]]
+name = "分配角色权限"
+expression = "sys:role:grant:permission"
+groupName = "system"
+
+[[permissions]]
+name = "分配角色菜单"
+expression = "sys:role:grant:menu"
+groupName = "system"
+
+# -----------------
+# 权限管理
+# -----------------
+[[permissions]]
+name = "查看权限"
+expression = "sys:permission:get"
+groupName = "system"
+
+[[permissions]]
+name = "查看权限列表"
+expression = "sys:permission:list"
+groupName = "system"
+
+[[permissions]]
+name = "创建权限"
+expression = "sys:permission:create"
+groupName = "system"
+
+[[permissions]]
+name = "编辑权限"
+expression = "sys:permission:edit"
+groupName = "system"
+
+[[permissions]]
+name = "删除权限"
+expression = "sys:permission:delete"
+groupName = "system"
+
+[[permissions]]
+name = "扫描权限"
+expression = "sys:permission:scan"
+groupName = "system"
+
+# -----------------
+# 组织架构
+# -----------------
+[[permissions]]
+name = "组织列表"
+expression = "sys:dept:list"
+groupName = "system"
+
+[[permissions]]
+name = "创建组织"
+expression = "sys:dept:create"
+groupName = "system"
+
+[[permissions]]
+name = "更新组织"
+expression = "sys:dept:update"
+groupName = "system"
+
+[[permissions]]
+name = "删除组织"
+expression = "sys:dept:delete"
+groupName = "system"
+
+# -----------------
+# 字典管理
+# -----------------
+[[permissions]]
+name = "创建字典分组"
+expression = "sys:dictGroup:create"
+groupName = "system"
+
+[[permissions]]
+name = "更新字典分组"
+expression = "sys:dictGroup:update"
+groupName = "system"
+
+[[permissions]]
+name = "删除字典分组"
+expression = "sys:dictGroup:delete"
+groupName = "system"
+
+[[permissions]]
+name = "添加字典"
+expression = "sys:dict:add"
+groupName = "system"
+
+[[permissions]]
+name = "更新字典"
+expression = "sys:dict:update"
+groupName = "system"
+
+[[permissions]]
+name = "删除字典"
+expression = "sys:dict:delete"
+groupName = "system"
+
+# -----------------
+# 语言资源
+# -----------------
+[[permissions]]
+name = "创建语言"
+expression = "sys:lang:create"
+groupName = "system"
+
+[[permissions]]
+name = "编辑语言"
+expression = "sys:lang:edit"
+groupName = "system"
+
+[[permissions]]
+name = "删除语言"
+expression = "sys:lang:delete"
+groupName = "system"
+
+[[permissions]]
+name = "编辑资源"
+expression = "sys:res:edit"
+groupName = "system"
+
+[[permissions]]
+name = "删除资源"
+expression = "sys:res:delete"
+groupName = "system"
+
+# -----------------
+# 历史记录
+# -----------------
+[[permissions]]
+name = "查看历史记录"
+expression = "sys:history:get"
+groupName = "system"
+
+[[permissions]]
+name = "历史记录列表"
+expression = "sys:history:list"
+groupName = "system"
+
+[[permissions]]
+name = "删除历史记录"
+expression = "sys:history:delete"
+groupName = "system"
+
+# -----------------
+# 文档管理
+# -----------------
+[[permissions]]
+name = "文档列表"
+expression = "sys:doc:list"
+groupName = "system"
+
+[[permissions]]
+name = "上传文档"
+expression = "sys:doc:upload"
+groupName = "system"
+
+[[permissions]]
+name = "删除文档"
+expression = "sys:doc:delete"
+groupName = "system"

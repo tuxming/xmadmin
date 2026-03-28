@@ -46,12 +46,11 @@ export const UserGrantDataPermissionModal : React.FC<{
         }, 500);
     }
 
-    return <Modal open={visible} onClose={onModalClose} height={600} width={800}>
-        <CustomScroll heightRelativeToParent="100%" >
+    return <Modal open={visible} onClose={onModalClose} height={600} width={"70vw"}>
+        <div style={{height: '100%'}}>
             <UserGrantDataPermission userId={userId} titleLevel={4} 
                 titleStyle={{textAlign: 'center', margin: '25px 0 15px 0'}} 
-                wrapperStyle={{paddingLeft: 20, paddingRight: 20}}    
             />
-        </CustomScroll>
+        </div>
     </Modal>
 }

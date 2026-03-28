@@ -103,9 +103,7 @@ onMounted(() => {
 const onCloseModal = () => {
   visible.value = false;
   emit('update:open', false);
-  setTimeout(() => {
-    emit('close');
-  }, 500);
+  emit('close');
 };
 
 const onClickCancel = () => {
@@ -124,8 +122,10 @@ const onClickOk = async () => {
 <style scoped>
 :deep(.t-transfer) {
   height: 100%;
+  width: 100%;
 }
 :deep(.t-transfer__list) {
   height: 100%;
+  flex: 1;
 }
 </style>
