@@ -59,7 +59,7 @@
 - 运行XmAdminLanucher.java里面的main方法
 
 ### 后端（Golang版）
-- 环境需求：Go ≥ 1.20
+- 环境需求：Go ≥ 1.20 （当前开发环境基于 Go 1.24.5）
 - 项目路径：codebase/server-go
 - 配置文件在 `codebase/server-go/config/application.properties` 中修改数据库和Redis连接
 - 安装依赖并运行：
@@ -71,13 +71,13 @@
 - 更多说明和Linux部署见：codebase/server-go/README.md
 
 ### 前端（React版）
-- 环境需求：node20.8.1
+- 环境需求：node ≥ 18（当前开发环境基于 node 20.8.1）
 - 建议用vscode打开前端项目，前端项目位于：codebase/admin
 - 运行npm install 
 - 运行npm start
 
 ### 前端（Vue3版）
-- 环境需求：node ≥ 18（推荐 20.8.1）
+- 环境需求：node ≥ 18（当前开发环境基于 node 22.14.0）
 - 建议用vscode打开前端项目，前端项目位于：codebase/admin-vue3
 - 运行npm install
 - 开发运行：npm run dev
