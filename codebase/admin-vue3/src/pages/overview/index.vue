@@ -11,7 +11,7 @@
           </template>
           <div style="display:flex;align-items:flex-start;gap:16px;">
             <t-avatar
-              :size="64"
+              size="64"
               :image="userStore.userInfo?.photo ? (api.document.img + '?id=' + userStore.userInfo.photo) : undefined"
               style="width:64px;height:64px;flex:0 0 64px;"
             >
@@ -32,8 +32,8 @@
               <t-tag v-for="(r, idx) in (userStore.userInfo?.roles || [])" :key="idx" theme="primary" variant="light">{{ r?.name || r?.code || '角色' }}</t-tag>
               <t-tag v-if="userStore.userInfo?.dept?.fullname" theme="success" variant="light">部门：{{ userStore.userInfo.dept.fullname }}</t-tag>
               <t-tag v-if="userStore.userInfo?.company?.fullname" theme="warning" variant="light">公司：{{ userStore.userInfo.company.fullname }}</t-tag>
-              <t-tag v-if="userStore.userInfo?.group?.fullname" theme="purple" variant="light">组：{{ userStore.userInfo.group.fullname }}</t-tag>
-              <t-tag v-if="Array.isArray(userStore.userInfo?.permissions)" theme="cyan" variant="light">权限：{{ userStore.userInfo.permissions.length }}</t-tag>
+              <t-tag v-if="userStore.userInfo?.group?.fullname" theme="primary" variant="light">组：{{ userStore.userInfo.group.fullname }}</t-tag>
+              <t-tag v-if="Array.isArray(userStore.userInfo?.permissions)" theme="default" variant="light">权限：{{ userStore.userInfo.permissions.length }}</t-tag>
             </t-space>
           </div>
         </t-card>

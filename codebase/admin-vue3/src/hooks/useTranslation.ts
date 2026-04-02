@@ -8,7 +8,7 @@ const loadingNamespaces: Record<string, Promise<void> | undefined> = {};
 const missingSent: Record<string, boolean> = {};
 
 export function useTranslation(ns: string = 'translation') {
-  const { t, locale, setLocaleMessage, getLocaleMessage } = useI18n();
+  const { locale, setLocaleMessage, getLocaleMessage } = useI18n();
   const request = useRequest();
 
   const loadNamespace = async (namespace: string, lang: string) => {
@@ -69,17 +69,20 @@ export function useTranslation(ns: string = 'translation') {
   const ti = (key: string, namespace?: string) => {
     const nsUse = namespace ?? ns;
     loadNamespace(nsUse, locale.value);
-    const path = nsUse ? `${nsUse}.${key}` : key;
-    const msg = t(path, key);
     const current = getLocaleMessage(locale.value) as Record<string, any>;
-    const exists = nsUse
-      ? Object.prototype.hasOwnProperty.call((current && current[nsUse]) || {}, key)
-      : Object.prototype.hasOwnProperty.call(current || {}, key);
+    const container = nsUse ? (current && current[nsUse]) || {} : current || {};
+    const exists = Object.prototype.hasOwnProperty.call(container, key);
     const nsKey = `${locale.value}_${nsUse}`;
+    if (exists) {
+      const val = (container as any)[key];
+      if (val === undefined || val === null) return key;
+      if (typeof val === 'string') return val.length > 0 ? val : key;
+      return String(val);
+    }
     if (loadedNamespaces[nsKey] && !exists) {
       addMissing(key, nsUse, locale.value, undefined);
     }
-    return msg;
+    return key;
   };
 
   const f = (key: string, values: any[], namespace?: string) => {

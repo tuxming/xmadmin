@@ -13,6 +13,7 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue';
 import { useTranslation } from '@/hooks/useTranslation';
 import { api } from '@/utils/api';
 import TableComponent from '@/components/TableComponent.vue';
@@ -32,11 +33,11 @@ const emit = defineEmits<{
 
 const { t } = useTranslation(AdminLang);
 
-const columns : any[] = [
+const columns = computed<any[]>(() => [
   { title: t('ID'), key: 'id', sort: true, ellipsis: true, width: 100, align: 'left' },
   { title: t('KEY'), key: 'resKey', sort: true, filter: true, ellipsis: true, width: 250, align: 'left' },
   { title: t('显示值'), key: 'resValue', sort: true, filter: true, ellipsis: true, width: 250, align: 'left' },
-];
+]);
 
 const onSelect = (rows: any[]) => {
   emit('select', rows);

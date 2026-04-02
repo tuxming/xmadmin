@@ -20,7 +20,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue';
+import { ref, reactive, onMounted, computed } from 'vue';
 import { useTranslation } from '@/hooks/useTranslation';
 import type { SubmitContext } from 'tdesign-vue-next';
 import { AdminUser } from '@/utils/I18NNamespace';
@@ -39,7 +39,7 @@ const formData = reactive({
   rePassword: ''
 });
 
-const statuses = [t('低'), t('中'), t('高')];
+const statuses = computed(() => [t('低'), t('中'), t('高')]);
 const statusLabel = ref<string>(t('强度'));
 const showIcon = ref<boolean>(false);
 const status = ref<any>('info');
@@ -48,7 +48,7 @@ const passwordChange = (value: string) => {
   showIcon.value = true;
   if (value) {
     if (value.length < 6) {
-      statusLabel.value = statuses[0];
+      statusLabel.value = statuses.value[0];
       status.value = 'error';
     } else {
       let isNum = /\d+/.test(value);
@@ -63,18 +63,18 @@ const passwordChange = (value: string) => {
       count += isSymbol ? 1 : 0;
 
       if (count < 2) {
-        statusLabel.value = statuses[0];
+        statusLabel.value = statuses.value[0];
         status.value = 'error';
       } else if (count < 3) {
-        statusLabel.value = statuses[1];
+        statusLabel.value = statuses.value[1];
         status.value = 'warning';
       } else {
-        statusLabel.value = statuses[2];
+        statusLabel.value = statuses.value[2];
         status.value = 'success';
       }
     }
   } else {
-    statusLabel.value = statuses[0];
+    statusLabel.value = statuses.value[0];
     status.value = 'error';
   }
 };

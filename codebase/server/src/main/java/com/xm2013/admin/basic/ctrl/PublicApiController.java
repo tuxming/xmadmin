@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.github.houbb.opencc4j.util.ZhConverterUtil;
 import com.jfinal.aop.Inject;
 import com.jfinal.kit.PropKit;
 import com.xm2013.admin.basic.service.DocumentService;
@@ -162,7 +163,14 @@ public class PublicApiController extends BaseController{
 		
 		List<LanguageResource> resoureces = languageService.findResources(lng, ns);
 		
-		Map<String, String> resMap = resoureces.stream().collect(Collectors.toMap(s -> s.getResKey(), s-> s.getResValue(), (k1, k2)->k1));
+		// 这里返回 key： value的map, 如果key==value就返回key:""
+		Map<String, String> resMap = resoureces.stream()
+				.collect(Collectors.toMap(
+						s -> s.getResKey(), 
+						s-> s.getResKey().equals(s.getResValue())?"": s.getResValue(), 
+						(k1, k2)->k1
+					)
+				);
 		
 		renderJson(JsonKit.toJson(resMap));
 		
@@ -195,12 +203,33 @@ public class PublicApiController extends BaseController{
 			return;
 		}
 		
+		// 如果是简体中文，就自动转换为繁体并保存
+		if(lng.equals("zh_CN")) {
+			try {
+				Language twLang = languageService.findLangByKey("zh_TW");
+				
+				new LanguageResource()
+						.setLanguageId(twLang.getId())
+						.setCategory(ns)
+						.setResKey(key)
+						.setResValue(ZhConverterUtil.toTraditional(value))
+						.save();
+				
+			}catch(Exception e) {
+			}
+		}
+		
+		
 		try {
 			LanguageResourceGroup g = new LanguageResourceGroup();
 			g.setName(ns);
 			g.save();
 		} catch (Exception e) {
 			// TODO: handle exception
+		}
+		
+		if(lng.equals("zh_TW") && ZhConverterUtil.containsSimple(value)) {
+			value = ZhConverterUtil.toTraditional(value);
 		}
 		
 		LanguageResource res = new LanguageResource()

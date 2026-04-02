@@ -32,21 +32,21 @@ const emit = defineEmits<{
 
 const { t } = useTranslation(AdminRole);
 
-const columns : any[]= [
+const columns = computed<any[]>(() => [
   { title: t('ID'), key: 'id', sort: true, ellipsis: true, width: 100 },
   { title: t('角色名'), key: 'roleName', sort: true, filter: true, ellipsis: true, width: 150 },
   { title: t('角色代码'), key: 'code', sort: true, filter: true, ellipsis: true, width: 200 },
-  { 
-    title: t('角色类型'), 
-    key: 'type', 
-    sort: true, 
-    filter: true, 
-    ellipsis: true, 
+  {
+    title: t('角色类型'),
+    key: 'type',
+    sort: true,
+    filter: true,
+    ellipsis: true,
     width: 150,
     render: (text: any) => h(RoleTypeTag, { value: text }),
   },
   { title: t('创建人'), key: 'createrName', sort: true, filter: true, ellipsis: true, width: 150 },
-];
+]);
 
 const modalPos = inject<any>('modalContext', null);
 

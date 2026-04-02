@@ -9,12 +9,13 @@ import { server } from './utils/api';
 
 const i18n = createI18n({
   legacy: false,
-  locale: 'zh_CN',
+  locale: typeof window !== 'undefined' ? (localStorage.getItem('lng') || 'zh_CN') : 'zh_CN',
   fallbackLocale: 'zh_CN',
   missingWarn: false,
   fallbackWarn: false,
   messages: {
     zh_CN: {},
+    zh_TW: {},
     en_US: {}
   }
 });

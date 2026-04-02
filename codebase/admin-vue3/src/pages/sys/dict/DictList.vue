@@ -13,7 +13,7 @@
 </template>
 
 <script setup lang="ts">
-import { h } from 'vue';
+import { h, computed } from 'vue';
 import { useTranslation } from '@/hooks/useTranslation';
 import { api } from '@/utils/api';
 import TableComponent from '@/components/TableComponent.vue';
@@ -34,7 +34,7 @@ const emit = defineEmits<{
 
 const { t } = useTranslation(AdminDict);
 
-const columns : any[] = [
+const columns = computed<any[]>(() => [ 
   {
     title: t('ID'),
     key: 'id',
@@ -98,7 +98,7 @@ const columns : any[] = [
     align: 'center',
     render: (text: any) => h(DictTypeTag, null, { default: () => text }),
   }
-];
+]);
 
 const onSelect = (rows: any[]) => {
   emit('select', rows);

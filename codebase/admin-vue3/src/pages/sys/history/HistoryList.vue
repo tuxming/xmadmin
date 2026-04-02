@@ -30,14 +30,14 @@ const emit = defineEmits<{
 
 const { t } = useTranslation(AdminHistory);
 
-const columns : any[]= [
+const columns = computed<any[]>(() => [
   { title: t('ID'), key: 'id', sort: true, ellipsis: true, width: 80, fixed: 'left' },
   { title: t('操作人'), key: 'username', sort: true, filter: true, ellipsis: true, width: 150 },
   { title: t('IP地址'), key: 'ipAddr', sort: true, filter: true, ellipsis: true, width: 150 },
   { title: t('操作类型'), key: 'type', sort: true, filter: true, width: 150 },
   { title: t('操作时间'), key: 'created', sort: true, filter: true, ellipsis: true, width: 200 },
   { title: t('请求参数'), key: 'remark', ellipsis: true, align: 'left', width: 200 },
-];
+]);
 
 const modalPos = inject<any>('modalContext', null);
 

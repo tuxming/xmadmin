@@ -32,7 +32,7 @@ const { t } = useTranslation(AdminDocument);
 
 const imgUrl = api.document?.img ;
 
-const columns : any[] = [
+const columns = computed<any[]>(() => [   
   { title: t('ID'), key: 'id', sort: true, ellipsis: true, width: 100 },
   { 
     title: t('缩略图'), 
@@ -58,7 +58,7 @@ const columns : any[] = [
   { title: t('创建人'), key: 'createrName', sort: true, filter: "input", ellipsis: true, width: 150 },
   { title: t('创建时间'), key: 'created', sort: true, filter: "datepicker", ellipsis: true, width: 150 },
   { title: t('备注'), key: 'remark', sort: true, filter: "input", ellipsis: true, width: 150 },
-];
+]);
 
 const modalPos = inject<any>('modalContext', null);
 

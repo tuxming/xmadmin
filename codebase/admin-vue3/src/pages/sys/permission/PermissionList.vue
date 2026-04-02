@@ -30,12 +30,12 @@ const emit = defineEmits<{
 
 const { t } = useTranslation(AdminPermission);
 
-const columns : any[] = [
+const columns = computed<any[]>(() => [
   { title: t('ID'), key: 'id', sort: true, ellipsis: true, width: 100, filter: 'number' },
   { title: t('分组名'), key: 'groupName', sort: true, ellipsis: true, width: 150, filter: 'input' },
   { title: t('权限名'), key: 'name', sort: true, ellipsis: true, width: 200 , filter: 'input'},
   { title: t('表达式'), key: 'expression', sort: true, filter: 'input', ellipsis: true, width: 200 },
-];
+]);
 
 const modalPos = inject<any>('modalContext', null);
 

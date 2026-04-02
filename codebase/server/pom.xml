@@ -140,6 +140,12 @@
 		   <artifactId>thumbnailator</artifactId>
 		   <version>0.4.8</version>
 		</dependency>
+		
+		<dependency>
+		    <groupId>com.github.houbb</groupId>
+		    <artifactId>opencc4j</artifactId>
+		    <version>1.10.0</version>
+		</dependency>
     </dependencies>
   
   

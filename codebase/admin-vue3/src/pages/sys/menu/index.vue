@@ -211,10 +211,6 @@ const rules = {
   sort: [{ required: true, message: t('排序不能为空') }]
 };
 
-
-
-
-
 const convertToTreeNode = (menus: any[]) => {
   return menus.map(menu => {
     return {

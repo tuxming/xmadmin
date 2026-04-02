@@ -42,7 +42,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, h } from 'vue';
+import { ref, h, computed } from 'vue';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useRequest } from '@/hooks/useRequest';
 import { useShowResult } from '@/hooks/useShowResult';
@@ -63,9 +63,9 @@ const props = withDefaults(defineProps<{
   titleLevel: 5
 });
 
-const { t, f } = useTranslation(AdminUser);
+const { t } = useTranslation(AdminUser);
 const request = useRequest();
-const { confirm, message, destroy } = useLayer();
+const { confirm, destroy } = useLayer();
 const showResult = useShowResult(AdminUser);
 
 const query = ref({});
@@ -93,7 +93,7 @@ const onDelete = (record: any, type: number) => {
   });
 };
 
-const userCols: any[] = [
+const userCols = computed<any[]>(() => [
   {
     title: t('ID'),
     key: 'userId',
@@ -133,9 +133,9 @@ const userCols: any[] = [
   },
   { title: t('账号'), key: 'username', sort: true, filter: true, ellipsis: true, width: 150 },
   { title: t('姓名'), key: 'fullname', sort: true, filter: true, ellipsis: true, width: 150 }
-];
+]);
 
-const deptCols : any[] = [
+const deptCols = computed<any[]>(() => [
   {
     title: t('ID'),
     key: 'deptId',
@@ -158,7 +158,7 @@ const deptCols : any[] = [
   { title: t('组织名'), key: 'name', sort: true, filter: true, ellipsis: true, width: 100, align: 'left' },
   { title: t('路径'), key: 'path', sort: true, filter: true, ellipsis: true, width: 180, align: 'left' },
   { title: t('路径名'), key: 'pathName', sort: true, filter: true, ellipsis: true, width: 180, align: 'left' }
-];
+]);
 
 const onSelect = () => {};
 
