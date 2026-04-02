@@ -137,8 +137,8 @@
       </t-footer>
     </t-layout>
 
-    <skin-setting v-model="showSetting" />
-    <user-edit v-if="openUserProfile" v-model:open="openUserProfile" :user="userProfile" @close="onUserEditClose" />
+    <SkinSetting v-if="showSetting" v-model="showSetting" />
+    <UserEdit v-if="openUserProfile" v-model:open="openUserProfile" :user="userProfile" @close="onUserEditClose" />
     
     <!-- Render Window modals -->
     <template v-for="win in windows" :key="win.id">
@@ -169,17 +169,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted, provide, shallowRef } from 'vue';
+import { ref, watch, onMounted, provide, shallowRef, defineAsyncComponent } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { DialogPlugin } from 'tdesign-vue-next';
 import { useThemeStore, useUserStore, useMenuStore } from '@/store';
 import IconFont from '@/components/IconFont.vue';
-import SkinSetting from '@/components/SkinSetting.vue';
-import UserEdit from '@/pages/sys/user/UserEdit.vue';
 import { api, basePath } from '@/utils/api';
 import { useRequest } from '@/hooks/useRequest';
 import { useTranslation } from '@/hooks/useTranslation';
-import ModalManager from '@/components/Modal/index.vue';
+
+const SkinSetting = defineAsyncComponent(() => import('@/components/SkinSetting.vue'));
+const UserEdit = defineAsyncComponent(() => import('@/pages/sys/user/UserEdit.vue'));
+const ModalManager = defineAsyncComponent(() => import('@/components/Modal/index.vue'));
 
 const route = useRoute();
 const router = useRouter();

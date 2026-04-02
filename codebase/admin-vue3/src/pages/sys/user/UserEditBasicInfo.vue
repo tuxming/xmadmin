@@ -104,7 +104,7 @@ const buildPhotoUrl = (photo: any) => {
   if (/^\d+$/.test(s)) return `${api.document.img}?id=${s}`;
   return s;
 };
-const uploadType = 'user/photo';
+const uploadType = 'photo';
 const uploadPress = 1;
 const uploadAction = computed(() => `${uploadUrl}?type=${encodeURIComponent(uploadType)}&press=${uploadPress}`);
 

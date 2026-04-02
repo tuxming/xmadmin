@@ -136,7 +136,7 @@ const title = ref(t('创建用户'));
 const formRef = ref<any>(null);
 
 const uploadUrl = api.document.upload;
-const uploadType = 'user/photo';
+const uploadType = 'photo';
 const uploadPress = 1;
 const uploadAction = computed(() => `${uploadUrl}?type=${encodeURIComponent(uploadType)}&press=${uploadPress}`);
 

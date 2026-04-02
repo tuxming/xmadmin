@@ -267,7 +267,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useThemeStore } from '@/store';
 import { useTranslation } from '@/hooks/useTranslation';
 import { AdminSkinSetting } from '@/utils/I18NNamespace';
@@ -352,8 +352,14 @@ const applyWallpaper = (url: string) => {
   showWallpaper.value = false;
 };
 
-// 初始化加载壁纸分类
-fetchWallpaperCats();
+watch(showWallpaper, async (val) => {
+  if (!val) return;
+  if (wallpaperCats.value.length > 0) return;
+  start.value = 0;
+  wallpaperList.value = [];
+  currWallpaperCat.value = '';
+  await fetchWallpaperCats();
+});
 </script>
 
 <style scoped>

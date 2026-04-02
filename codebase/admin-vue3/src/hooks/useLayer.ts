@@ -1,7 +1,8 @@
-import { ref, markRaw } from 'vue';
+import { ref, markRaw, defineAsyncComponent } from 'vue';
 import { MessagePlugin, LoadingPlugin } from 'tdesign-vue-next';
-import Confirm from '@/components/Modal/Confirm.vue';
-import Modal from '@/components/Modal/index.vue';
+
+const Confirm = defineAsyncComponent(() => import('@/components/Modal/Confirm.vue'));
+const Modal = defineAsyncComponent(() => import('@/components/Modal/index.vue'));
 
 export interface LayerConfirmType {
   title?: string;
