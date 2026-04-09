@@ -17,6 +17,7 @@ export const useThemeStore = defineStore('theme', {
     bgBlur: 0,
     bgOpacity: 1,
     containerOpacity: 1,
+    sideOpacity: 1,
     sideItemOpacity: 0.1,
     sideItemSelectOpacity: 0.75,
   }),
@@ -99,6 +100,9 @@ export const useThemeStore = defineStore('theme', {
       this.containerOpacity = val;
       this.applyBackgroundVars();
     },
+    setSideOpacity(val: number) {
+      this.sideOpacity = val;
+    },
     setSideItemOpacity(val: number) {
       this.sideItemOpacity = val;
       this.applyBackgroundVars();
@@ -152,6 +156,7 @@ export const useThemeStore = defineStore('theme', {
     resetSidebar() {
       this.sideTheme = 'dark';
       this.sideWidth = 232;
+      this.sideOpacity = 1;
     }
   },
   persist: true,

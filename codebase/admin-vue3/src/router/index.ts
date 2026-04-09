@@ -76,12 +76,6 @@ const routes: Array<RouteRecordRaw> = [
         name: 'History',
         component: () => import('@/pages/sys/history/index.vue'),
         meta: { title: '日志管理' }
-      },
-      {
-        path: '/sys/pluginCode',
-        name: 'PluginCode',
-        component: () => import('@/pages/sys/pluginCode/index.vue'),
-        meta: { title: '插件发码' }
       }
     ]
   },

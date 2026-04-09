@@ -170,19 +170,18 @@
                   @change="(val: any) => themeStore.setSideWidth(val as number)" 
                 />
               </div>
+              <div class="setting-item">
+                <div class="setting-title">{{ t('侧边栏背景透明度') }}</div>
+                <t-slider 
+                  :value="themeStore.sideOpacity" 
+                  :min="0" 
+                  :max="1" 
+                  :step="0.1"
+                  :input-number-props="{ theme: 'column' }"
+                  @change="(val: any) => themeStore.setSideOpacity(val as number)" 
+                />
+              </div>
             </div>
-
-          <div class="setting-item">
-            <div class="setting-title">{{ t('侧边菜单项透明度') }}</div>
-            <t-slider 
-              :value="themeStore.sideItemOpacity" 
-              :min="0" 
-              :max="1" 
-              :step="0.1"
-              :input-number-props="{ theme: 'column' }"
-              @change="(val: any) => themeStore.setSideItemOpacity(val as number)" 
-            />
-          </div>
           <div class="setting-item">
             <div class="setting-title">{{ t('侧边菜单选中透明度') }}</div>
             <t-slider 

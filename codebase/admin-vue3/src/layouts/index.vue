@@ -1,169 +1,137 @@
 <template>
-  <div
-    class="wallpaper-wrap"
-    :style="{
-      backgroundImage: themeStore.wallpaperUrl ? `url('${themeStore.wallpaperUrl}')` : 'none',
-      backgroundRepeat: 'no-repeat',
-      backgroundPosition: 'center center',
-      backgroundSize: 'cover'
-    }"
-  >
-  <t-layout class="layout-container" :class="{ 'xm-only-icon': themeStore.onlyIcon }" :data-size="themeStore.componentSize" :style="{ backdropFilter: `blur(${themeStore.bgBlur}px)` }">
-    <t-aside 
-      :width="themeStore.collapsed ? '64px' : `${themeStore.sideWidth}px`" 
-      class="layout-sider"
-      :style="{
+  <div class="wallpaper-wrap" :style="{
+    backgroundImage: themeStore.wallpaperUrl ? `url('${themeStore.wallpaperUrl}')` : 'none',
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'center center',
+    backgroundSize: 'cover'
+  }">
+    <t-layout class="layout-container" :class="{ 'xm-only-icon': themeStore.onlyIcon }"
+      :data-size="themeStore.componentSize" :style="{ backdropFilter: `blur(${themeStore.bgBlur}px)` }">
+      <t-aside :width="themeStore.collapsed ? '64px' : `${themeStore.sideWidth}px`" class="layout-sider" :style="{
         backgroundColor: themeStore.sideTheme === 'light'
-          ? `rgba(245,245,245, ${themeStore.bgOpacity})`
-          : `rgba(0,0,0, ${themeStore.bgOpacity})`
-      }"
-    >
-      <div class="logo">
-        <t-icon name="logo-codepen" size="32px" color="var(--td-brand-color)" />
-        <span v-show="!themeStore.collapsed" class="title" :style="{ color: themeStore.sideTheme === 'dark' ? '#fff' : 'var(--td-brand-color)' }">Xm-Admin</span>
-      </div>
-      <t-menu
-        :value="route.path"
-        :collapsed="themeStore.collapsed"
-        class="layout-menu"
-        :theme="themeStore.sideTheme"
-        @change="handleMenuChange"
-      >
-        <t-menu-item :value="api.backendPage">
-          <template #icon><t-icon name="dashboard" /></template>
-          首页
-        </t-menu-item>
-        
-        <!-- dynamic menus -->
-        <template v-for="menu in menuStore.treeMenu" :key="menu.id">
-          <!-- 这里使用自定义组件或者直接写以支持图标间距，不过 TDesign 默认通过插槽处理图标间距，前面样式中加了 gap: 8px -->
-          <t-submenu v-if="menu.children && menu.children.length > 0" :value="menu.path" :title="menu.name">
-            <template #icon>
-              <icon-font v-if="menu.icon" :name="menu.icon" />
-            </template>
-            <t-menu-item v-for="child in menu.children" :key="child.id" :value="child.path">
+          ? `rgba(245,245,245, ${themeStore.sideOpacity})`
+          : `rgba(0,0,0, ${themeStore.sideOpacity})`
+      }">
+        <div class="logo">
+          <t-icon name="logo-codepen" size="32px" color="var(--td-brand-color)" />
+          <span v-show="!themeStore.collapsed" class="title"
+            :style="{ color: themeStore.sideTheme === 'dark' ? '#fff' : 'var(--td-brand-color)' }">Xm-Admin</span>
+        </div>
+        <t-menu :value="route.path" :collapsed="themeStore.collapsed" class="layout-menu" :theme="themeStore.sideTheme"
+          @change="handleMenuChange" style="width:100%; padding-right:5px;">
+          <!-- dynamic menus -->
+          <template v-for="menu in menuStore.treeMenu" :key="menu.id">
+            <!-- 这里使用自定义组件或者直接写以支持图标间距，不过 TDesign 默认通过插槽处理图标间距，前面样式中加了 gap: 8px -->
+            <t-submenu v-if="menu.children && menu.children.length > 0" :value="menu.path" :title="menu.name">
               <template #icon>
-                <icon-font v-if="child.icon" :name="child.icon" />
+                <icon-font v-if="menu.icon" :name="menu.icon" />
               </template>
-              {{ child.name }}
-            </t-menu-item>
-          </t-submenu>
-          <t-menu-item v-else :value="menu.path">
-            <template #icon>
-              <icon-font v-if="menu.icon" :name="menu.icon" />
-            </template>
-            {{ menu.name }}
-          </t-menu-item>
-        </template>
-      </t-menu>
-    </t-aside>
-    
-    <t-layout style="min-width: 0; overflow: hidden;">
-      <t-header class="layout-header">
-        <div class="xm-header-wrap">
-          <div class="xm-top">
-            <div class="home-header-left">
-              <t-button variant="text" shape="square" @click="themeStore.toggleCollapsed()">
-                <t-icon :name="themeStore.collapsed ? 'menu-unfold' : 'menu-fold'" />
-              </t-button>
-            </div>
-            <div class="home-header-right">
-              <t-space>
-                <t-dropdown :options="langOptions" @click="handleLangChange">
-                  <t-button variant="text">
-                    <t-icon name="translate" />
-                    <span style="margin-left: 8px">{{ currentLang }}</span>
-                  </t-button>
-                </t-dropdown>
-                <t-button variant="text" shape="square" @click="showSetting = true">
-                  <t-icon name="setting" />
-                </t-button>
-                <t-dropdown @click="handleUserDropdownClick">
-                  <t-button variant="text">
-                    <t-avatar size="small" :image="userStore.userInfo?.photo ? (api.document.img + '?id=' + userStore.userInfo.photo) : undefined">
-                      <template #icon v-if="!userStore.userInfo?.photo"><t-icon name="user" /></template>
-                    </t-avatar>
-                    <span style="margin-left: 8px">{{ userStore.userInfo?.fullname || 'Admin' }}</span>
-                  </t-button>
-                  <t-dropdown-menu>
-                    <t-dropdown-item value="profile">个人信息</t-dropdown-item>
-                    <t-dropdown-item value="logout">退出登录</t-dropdown-item>
-                  </t-dropdown-menu>
-                </t-dropdown>
-              </t-space>
-            </div>
-          </div>
-          
-          <div class="xm-tab layout-tabs">
-            <t-tabs v-model="activeTab" @change="handleTabChange" @remove="handleTabRemove">
-              <t-tab-panel
-                v-for="tab in tabs"
-                :key="tab.value"
-                :value="tab.value"
-                :removable="tab.value !== api.backendPage"
-              >
-                <template #label>
-                  <span 
-                    class="tab-label-wrap"
-                    @mouseenter="tab.hover = true"
-                    @mouseleave="tab.hover = false"
-                  >
-                    <icon-font 
-                      v-if="tab.icon || tab.hover" 
-                      :name="(tab.hover && activeTab === tab.value) ? 'icon-maximize' : (tab.icon || 'dashboard')" 
-                      class="tab-icon"
-                      @click.stop="(e: Event) => handleTabIconClick(e, tab)"
-                    />
-                    <span class="tab-text">{{ tab.label }}</span>
-                  </span>
+              <t-menu-item v-for="child in menu.children" :key="child.id" :value="child.path">
+                <template #icon>
+                  <icon-font v-if="child.icon" :name="child.icon" />
                 </template>
-              </t-tab-panel>
-            </t-tabs>
-          </div>
-        </div>
-      </t-header>
-      
-      <t-content class="layout-content">
-        <router-view v-slot="{ Component }">
-          <keep-alive>
-            <component :is="Component" />
-          </keep-alive>
-        </router-view>
-      </t-content>
-      
-      <t-footer class="layout-footer">
-        <t-icon name="logo-codepen" color="var(--td-brand-color)" />
-        <span style="margin-left: 8px">Xm-Admin 后台管理系统</span>
-      </t-footer>
-    </t-layout>
+                {{ child.name }}
+              </t-menu-item>
+            </t-submenu>
+            <t-menu-item v-else :value="menu.path">
+              <template #icon>
+                <icon-font v-if="menu.icon" :name="menu.icon" />
+              </template>
+              {{ menu.name }}
+            </t-menu-item>
+          </template>
+        </t-menu>
+      </t-aside>
 
-    <SkinSetting v-if="showSetting" v-model="showSetting" />
-    <UserEdit v-if="openUserProfile" v-model:open="openUserProfile" :user="userProfile" @close="onUserEditClose" />
-    
-    <!-- Render Window modals -->
-    <template v-for="win in windows" :key="win.id">
-      <ModalManager
-        type="window"
-        :title="win.title"
-        :icon="win.icon"
-        :open="true"
-        :show-mask="false"
-        width="80vw"
-        height="60vh"
-        @close="() => onWindowClose(win.id)"
-      >
-        <div style="height: 100%; display: flex; flex-direction: column;">
-          <div style="padding: 4px 16px; margin-bottom:10px; border-bottom: 1px solid var(--td-component-border); display: flex; align-items: center; gap: 8px; font-weight: bold; font-size: 16px;">
-            <icon-font v-if="win.icon" :name="win.icon" />
-            <span>{{ win.title }}</span>
+      <t-layout style="min-width: 0; overflow: hidden;">
+        <t-header class="layout-header">
+          <div class="xm-header-wrap">
+            <div class="xm-top">
+              <div class="home-header-left">
+                <t-button variant="text" shape="square" @click="themeStore.toggleCollapsed()">
+                  <t-icon :name="themeStore.collapsed ? 'menu-unfold' : 'menu-fold'" />
+                </t-button>
+              </div>
+              <div class="home-header-right">
+                <t-space>
+                  <t-dropdown :options="langOptions" @click="handleLangChange">
+                    <t-button variant="text">
+                      <t-icon name="translate" />
+                      <span style="margin-left: 8px">{{ currentLang }}</span>
+                    </t-button>
+                  </t-dropdown>
+                  <t-button variant="text" shape="square" @click="showSetting = true">
+                    <t-icon name="setting" />
+                  </t-button>
+                  <t-dropdown @click="handleUserDropdownClick">
+                    <t-button variant="text">
+                      <t-avatar size="small"
+                        :image="userStore.userInfo?.photo ? (api.document.img + '?id=' + userStore.userInfo.photo) : undefined">
+                        <template #icon v-if="!userStore.userInfo?.photo"><t-icon name="user" /></template>
+                      </t-avatar>
+                      <span style="margin-left: 8px">{{ userStore.userInfo?.fullname || 'Admin' }}</span>
+                    </t-button>
+                    <t-dropdown-menu>
+                      <t-dropdown-item value="profile">个人信息</t-dropdown-item>
+                      <t-dropdown-item value="logout">退出登录</t-dropdown-item>
+                    </t-dropdown-menu>
+                  </t-dropdown>
+                </t-space>
+              </div>
+            </div>
+
+            <div class="xm-tab layout-tabs">
+              <t-tabs v-model="activeTab" @change="handleTabChange" @remove="handleTabRemove">
+                <t-tab-panel v-for="tab in tabs" :key="tab.value" :value="tab.value"
+                  :removable="tab.value !== api.backendPage">
+                  <template #label>
+                    <span class="tab-label-wrap" @mouseenter="tab.hover = true" @mouseleave="tab.hover = false">
+                      <icon-font v-if="tab.icon || tab.hover"
+                        :name="(tab.hover && activeTab === tab.value) ? 'icon-maximize' : (tab.icon || 'dashboard')"
+                        class="tab-icon" @click.stop="(e: Event) => handleTabIconClick(e, tab)" />
+                      <span class="tab-text">{{ tab.label }}</span>
+                    </span>
+                  </template>
+                </t-tab-panel>
+              </t-tabs>
+            </div>
           </div>
-          <div style="flex: 1; overflow: hidden;">
-            <component :is="win.component" v-bind="win.props" />
+        </t-header>
+
+        <t-content class="layout-content">
+          <router-view v-slot="{ Component }">
+            <keep-alive>
+              <component :is="Component" />
+            </keep-alive>
+          </router-view>
+        </t-content>
+
+        <t-footer class="layout-footer">
+          <t-icon name="logo-codepen" color="var(--td-brand-color)" />
+          <span style="margin-left: 8px">Xm-Admin 后台管理系统</span>
+        </t-footer>
+      </t-layout>
+
+      <SkinSetting v-if="showSetting" v-model="showSetting" />
+      <UserEdit v-if="openUserProfile" v-model:open="openUserProfile" :user="userProfile" @close="onUserEditClose" />
+
+      <!-- Render Window modals -->
+      <template v-for="win in windows" :key="win.id">
+        <ModalManager type="window" :title="win.title" :icon="win.icon" :open="true" :show-mask="false" width="80vw"
+          height="60vh" @close="() => onWindowClose(win.id)">
+          <div style="height: 100%; display: flex; flex-direction: column;">
+            <div
+              style="padding: 4px 16px; margin-bottom:10px; border-bottom: 1px solid var(--td-component-border); display: flex; align-items: center; gap: 8px; font-weight: bold; font-size: 16px;">
+              <icon-font v-if="win.icon" :name="win.icon" />
+              <span>{{ win.title }}</span>
+            </div>
+            <div style="flex: 1; overflow: hidden;">
+              <component :is="win.component" v-bind="win.props" />
+            </div>
           </div>
-        </div>
-      </ModalManager>
-    </template>
-  </t-layout>
+        </ModalManager>
+      </template>
+    </t-layout>
   </div>
 
 </template>
@@ -216,7 +184,7 @@ const onWindowClose = (winId: number) => {
 };
 
 const currentLang = ref('简体中文');
-const langOptions = ref<Array<{content: string, value: string}>>([]);
+const langOptions = ref<Array<{ content: string, value: string }>>([]);
 
 const getLangs = async () => {
   try {
@@ -334,9 +302,9 @@ watch(
 const handleTabIconClick = (e: Event, tab: any) => {
   // 只有当前激活的 tab 才能点击图标弹窗化
   if (activeTab.value !== tab.value) return;
-  
+
   openWindow(tab);
-  
+
   // 从 tab 列表移除该页并切换路由
   handleTabRemove({ value: tab.value });
 };
@@ -396,20 +364,22 @@ const handleLogout = () => {
   height: 100vh;
   width: 100vw;
 }
+
 .layout-container {
-    height: 100%;
-    overflow: hidden;
-    
-    &.xm-only-icon {
-      :deep(.t-menu__item-text) {
-        display: none !important;
-      }
-      :deep(.t-menu__item) {
-        justify-content: center;
-      }
+  height: 100%;
+  overflow: hidden;
+
+  &.xm-only-icon {
+    :deep(.t-menu__item-text) {
+      display: none !important;
     }
-    
-    .layout-sider {
+
+    :deep(.t-menu__item) {
+      justify-content: center;
+    }
+  }
+
+  .layout-sider {
     transition: width 0.2s;
     box-shadow: var(--td-shadow-1);
     z-index: 10;
@@ -417,7 +387,7 @@ const handleLogout = () => {
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    
+
     :deep(.t-menu) {
       width: 100% !important;
       background-color: transparent !important;
@@ -426,16 +396,21 @@ const handleLogout = () => {
     :deep(.t-default-menu) {
       background-color: transparent !important;
     }
-    
+
     :deep(.t-menu__item) {
       min-width: 0;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      gap: 8px; /* 增加图标和文本的间距 */
-      background-color: var(--xm-side-item-bg) !important;
+      gap: 8px;
+      /* 增加图标和文本的间距 */
+      background-color: transparent !important;
     }
-    
+
+    :deep(.t-menu__item:hover:not(.t-is-active):not(.t-is-disabled)) {
+      background-color: color-mix(in srgb, var(--td-brand-color) 40%, transparent) !important;
+    }
+
     :deep(.t-menu__item-text) {
       overflow: hidden;
       text-overflow: ellipsis;
@@ -448,6 +423,13 @@ const handleLogout = () => {
       gap: 8px;
     }
 
+    :deep(.t-default-menu__inner .t-menu) {
+      padding-left: 3px;
+      padding-right: 0px;
+    }
+
+
+
     :deep(.t-submenu__title > span) {
       overflow: hidden;
       text-overflow: ellipsis;
@@ -455,7 +437,7 @@ const handleLogout = () => {
       flex: 1;
       min-width: 0;
     }
-    
+
     :deep(.t-menu__item.t-is-active) {
       background-color: var(--xm-side-item-active-bg) !important;
     }
@@ -465,7 +447,7 @@ const handleLogout = () => {
       display: flex;
       align-items: center;
       justify-content: center;
-      
+
       .title {
         margin-left: 8px;
         font-size: 20px;
@@ -473,24 +455,25 @@ const handleLogout = () => {
         color: var(--td-brand-color);
       }
     }
-    
+
     .layout-menu {
       height: calc(100% - 64px);
+      width: 100%;
     }
   }
-  
+
   .layout-header {
     height: 100px;
     padding: 0;
     background-color: transparent;
     z-index: 9;
-    
+
     .xm-header-wrap {
       width: 100%;
       height: 100%;
       display: flex;
       flex-direction: column;
-      
+
       .xm-top {
         height: 64px;
         padding: 0 16px;
@@ -500,7 +483,7 @@ const handleLogout = () => {
         background-color: var(--td-bg-color-container);
         box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
       }
-      
+
       .xm-tab {
         flex: 1;
         background-color: var(--td-bg-color-container);
@@ -517,12 +500,12 @@ const handleLogout = () => {
           align-items: center;
           gap: 6px;
         }
-        
+
         .tab-icon {
           font-size: 14px;
           cursor: pointer;
           transition: transform 0.2s;
-          
+
           &:hover {
             transform: scale(1.1);
             color: var(--td-brand-color);
@@ -531,7 +514,7 @@ const handleLogout = () => {
       }
     }
   }
-  
+
   .layout-content {
     padding: 16px;
     overflow: hidden;
@@ -542,14 +525,14 @@ const handleLogout = () => {
     flex-direction: column;
     min-height: 0;
     min-width: 0;
-    
+
     > :first-child {
       flex: 1;
       min-height: 0;
       min-width: 0;
     }
   }
-  
+
   .layout-footer {
     display: flex;
     align-items: center;
