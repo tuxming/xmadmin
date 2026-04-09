@@ -134,14 +134,14 @@ export const useRequest = () => {
                 // hide loading
             }
             const data = response.data as ResposeDataType;
-            
+
             if (!data.status && (data.code === '1' || data.code === '2')) {
                 goLogin();
             }
 
             return data as any;
         }, interceptorErr);
-        
+
         return instance;
     }
 

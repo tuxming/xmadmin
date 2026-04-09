@@ -8,16 +8,16 @@ import { server } from './utils/api';
 // and provide a helper hook that can dynamically load namespaces similar to i18next-http-backend.
 
 const i18n = createI18n({
-  legacy: false,
-  locale: typeof window !== 'undefined' ? (localStorage.getItem('lng') || 'zh_CN') : 'zh_CN',
-  fallbackLocale: 'zh_CN',
-  missingWarn: false,
-  fallbackWarn: false,
-  messages: {
-    zh_CN: {},
-    zh_TW: {},
-    en_US: {}
-  }
+    legacy: false,
+    locale: typeof window !== 'undefined' ? (localStorage.getItem('lng') || 'zh_CN') : 'zh_CN',
+    fallbackLocale: 'zh_CN',
+    missingWarn: false,
+    fallbackWarn: false,
+    messages: {
+        zh_CN: {},
+        zh_TW: {},
+        en_US: {}
+    }
 });
 
 export default i18n;

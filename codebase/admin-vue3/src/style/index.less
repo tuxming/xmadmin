@@ -1,46 +1,54 @@
-html, body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
+html,
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
 }
 
 #app {
-  width: 100%;
-  height: 100%;
+    width: 100%;
+    height: 100%;
 }
 
 .need-buttom-border .t-table__body tr:last-child td {
-  border-bottom: 1px solid var(--td-component-border) !important;
+    border-bottom: 1px solid var(--td-component-border) !important;
 
 }
 
-.t-table__pagination-wrap{
-  padding: 0px 15px 10px 15px;
+.t-table__pagination-wrap {
+    padding: 0px 15px 10px 15px;
 }
 
-.skin-setting-drawer{
-  .t-drawer__mask{
-    background-color: transparent !important;
-  }
-  .t-drawer__content-wrapper{
-    background-color: white;
-  }
+.skin-setting-drawer {
+    .t-drawer__mask {
+        background-color: transparent !important;
+    }
+
+    .t-drawer__content-wrapper {
+        background-color: white;
+    }
 }
 
-.skin-setting-drawer{
-  .t-drawer__mask{
-    background-color: transparent !important;
-  }
-  .t-drawer__content-wrapper{
-    background-color: white;
-  }
+.skin-setting-drawer {
+    .t-drawer__mask {
+        background-color: transparent !important;
+    }
+
+    .t-drawer__content-wrapper {
+        background-color: white;
+    }
 }
 
-[theme-mode="dark"] .skin-setting-drawer .t-drawer__content-wrapper{
-  background-color: rgba(0, 0, 0) !important;
+[theme-mode="dark"] .skin-setting-drawer .t-drawer__content-wrapper {
+    background-color: rgba(0, 0, 0) !important;
 }
 
 .t-default-menu .t-menu__item.t-is-active:not(.t-is-opened) {
     color: #000;
+}
+
+
+.t-menu__item.t-is-active {
+    background-color: var(--xm-side-item-active-bg) !important;
 }

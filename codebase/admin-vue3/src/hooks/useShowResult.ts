@@ -10,7 +10,7 @@ const MESSAGE_THROTTLE_MS = 3000;
 export const useShowResult = (i18namespace: string) => {
     const { message } = useLayer();
     const { t } = useTranslation(i18namespace);
-    
+
     // a simple format function for arguments
     const f = (msg: string | undefined, args: string[]) => {
         if (!msg) return '';
@@ -24,11 +24,11 @@ export const useShowResult = (i18namespace: string) => {
     const showMsg = (type: 'success' | 'warning' | 'error' | 'info', content: string) => {
         const now = Date.now();
         const lastTime = displayedMessages.get(content) || 0;
-        
+
         if (now - lastTime > MESSAGE_THROTTLE_MS) {
             displayedMessages.set(content, now);
             message[type](content);
-            
+
             // 清理过期的记录防止内存泄漏
             setTimeout(() => {
                 if (displayedMessages.get(content) === now) {

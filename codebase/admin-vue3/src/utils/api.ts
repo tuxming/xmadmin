@@ -1,5 +1,6 @@
 const proServer = "";
-const devServer = "http://localhost";
+// const devServer = "http://localhost";
+const devServer = "http://192.168.2.106"
 
 export const server = import.meta.env.MODE === 'production' ? proServer : devServer;
 
@@ -68,8 +69,8 @@ export const api = {
         list: server + "/am/history/list",
         deletes: server + "/am/history/deletes"
     },
-    document: { 
-        img:  server + "/public/img",
+    document: {
+        img: server + "/public/img",
         list: server + "/am/document/list",
         upload: server + "/am/document/upload",
         deletes: server + "/am/document/deletes",
@@ -90,7 +91,7 @@ export const api = {
         deleteLang: server + "/am/lang/deleteLang",
         updateRes: server + "/am/lang/updateRes",
         deleteRes: server + "/am/lang/deleteRes",
-        resourceByKey:  server + "/am/lang/resourceByKey",
+        resourceByKey: server + "/am/lang/resourceByKey",
     },
     dict: {
         groups: server + "/am/dict/groups",
